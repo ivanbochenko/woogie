@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    
+    // "lib": [
+    //   "es5", "es6", "dom", "dom.iterable"
+    // ]
+  }
+}

@@ -1,0 +1,299 @@
+import React, { useState } from 'react';
+import { Alert, Pressable, StyleSheet, View, Image, ScrollView, SafeAreaView } from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import * as ImagePicker from "expo-image-picker";
+import MapView from 'react-native-maps';
+import { useMutation } from 'urql'
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+import { height, width } from '../../constants/Layout';
+import { s, m, l, xl } from '../../constants/Spaces';
+import { getResizedAndCroppedPhotoUrl } from '../../lib/getPhotoUrl'
+import { Button, Square } from '../../components/Button';
+import BottomSheet from '../../components/BottomSheet';
+import { Icon } from '../../components/Themed';
+import { BoldText, RegularText, TextInput } from '../../components/StyledText'
+import { useAuth } from '../../lib/Auth';
+import { graphql } from '../../gql';
+
+const CREATE_EVENT = graphql(`
+  mutation CREATE_EVENT($author_id: ID!, $title: String!, $text: String!, $photo: String!, $slots: Int!, $time: DateTime!, $latitude: Float!, $longitude: Float!) {
+    postEvent(author_id: $author_id, title: $title, text: $text, photo: $photo, slots: $slots, time: $time, latitude: $latitude, longitude: $longitude) {
+      id
+    }
+  }
+`)
+
+const MAX_SLOTS = 20
+
+export default (props: {
+  refresh(): void,
+  latitude: number,
+  longitude: number
+}) => {
+  const {refresh, latitude, longitude} = props
+  const { colors } = useTheme()
+  const combinedInputStyles = [styles.input, { backgroundColor: colors.card }]
+
+  const [showPhotoSheet, setShowPhotoSheet] = useState(false)
+  const [showTime, setShowTime] = useState(false)
+  const [showLocationSheet, setShowLocationSheet] = useState(false)
+  
+  const { api, user } = useAuth()
+
+  const initialState = {
+    author_id: user?.id!,
+    photo: {} as ImagePicker.ImagePickerAsset,
+    title: '',
+    text: '',
+    time: new Date(),
+    slots: 1,
+    latitude,
+    longitude,
+  }
+
+  const [state, setState] = useState(initialState)
+
+  const [postEventResult, postEvent] = useMutation(CREATE_EVENT)
+
+  const onSubmit = async () => {
+    if (!state.photo || !state.title || !state.text) {
+      Alert.alert('Pick photo, title and text')
+      return
+    }
+    const photo = await getResizedAndCroppedPhotoUrl({
+      photo: state.photo, 
+      width: 576,
+      height: 864,
+      url: (await api.get(`s3url`)).data
+    })
+    const result = await postEvent({...state, photo})
+    if (result.error) console.error('Oh no!', result.error)
+    refresh()
+  }
+
+  const launchPicker = async (pickFromCamera: boolean) => {
+    const options = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    }
+    const result = pickFromCamera
+      ? (await ImagePicker.launchCameraAsync(options))
+      : (await ImagePicker.launchImageLibraryAsync(options))
+
+    setShowPhotoSheet(false)
+    if (!result.canceled) {
+      const photo = result.assets[0]
+      setState(state => ({...state, photo}))
+    }
+  }
+
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[styles.center, {padding: m}]}
+      >
+
+        {/* Add photo */}
+        <View style={[styles.heading, {marginBottom: s}]}>
+          <BoldText>Picture</BoldText>
+          <RegularText style={styles.text}>Select the best picture for your event</RegularText>
+        </View>
+        <Pressable
+          style={[styles.addImg, {backgroundColor: colors.card}]}
+          onPress={() => setShowPhotoSheet(true)}
+        >
+          {state.photo.uri
+            ? <Image style={styles.addImg} source={state.photo}/>
+            : <Icon name="camera" size={xl}/>
+          }
+        </Pressable>
+
+        {/* Title and text */}
+        <View style={styles.heading}>
+          <BoldText>Title & Text</BoldText>
+          <RegularText style={styles.text}>Write fun and clear intro</RegularText>
+        </View>
+        <TextInput
+          maxLength={50}
+          placeholder={'Title...'}
+          onChangeText={ title => setState(state => ({...state, title}))}
+          value={state.title}
+        />
+        <TextInput
+          multiline
+          numberOfLines={3}
+          maxLength={300}
+          placeholder={'Text...'}
+          onChangeText={ text => setState(state => ({...state, text}))}
+          value={state.text}
+        />
+
+        {/* Pick time */}
+        <View style={styles.heading}>
+          <BoldText>Time & Location</BoldText>
+          <RegularText style={styles.text}>When and where event starts</RegularText>
+        </View>
+        <Pressable
+          style={[combinedInputStyles, styles.row, {justifyContent: 'space-between'}]}
+          onPress={() => setShowTime(true)}
+        >
+          <Icon name="clock-o"/>
+          <BoldText>{state.time.toLocaleTimeString().replace(/(:\d{2}| [AP]M)$/, "")}</BoldText>
+          <View style={{width: l}}/>
+        </Pressable>
+        {showTime &&
+          <DateTimePicker
+            testID="dateTimePicker"
+            mode='time'
+            display='spinner'
+            value={state.time}
+            onChange={(event, time) => {
+              setShowTime(false)
+              
+              setState(state => ({...state, time: time ?? new Date()}))
+            }}
+          />
+        }
+
+        {/* Set location */}
+        <Pressable
+          style={[combinedInputStyles, styles.row, {justifyContent: 'space-between'}]}
+          onPress={() => {
+            setShowLocationSheet(true)
+          }}
+        >
+          <Icon style={{paddingLeft: s}} name="map-pin" />
+          <BoldText>Location</BoldText>
+          <View style={{width: l}}/>
+        </Pressable>
+
+        {/* Set slots */}
+        <View style={styles.heading}>
+          <BoldText>Slots</BoldText>
+          <RegularText style={styles.text}>How many people you expect</RegularText>
+        </View>
+        <View style={[combinedInputStyles, styles.row, { justifyContent: 'space-between', alignItems: 'center' }]}>
+          <Pressable
+            onPress={() => {
+              if (state.slots > 1) setState(state => ({...state, slots: --state.slots}))
+            }}
+            style={[styles.add, {backgroundColor: colors.background}]}
+          >
+            <Icon name="minus"/>
+          </Pressable>
+          <BoldText>{state.slots}</BoldText>
+          <Pressable
+            onPress={() => {
+              if (state.slots < MAX_SLOTS) setState(state => ({...state, slots: ++state.slots}))
+            }}
+            style={[styles.add, {backgroundColor: colors.background}]}
+          >
+            <Icon name="plus"/>
+          </Pressable>
+        </View>
+
+        <Button title={'Create'} onPress={onSubmit}/>
+      </ScrollView>
+
+      {/* Location bottomsheet */}
+      <BottomSheet show={showLocationSheet} height={height}>
+        <View style={{flex: 1}}>
+          <MapView
+            style={{flex: 1}}
+            initialRegion={{
+              latitude: state.latitude,
+              longitude: state.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+            onRegionChangeComplete={(region) => {
+              const { latitude, longitude } = region
+              setState(state => ({ ...state, latitude, longitude }))
+            }}
+          />
+          <Icon
+            name="map-pin"
+            style={styles.marker}
+          />
+          <Pressable
+            style={[styles.footer, styles.center, { backgroundColor: colors.card, width: width - l*2 }]}
+            onPress={()=>setShowLocationSheet(false)}
+          >
+            <BoldText style={{color: colors.primary}}>Ok</BoldText>
+          </Pressable>
+        </View>
+      </BottomSheet>
+
+      {/* Photo bottom sheet */}
+      <BottomSheet show={showPhotoSheet} onOuterClick={() => setShowPhotoSheet(false)}>
+        <View style={[styles.row, {padding: m, justifyContent: 'space-around'}]}>
+          <Square
+            onPress={async () => await launchPicker(true)}
+            icon={<Icon name="camera" size={xl}/>}
+          />
+          <Square
+            onPress={async () => await launchPicker(false)}
+            icon={<Icon name="photo" size={xl}/>}
+          />
+        </View>
+      </BottomSheet>
+    </SafeAreaView>
+  )
+}
+
+const styles = StyleSheet.create({
+  center: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  row: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  text: {
+    color: 'gray',
+    marginTop: s,
+  },
+  heading: {
+    marginTop: m,
+    width: '100%'
+  },
+  addImg: {
+    width: '100%',
+    height: m*10,
+    borderRadius: l,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  input: {
+    width: '100%',
+    padding: m,
+    borderRadius: l,
+    marginTop: m,
+  },
+  add: {
+    width: xl,
+    height: xl,
+    borderRadius: l,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  marker: {
+    left: '50%',
+    marginLeft: -m,
+    marginTop: -m,
+    position: 'absolute',
+    top: '50%'
+  },
+  footer: {
+    bottom: 0,
+    position: 'absolute',
+    margin: l,
+    padding: m,
+    borderRadius: l,
+  },
+});
