@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import * as ImagePicker from "expo-image-picker";
@@ -6,11 +6,10 @@ import MapView from 'react-native-maps';
 import { useMutation } from 'urql'
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import { height, width } from '../../constants/Layout';
 import { s, m, l, xl } from '../../constants/Spaces';
 import { getResizedAndCroppedPhotoUrl } from '../../lib/getPhotoUrl'
 import { Button, Square } from '../../components/Button';
-import BottomSheet from '../../components/BottomSheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { Icon } from '../../components/Themed';
 import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { useAuth } from '../../lib/Auth';
@@ -34,10 +33,9 @@ export default (props: {
   const {refresh, latitude, longitude} = props
   const { colors } = useTheme()
   const combinedInputStyles = [styles.input, { backgroundColor: colors.card }]
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const [showPhotoSheet, setShowPhotoSheet] = useState(false)
-  const [showTime, setShowTime] = useState(false)
-  const [showLocationSheet, setShowLocationSheet] = useState(false)
+  const [showSheet, setShowSheet] = useState('')
   
   const { api, user } = useAuth()
 
@@ -82,7 +80,7 @@ export default (props: {
       ? (await ImagePicker.launchCameraAsync(options))
       : (await ImagePicker.launchImageLibraryAsync(options))
 
-    setShowPhotoSheet(false)
+    bottomSheetRef.current?.close()
     if (!result.canceled) {
       const photo = result.assets[0]
       setState(state => ({...state, photo}))
@@ -103,7 +101,10 @@ export default (props: {
         </View>
         <Pressable
           style={[styles.addImg, {backgroundColor: colors.card}]}
-          onPress={() => setShowPhotoSheet(true)}
+          onPress={() => {
+            setShowSheet('photo')
+            bottomSheetRef.current?.expand()
+          }}
         >
           {state.photo.uri
             ? <Image style={styles.addImg} source={state.photo}/>
@@ -138,31 +139,22 @@ export default (props: {
         </View>
         <Pressable
           style={[combinedInputStyles, styles.row, {justifyContent: 'space-between'}]}
-          onPress={() => setShowTime(true)}
+          onPress={() => {
+            setShowSheet('time')
+            bottomSheetRef.current?.expand()
+          }}
         >
           <Icon name="clock-o"/>
           <BoldText>{state.time.toLocaleTimeString().replace(/(:\d{2}| [AP]M)$/, "")}</BoldText>
           <View style={{width: l}}/>
         </Pressable>
-        {showTime &&
-          <DateTimePicker
-            testID="dateTimePicker"
-            mode='time'
-            display='spinner'
-            value={state.time}
-            onChange={(event, time) => {
-              setShowTime(false)
-              
-              setState(state => ({...state, time: time ?? new Date()}))
-            }}
-          />
-        }
 
         {/* Set location */}
         <Pressable
           style={[combinedInputStyles, styles.row, {justifyContent: 'space-between'}]}
           onPress={() => {
-            setShowLocationSheet(true)
+            setShowSheet('map')
+            bottomSheetRef.current?.expand()
           }}
         >
           <Icon style={{paddingLeft: s}} name="map-pin" />
@@ -198,53 +190,70 @@ export default (props: {
         <Button title={'Create'} onPress={onSubmit}/>
       </ScrollView>
 
-      {/* Location bottomsheet */}
-      <BottomSheet show={showLocationSheet} height={height}>
-        <View style={{flex: 1}}>
-          <MapView
-            style={{flex: 1}}
-            initialRegion={{
-              latitude: state.latitude,
-              longitude: state.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}
-            onRegionChangeComplete={(region) => {
-              const { latitude, longitude } = region
-              setState(state => ({ ...state, latitude, longitude }))
-            }}
-          />
-          <Icon
-            name="map-pin"
-            style={styles.marker}
-          />
-          <Pressable
-            style={[styles.footer, styles.center, { backgroundColor: colors.card, width: width - l*2 }]}
-            onPress={()=>setShowLocationSheet(false)}
-          >
-            <BoldText style={{color: colors.primary}}>Ok</BoldText>
-          </Pressable>
-        </View>
-      </BottomSheet>
+      <BottomSheet
+        enablePanDownToClose={true}
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={useMemo(() => ['25%', '50%'], [])}
+      >
+        {
+          ({
+            'time':
+              <View style={styles.container}>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  mode='time'
+                  display='spinner'
+                  value={state.time}
+                  onChange={(event, time) => setState(state => ({...state, time: time ?? new Date()}))}
+                />
+              </View>,
 
-      {/* Photo bottom sheet */}
-      <BottomSheet show={showPhotoSheet} onOuterClick={() => setShowPhotoSheet(false)}>
-        <View style={[styles.row, {padding: m, justifyContent: 'space-around'}]}>
-          <Square
-            onPress={async () => await launchPicker(true)}
-            icon={<Icon name="camera" size={xl}/>}
-          />
-          <Square
-            onPress={async () => await launchPicker(false)}
-            icon={<Icon name="photo" size={xl}/>}
-          />
-        </View>
+            'map':
+              <View style={{flex: 1}}>
+                <MapView
+                  style={{flex: 1}}
+                  initialRegion={{
+                    latitude: state.latitude,
+                    longitude: state.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  }}
+                  onRegionChangeComplete={(region) => {
+                    const { latitude, longitude } = region
+                    setState(state => ({ ...state, latitude, longitude }))
+                  }}
+                />
+                <Icon
+                  name="map-pin"
+                  style={styles.marker}
+                />
+              </View>,
+
+            'photo':
+              <View style={[styles.container, {flexDirection: 'row', gap: l}]}>
+                <Square
+                  onPress={async () => await launchPicker(true)}
+                  icon={<Icon name="camera" size={xl}/>}
+                />
+                <Square
+                  onPress={async () => await launchPicker(false)}
+                  icon={<Icon name="photo" size={xl}/>}
+                />
+              </View>
+          })[showSheet]
+        }
       </BottomSheet>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   center: {
     alignItems: "center",
     justifyContent: "center",

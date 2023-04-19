@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, Alert, Image, View, Pressable } from 'react-native';
 import * as ImagePicker from "expo-image-picker";
 import { useRouter, Stack } from 'expo-router';
 import { useMutation } from 'urql';
 import { Button, Square } from "../../../components/Button";
 import { Icon } from '../../../components/Themed';
-import BottomSheet from '../../../components/BottomSheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { getResizedPhotoUrl } from '../../../lib/getPhotoUrl'
 import { useAuth } from '../../../lib/Auth'
 import { s, m, l, xl } from '../../../constants/Spaces';
@@ -25,6 +25,7 @@ export default (props: {
   const { colors } = useTheme()
   const { api } = useAuth()
   const [photoShow, setPhotoShow] = useState(false)
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [value, setValue] = useState(props)
 
@@ -63,7 +64,7 @@ export default (props: {
     <SafeAreaView style={{flex: 1}}>
       <Stack.Screen options={{ title: 'Edit profile' }} />
       <ScrollView contentContainerStyle={styles.center}>
-        <Pressable style={{borderRadius: 90}} onPress={()=>setPhotoShow(true)}>
+        <Pressable style={{borderRadius: 90}} onPress={()=> bottomSheetRef.current?.expand()}>
           <Image style={styles.profileImg} source={value.avatar ? {uri: value.avatar} : require('../../../assets/images/avatar.png')} />
         </Pressable>
         <TextInput
@@ -97,7 +98,12 @@ export default (props: {
       </ScrollView>
 
       {/* Photo bottomsheet */}
-      <BottomSheet show={photoShow} onOuterClick={()=>setPhotoShow(false)}>
+      <BottomSheet 
+        enablePanDownToClose={true}
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={useMemo(() => ['25%', '50%'], [])}
+      >
         <View style={[styles.center, styles.row, {justifyContent: 'space-evenly'}]}>
           <Square
             onPress={async () => await launchPicker(true)}

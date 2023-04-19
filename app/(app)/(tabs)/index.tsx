@@ -18,28 +18,32 @@ export default () => {
 
   // Get location and fetch close events
   useEffect(() => {
-    (async () => {
-      const location = await getLocation()
-      if (user_id && location?.latitude && maxDistance) {
-        const { status, data } = await api.post(`feed`, {user_id, location, maxDistance})
-        if (status == 200) {
-          setEvents(data)
+    if (user) {
+      (async () => {
+        const location = await getLocation()
+        if (user_id && location?.latitude && maxDistance) {
+          const { status, data } = await api.post(`feed`, {user_id, location, maxDistance})
+          if (status == 200) {
+            setEvents(data)
+          }
         }
-      }
-    })()
+      })()
+    }
   }, [user, maxDistance])
   
   // Requesting permissions here
-  useMediaPermissions()
-
-  useNotifications(
-    () => {
-      // Do on notification recieved while app is foregrounded
-    },
-    () => {
-      // Do on notification recieved while app is backgrounded or killed
-    }
-  )
+  if (user) {
+    useMediaPermissions()
+    
+    useNotifications(
+      () => {
+        // Do on notification recieved while app is foregrounded
+      },
+      () => {
+        // Do on notification recieved while app is backgrounded or killed
+      }
+    )
+  }
 
   const onSwipeRight = async (event_id: string) => {
     await match({user_id, event_id, dismissed: false})
