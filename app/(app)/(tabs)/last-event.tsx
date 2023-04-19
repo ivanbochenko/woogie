@@ -51,11 +51,11 @@ const Match = (props: {
 
 export default () => {
   const { colors } = useTheme()
-  const { user } = useAuth()
-  const location = useLocation()
   const router = useRouter()
+  const { user } = useAuth()
+  const location = useLocation()!
+  
   const [refreshing, setRefreshing] = useState(false)
-
   const refresh = () => reexecuteQuery({requestPolicy: 'network-only'})
 
   const onRefresh = useCallback(() => {
@@ -77,7 +77,7 @@ export default () => {
     </View>
   )
 
-  if (!data?.lastEvent) return <NewEvent latitude={location?.latitude!} longitude={location?.longitude!} refresh={refresh}/>
+  if (!data?.lastEvent) return <NewEvent latitude={location.latitude} longitude={location.longitude} refresh={refresh}/>
 
   const { id: event_id, title, photo, matches } = data.lastEvent
   const img = photo ? {uri: photo} : require('../../../assets/images/avatar.png')

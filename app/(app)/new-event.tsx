@@ -32,7 +32,7 @@ export default (props: {
 }) => {
   const {refresh, latitude, longitude} = props
   const { colors } = useTheme()
-  const combinedInputStyles = [styles.input, { backgroundColor: colors.card }]
+  const combinedInputStyles = [ styles.input, {backgroundColor: colors.border} ]
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [showSheet, setShowSheet] = useState('')
@@ -91,7 +91,11 @@ export default (props: {
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[styles.center, {padding: m}]}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+          padding: m
+        }}
       >
 
         {/* Add photo */}
@@ -100,7 +104,7 @@ export default (props: {
           <RegularText style={styles.text}>Select the best picture for your event</RegularText>
         </View>
         <Pressable
-          style={[styles.addImg, {backgroundColor: colors.card}]}
+          style={[styles.addImg, {backgroundColor: colors.border}]}
           onPress={() => {
             setShowSheet('photo')
             bottomSheetRef.current?.expand()
@@ -138,7 +142,7 @@ export default (props: {
           <RegularText style={styles.text}>When and where event starts</RegularText>
         </View>
         <Pressable
-          style={[combinedInputStyles, styles.row, {justifyContent: 'space-between'}]}
+          style={combinedInputStyles}
           onPress={() => {
             setShowSheet('time')
             bottomSheetRef.current?.expand()
@@ -151,7 +155,7 @@ export default (props: {
 
         {/* Set location */}
         <Pressable
-          style={[combinedInputStyles, styles.row, {justifyContent: 'space-between'}]}
+          style={combinedInputStyles}
           onPress={() => {
             setShowSheet('map')
             bottomSheetRef.current?.expand()
@@ -167,7 +171,7 @@ export default (props: {
           <BoldText>Slots</BoldText>
           <RegularText style={styles.text}>How many people you expect</RegularText>
         </View>
-        <View style={[combinedInputStyles, styles.row, { justifyContent: 'space-between', alignItems: 'center' }]}>
+        <View style={[combinedInputStyles, { alignItems: 'center' }]}>
           <Pressable
             onPress={() => {
               if (state.slots > 1) setState(state => ({...state, slots: --state.slots}))
@@ -194,7 +198,7 @@ export default (props: {
         enablePanDownToClose={true}
         ref={bottomSheetRef}
         index={-1}
-        snapPoints={useMemo(() => ['25%', '50%'], [])}
+        snapPoints={useMemo(() => ['50%', '75%'], [])}
       >
         {
           ({
@@ -254,10 +258,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  center: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
   row: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -278,10 +278,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   input: {
+    justifyContent: 'space-between',
     width: '100%',
     padding: m,
     borderRadius: l,
     marginTop: m,
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   add: {
     width: xl,
@@ -297,12 +300,5 @@ const styles = StyleSheet.create({
     marginTop: -m,
     position: 'absolute',
     top: '50%'
-  },
-  footer: {
-    bottom: 0,
-    position: 'absolute',
-    margin: l,
-    padding: m,
-    borderRadius: l,
-  },
+  }
 });
