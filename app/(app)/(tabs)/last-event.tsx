@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { SafeAreaView, ScrollView, View, Image, Pressable, StyleSheet, RefreshControl, ActivityIndicator } from 'react-native'
+import { SafeAreaView, ScrollView, View, Image, Pressable, StyleSheet, RefreshControl, ActivityIndicator, ImageBackground } from 'react-native'
 import { useTheme } from '@react-navigation/native';
 import { useQuery, useMutation,  } from 'urql';
 import Animated, {
@@ -19,6 +19,7 @@ import NewEvent from '../new-event'
 import { graphql } from '../../../gql';
 import { useLocation } from '../../../lib/Location';
 import { baseURL } from '../../../lib/Client';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // This screen displays matches and link to event
 // Chats screen displays links to chats of events matched to
@@ -30,22 +31,20 @@ const Match = (props: {
   const { match, onPress } = props
   const { colors } = useTheme()
   return (
-    <>
-      <Animated.View
-        entering={FadeInLeft}
-        exiting={FadeOutRight}
-        layout={Layout.springify()}
-        style={[styles.match, {backgroundColor: colors.border}]}
-      >
-        <User {...match.user}/>
-        <Pressable style={{alignItems: 'center'}} onPress={onPress}>
-          <View style={[styles.circle, {backgroundColor: colors.card}]}>
-            <Icon name="check" />
-          </View>
-          <RegularText>Accept</RegularText>
-        </Pressable>
-      </Animated.View>
-    </>
+    <Animated.View
+      entering={FadeInLeft}
+      exiting={FadeOutRight}
+      layout={Layout.springify()}
+      style={[styles.match, {backgroundColor: colors.border}]}
+    >
+      <User {...match.user}/>
+      <Pressable style={{alignItems: 'center'}} onPress={onPress}>
+        <View style={[styles.circle, {backgroundColor: colors.card}]}>
+          <Icon name="check" />
+        </View>
+        <RegularText>Accept</RegularText>
+      </Pressable>
+    </Animated.View>
   )
 }
 
@@ -89,21 +88,29 @@ export default () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <Pressable
-          style={[styles.card, {backgroundColor: colors.card}]}
+          style={styles.card}
           onPress={() => router.push({pathname: 'Chat', params: { event_id, title }})}
         >
-          <Image style={styles.img} source={img} />
-          <View style={{flex: 1}}>
-            <BoldText>{title}</BoldText>
-          </View>
+          <ImageBackground source={img} style={{height: 220, justifyContent: 'flex-end'}}>
+            <LinearGradient
+              colors={['black', 'transparent']}
+              start={{x: 0.5, y: 1}}
+              end={{x: 0.5, y: 0}}
+            >
+              <View style={styles.headRow}>
+                <BoldText style={{ fontSize: l, color: 'white', maxWidth: 300 }}>{title}</BoldText>
+              </View>
+            </LinearGradient>
+          </ImageBackground>
         </Pressable>
+
         {matches?.length ? matches.map( (match: any) => (
           <Match
             key={match.id}
             match={match}
             onPress={async () => await matchUser({id: match.id})}
           />
-        )) : <BoldText style={{margin: m}}>No matches yet</BoldText>}
+        )) : <BoldText>No matches yet</BoldText>}
       </ScrollView>
     </SafeAreaView>
   )
@@ -112,20 +119,21 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: m
+    padding: m,
+    gap: m,
   },
   card: {
     flex: 1,
-    padding: m,
     borderRadius: l,
-    borderTopLeftRadius: 150/2 + m,
+    overflow: 'hidden',
+    // borderTopLeftRadius: 150/2 + m,
+    // borderBottomLeftRadius: 150/2 + m,
     width: '100%',
-    flexDirection: "row",
   },
   img: {
-    width: 150,
-    height: 150,
-    borderRadius: 150 / 2,
+    width: 180,
+    height: 180,
+    borderRadius: 180/2,
     marginRight: m,
   },
   match: {
@@ -133,7 +141,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: 'space-around',
     padding: m,
-    marginTop: m,
     borderRadius: l,
   },
   circle: {
@@ -142,6 +149,18 @@ const styles = StyleSheet.create({
     borderRadius: 60/2,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  row: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  headRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: s*3,
+    minHeight: xl*2,
   },
 });
 

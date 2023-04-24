@@ -39,7 +39,14 @@ export default function Settings() {
 
       <Button onPress={signOut} title={'Sign Out'}/>
       
-      <Button onPress={() => router.push({pathname: 'Upgrade'})} title={'Upgrade'}/>
+      <Button
+        title={'Upgrade'}
+        onPress={
+          () => {
+            // router.push({pathname: 'Upgrade'})
+          }
+        }
+      />
 
     </View>
   );
