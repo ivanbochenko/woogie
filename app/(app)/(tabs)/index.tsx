@@ -6,13 +6,11 @@ import { Stack } from '../../../components/Card';
 import { RegularText } from '../../../components/StyledText';
 import { useAuth } from '../../../lib/Auth'
 import { graphql } from '../../../gql';
-import { useLocation } from '../../../lib/Location';
 
 export default () => {
-  const { api, user, maxDistance } = useAuth()
+  const { api, user, maxDistance, location } = useAuth()
   const [events, setEvents] = useState(null)
   const [matchResult, match] = useMutation(CREATE_MATCH)
-  const location = useLocation()
   const user_id = user?.id!
 
   // Get location and fetch close events

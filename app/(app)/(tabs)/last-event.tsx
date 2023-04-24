@@ -15,7 +15,6 @@ import { useRouter } from 'expo-router';
 import User from "../../../components/User";
 import NewEvent from '../new-event';
 import { graphql } from '../../../gql';
-import { useLocation } from '../../../lib/Location';
 import { LinearGradient } from 'expo-linear-gradient';
 
 // This screen displays matches and link to event
@@ -47,8 +46,7 @@ const Match = (props: {
 
 export default () => {
   const router = useRouter()
-  const { user } = useAuth()
-  const location = useLocation()!
+  const { user, location } = useAuth()
   
   const [refreshing, setRefreshing] = useState(false)
   const refresh = () => reexecuteQuery({requestPolicy: 'network-only'})
@@ -71,7 +69,7 @@ export default () => {
     </View>
   )
 
-  if (!data?.lastEvent) return <NewEvent latitude={location.latitude} longitude={location.longitude} refresh={refresh}/>
+  if (!data?.lastEvent) return <NewEvent latitude={location?.latitude!} longitude={location?.longitude!} refresh={refresh}/>
 
   const { id: event_id, title, photo, matches } = data.lastEvent
   const img = photo ? {uri: photo} : require('../../../assets/images/avatar.png')

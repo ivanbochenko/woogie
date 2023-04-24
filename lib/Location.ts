@@ -22,7 +22,7 @@ export const useLocation = () => {
   return location
 }
 
-type LocationType = {
+export type LocationType = {
   latitude: number,
   longitude: number
 } | null

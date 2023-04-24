@@ -4,14 +4,16 @@ import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { Provider as GqlProvider } from 'urql'
 import { Axios } from 'axios'
 import { apiClient, gqlClient, refreshToken } from '../lib/Client'
+import { LocationType, useLocation } from "./Location";
 
 type Context = {
   user: User,
   api: Axios,
   signIn: (data: {id: string, token: string}) => void,
   signOut: () => void,
-  setMaxDistance: (num: number) => void,
+  location: LocationType,
   maxDistance: number,
+  setMaxDistance: (num: number) => void,
 }
 
 type User = {
@@ -47,6 +49,7 @@ export function Provider(props: {children: JSX.Element}) {
   const [maxDistance, setMaxDistance] = useState(100)
   const client = gqlClient(user?.token)
   const api = apiClient(user?.token)
+  const location = useLocation()
   
   useEffect(() => {
     getItem().then( async (json) => {
@@ -71,9 +74,10 @@ export function Provider(props: {children: JSX.Element}) {
     },
     user,
     api,
+    location,
     maxDistance,
     setMaxDistance,
-  }), [user, maxDistance])
+  }), [user, maxDistance, location])
 
   useProtectedRoute(user);
 
