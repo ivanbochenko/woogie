@@ -4,7 +4,6 @@ import { useIsFocused, useTheme } from '@react-navigation/native';
 import { useQuery } from 'urql';
 import { useSearchParams, useRouter, Stack } from 'expo-router'
 import Animated, {
-  Layout,
   FadeOutRight,
   FadeInLeft,
 } from "react-native-reanimated";

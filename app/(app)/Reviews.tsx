@@ -3,7 +3,6 @@ import { StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, View } from 'r
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { useSearchParams } from 'expo-router';
 import Animated, {
-  Layout,
   FadeOutRight,
   FadeInLeft,
 } from "react-native-reanimated";
