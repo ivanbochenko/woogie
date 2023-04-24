@@ -12,7 +12,7 @@ export const getLocation = async () => {
 }
 
 export const useLocation = () => {
-  const [location, setLocation] = useState({} as LocationType)
+  const [location, setLocation] = useState<LocationType>(null)
   useEffect(() => {
     (async () => {
       const freshLocation = await getLocation()
