@@ -74,11 +74,11 @@ export default function Chats() {
           exiting={SlideOutLeft}
           layout={Layout.duration(200)}
         >
-          {matches.data?.matches!.length ? matches.data.matches.map( (match: any) => (
+          {matches.data?.matches!.length ? matches.data.matches.map( (match, index) => (
             <Swipe
-              key={match.id}
-              event={match.event}
-              leave={async () => await deleteMatch({ id: match.id })}
+              key={index}
+              event={match!.event}
+              leave={async () => await deleteMatch({ id: match!.id })}
             />
             )) : <View style={{alignItems: 'center'}}><BoldText>No matches</BoldText></View>}
         </ReAnimated.View>
@@ -117,9 +117,9 @@ export default function Chats() {
           layout={Layout.duration(200)}
         >
           {events.data?.events!.length
-            ? events.data.events.map( (event) =>
+            ? events.data.events.map( (event, index) =>
               <Swipe
-                key={event!.id}
+                key={index}
                 event={event!}
                 leave={async () => await deleteEvent({ id: event?.id! })}
               />
@@ -181,7 +181,7 @@ const Swipe = (props: {
     time: string,
     photo: string,
   },
-  leave: () => void
+  leave(): void
 }) => {
   const { event, leave } = props
   const router = useRouter()

@@ -13,7 +13,7 @@ import { s, m, l, xl } from '../../../constants/Spaces';
 import { useAuth } from '../../../lib/Auth';
 import { useRouter } from 'expo-router';
 import User from "../../../components/User";
-import NewEvent from '../new-event'
+import NewEvent from '../new-event';
 import { graphql } from '../../../gql';
 import { useLocation } from '../../../lib/Location';
 import { LinearGradient } from 'expo-linear-gradient';
