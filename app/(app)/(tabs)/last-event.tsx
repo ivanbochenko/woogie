@@ -1,14 +1,12 @@
 import React, { useState, useCallback } from 'react'
-import { SafeAreaView, ScrollView, View, Image, Pressable, StyleSheet, RefreshControl, ActivityIndicator, ImageBackground } from 'react-native'
+import { SafeAreaView, ScrollView, View, Pressable, StyleSheet, RefreshControl, ActivityIndicator, ImageBackground } from 'react-native'
 import { useTheme } from '@react-navigation/native';
 import { useQuery, useMutation,  } from 'urql';
 import Animated, {
-  Layout,
+  FadeInUp,
   FadeOutRight,
   FadeInLeft,
 } from "react-native-reanimated";
-
-import { Square } from '../../../components/Button';
 import { RegularText, BoldText } from '../../../components/StyledText';
 import { Icon } from '../../../components/Themed';
 import { s, m, l, xl } from '../../../constants/Spaces';
@@ -18,7 +16,6 @@ import User from "../../../components/User";
 import NewEvent from '../new-event'
 import { graphql } from '../../../gql';
 import { useLocation } from '../../../lib/Location';
-import { baseURL } from '../../../lib/Client';
 import { LinearGradient } from 'expo-linear-gradient';
 
 // This screen displays matches and link to event
@@ -26,19 +23,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const Match = (props: {
   match: any,
-  onPress(): void
+  index: number,
 }) => {
-  const { match, onPress } = props
+  const { match, index } = props
   const { colors } = useTheme()
+  const [matchUserResult, matchUser] = useMutation(ACCEPT_MATCH)
   return (
     <Animated.View
-      entering={FadeInLeft}
+      entering={FadeInLeft.delay(index*100 + 100).springify()}
       exiting={FadeOutRight}
-      layout={Layout.springify()}
       style={[styles.match, {backgroundColor: colors.border}]}
     >
       <User {...match.user}/>
-      <Pressable style={{alignItems: 'center'}} onPress={onPress}>
+      <Pressable style={{alignItems: 'center'}} onPress={async () => await matchUser({id: match.id})}>
         <View style={[styles.circle, {backgroundColor: colors.card}]}>
           <Icon name="check" />
         </View>
@@ -49,7 +46,6 @@ const Match = (props: {
 }
 
 export default () => {
-  const { colors } = useTheme()
   const router = useRouter()
   const { user } = useAuth()
   const location = useLocation()!
@@ -68,7 +64,6 @@ export default () => {
     variables: { author_id: user?.id! },
   });
   
-  const [matchUserResult, matchUser] = useMutation(ACCEPT_MATCH)
   
   if (fetching) return (
     <View style={styles.container}>
@@ -87,28 +82,33 @@ export default () => {
         contentContainerStyle={styles.container}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <Pressable
-          style={styles.card}
-          onPress={() => router.push({pathname: 'Chat', params: { event_id, title }})}
-        >
-          <ImageBackground source={img} style={{height: 220, justifyContent: 'flex-end'}}>
-            <LinearGradient
-              colors={['black', 'transparent']}
-              start={{x: 0.5, y: 1}}
-              end={{x: 0.5, y: 0}}
-            >
-              <View style={styles.headRow}>
-                <BoldText style={{ fontSize: l, color: 'white', maxWidth: 300 }}>{title}</BoldText>
-              </View>
-            </LinearGradient>
-          </ImageBackground>
-        </Pressable>
+        <Animated.View style={{flex: 1, width: '100%'}} entering={FadeInUp.springify()}>
+          <Pressable
+            style={{
+              borderRadius: l,
+              overflow: 'hidden',
+            }}
+            onPress={() => router.push({pathname: 'Chat', params: { event_id, title }})}
+          >
+            <ImageBackground source={img} style={{height: 220, justifyContent: 'flex-end'}}>
+              <LinearGradient
+                colors={['black', 'transparent']}
+                start={{x: 0.5, y: 1}}
+                end={{x: 0.5, y: 0}}
+              >
+                <View style={styles.headRow}>
+                  <BoldText style={{ fontSize: l, color: 'white', maxWidth: 300 }}>{title}</BoldText>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+          </Pressable>
+        </Animated.View>
 
-        {matches?.length ? matches.map( (match: any) => (
+        {matches?.length ? matches.map( (match: any, index) => (
           <Match
-            key={match.id}
+            key={index}
+            index={index}
             match={match}
-            onPress={async () => await matchUser({id: match.id})}
           />
         )) : <BoldText>No matches yet</BoldText>}
       </ScrollView>
@@ -121,14 +121,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: m,
     gap: m,
-  },
-  card: {
-    flex: 1,
-    borderRadius: l,
-    overflow: 'hidden',
-    // borderTopLeftRadius: 150/2 + m,
-    // borderBottomLeftRadius: 150/2 + m,
-    width: '100%',
   },
   img: {
     width: 180,
