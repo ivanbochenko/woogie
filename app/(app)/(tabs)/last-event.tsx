@@ -31,7 +31,7 @@ const Match = (props: {
   return (
     <Animated.View
       entering={FadeInLeft.delay(index*100 + 100).springify()}
-      exiting={FadeOutRight}
+      exiting={FadeOutRight.springify()}
       style={[styles.match, {backgroundColor: colors.border}]}
     >
       <User {...match.user}/>
