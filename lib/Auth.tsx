@@ -21,7 +21,7 @@ type User = {
   token: string,
 } | null
 
-const AuthContext = createContext({} as Context);
+const AuthContext = createContext<Context>(null!);
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -46,10 +46,10 @@ function useProtectedRoute(user: User) {
 export function Provider(props: {children: JSX.Element}) {
   const { getItem, setItem, removeItem } = useAsyncStorage("USER");
   const [user, setAuth] = useState<User>(null);
+  const location = useLocation()
   const [maxDistance, setMaxDistance] = useState(100)
   const client = gqlClient(user?.token)
   const api = apiClient(user?.token)
-  const location = useLocation()
   
   useEffect(() => {
     getItem().then( async (json) => {
