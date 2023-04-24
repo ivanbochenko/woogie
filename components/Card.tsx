@@ -105,8 +105,8 @@ export const Card = (props: Event) => {
 export const Stack = (props: {
   events: Event[],
   children: JSX.Element,
-  onSwipeRight: (id:string) => void,
-  onSwipeLeft: (id:string) => void,
+  onSwipeRight(id:string): void,
+  onSwipeLeft(id:string): void,
 }) => {
   const {events, children, onSwipeRight, onSwipeLeft} = props
   const [remainingEvents, setRemainingEvents] = useState(events)
