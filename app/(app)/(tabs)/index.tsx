@@ -6,44 +6,24 @@ import { Stack } from '../../../components/Card';
 import { RegularText } from '../../../components/StyledText';
 import { useAuth } from '../../../lib/Auth'
 import { graphql } from '../../../gql';
-import { getLocation } from '../../../lib/Location';
-import { useMediaPermissions } from '../../../lib/Media';
-import { useNotifications } from '../../../lib/Notification';
+import { useLocation } from '../../../lib/Location';
 
 export default () => {
   const { api, user, maxDistance } = useAuth()
   const [events, setEvents] = useState(null)
   const [matchResult, match] = useMutation(CREATE_MATCH)
+  const location = useLocation()
   const user_id = user?.id!
 
   // Get location and fetch close events
   useEffect(() => {
-    if (user) {
-      (async () => {
-        const location = await getLocation()
-        if (user_id && location?.latitude && maxDistance) {
-          const { status, data } = await api.post(`feed`, {user_id, location, maxDistance})
-          if (status == 200) {
-            setEvents(data)
-          }
-        }
-      })()
-    }
-  }, [user, maxDistance])
-  
-  // Requesting permissions here
-  if (user) {
-    useMediaPermissions()
-    
-    useNotifications(
-      () => {
-        // Do on notification recieved while app is foregrounded
-      },
-      () => {
-        // Do on notification recieved while app is backgrounded or killed
+    (async () => {
+      if (user_id && location && maxDistance) {
+        const { status, data } = await api.post(`feed`, {user_id, location, maxDistance})
+        if (status == 200) setEvents(data)
       }
-    )
-  }
+    })()
+  }, [user, maxDistance, location])
 
   const onSwipeRight = async (event_id: string) => {
     await match({user_id, event_id, dismissed: false})

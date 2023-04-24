@@ -9,3 +9,8 @@ export const useMediaPermissions = () => {
     })()
   }, [])
 }
+
+export const getMediaPermissions = async () => {
+  await ImagePicker.requestCameraPermissionsAsync()
+  await ImagePicker.requestMediaLibraryPermissionsAsync()
+}

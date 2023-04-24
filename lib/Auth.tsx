@@ -69,10 +69,10 @@ export function Provider(props: {children: JSX.Element}) {
       setAuth(null);
       removeItem();
     },
-    setMaxDistance,
     user,
     api,
     maxDistance,
+    setMaxDistance,
   }), [user, maxDistance])
 
   useProtectedRoute(user);

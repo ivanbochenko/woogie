@@ -14,6 +14,7 @@ import { Icon } from '../../components/Themed';
 import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { useAuth } from '../../lib/Auth';
 import { graphql } from '../../gql';
+import { getMediaPermissions } from '../../lib/Media';
 
 const CREATE_EVENT = graphql(`
   mutation CREATE_EVENT($author_id: ID!, $title: String!, $text: String!, $photo: String!, $slots: Int!, $time: DateTime!, $latitude: Float!, $longitude: Float!) {
@@ -71,6 +72,7 @@ export default (props: {
   }
 
   const launchPicker = async (pickFromCamera: boolean) => {
+    getMediaPermissions();
     const options = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,

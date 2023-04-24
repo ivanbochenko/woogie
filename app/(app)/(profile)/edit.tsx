@@ -12,6 +12,7 @@ import { s, m, l, xl } from '../../../constants/Spaces';
 import { RegularText, TextInput } from '../../../components/StyledText';
 import { useTheme } from '@react-navigation/native';
 import { graphql } from '../../../gql';
+import { getMediaPermissions } from '../../../lib/Media';
 
 export default (props: {
   id: string,
@@ -30,6 +31,7 @@ export default (props: {
   const [value, setValue] = useState(props)
 
   const launchPicker = async (pickFromCamera: boolean) => {
+    getMediaPermissions();
     const options = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
