@@ -64,14 +64,7 @@ export default () => {
               overScrollMode={'never'}
               horizontal={true}
               data={[author, ...users!]}
-              renderItem={({item}) => {
-                const user = {...(item as object)} as {
-                  id: string,
-                  avatar: string,
-                  name: string,
-                }
-                return <User {...user}/>
-              }}
+              renderItem={({item}) => <User {...item!}/>}
             />
             <View style={{paddingTop: s*3}}/>
             <MapView

@@ -34,15 +34,14 @@ export default () => {
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={[styles.center, {padding: m}]}>
         {data?.reviews!.length
-          ? data.reviews.map( (review) => {
-            const { id, author, stars, text, time } = review!
+          ? data.reviews.map( (review, index) => {
+            const { author, stars, text, time } = review!
             return (
               <Animated.View
-                entering={FadeInLeft}
+                entering={FadeInLeft.delay(index*100).springify()}
                 exiting={FadeOutRight}
-                layout={Layout.springify()}
                 style={[styles.review, {backgroundColor: colors.border}]}
-                key={id}
+                key={index}
               >
                 <View style={styles.row}>
                   <User {...author}/>
