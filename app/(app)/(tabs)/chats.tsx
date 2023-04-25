@@ -67,6 +67,15 @@ export default function Chats() {
         </View>
       )
     }
+
+    if (matches.error) return (
+      <View style={styles.container}>
+        <RegularText>
+          Server error
+        </RegularText>
+      </View>
+    )
+
     return (
       <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <ReAnimated.View
@@ -108,6 +117,14 @@ export default function Chats() {
         </View>
       )
     }
+
+    if (events.error) return (
+      <View style={styles.container}>
+        <RegularText>
+          Server error
+        </RegularText>
+      </View>
+    )
 
     return (
       <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
