@@ -29,6 +29,14 @@ export default () => {
     </View>
   )
 
+  if (error) return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <RegularText>
+        Server error
+      </RegularText>
+    </View>
+  )
+
   const { title, text, time, photo, author, matches, latitude, longitude } = data?.event!
   const users = matches?.map(item => item?.user)
   const image = photo ? {uri: photo} : require('../../assets/images/placeholder.png')

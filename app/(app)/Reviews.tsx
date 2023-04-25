@@ -29,6 +29,15 @@ export default () => {
       <ActivityIndicator size="large" color={'gray'} />
     </View>
   )
+
+  if (error) return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <RegularText>
+        Server error
+      </RegularText>
+    </View>
+  )
+  
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={[styles.center, {padding: m}]}>

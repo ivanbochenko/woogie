@@ -30,6 +30,14 @@ export default () => {
     </View>
   )
 
+  if (error) return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <RegularText>
+        Server error
+      </RegularText>
+    </View>
+  )
+
   const { name, age, avatar, sex, bio } = data?.user!
 
   if (edit) return (

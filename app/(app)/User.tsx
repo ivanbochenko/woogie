@@ -54,6 +54,14 @@ export default () => {
     </View>
   )
 
+  if (error) return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <RegularText>
+        Server error
+      </RegularText>
+    </View>
+  )
+
   const { avatar, name, age, bio, stars, reviews } = data?.user!
   const image = avatar ? {uri: avatar} : require('../../assets/images/avatar.png')
 

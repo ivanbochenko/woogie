@@ -69,6 +69,14 @@ export default () => {
     </View>
   )
 
+  if (error) return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <RegularText>
+        Server error
+      </RegularText>
+    </View>
+  )
+
   if (!data?.lastEvent) return <NewEvent latitude={location?.latitude!} longitude={location?.longitude!} refresh={refresh}/>
 
   const { id: event_id, title, photo, matches } = data.lastEvent
