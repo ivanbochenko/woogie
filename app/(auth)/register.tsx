@@ -10,7 +10,7 @@ import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 import validator from "validator";
-import { PrimaryButton } from "../../components/PrimaryButton";
+import { PrimaryButton } from "../../components/Button";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import { useAuth } from "../../lib/Auth";
 import { registerNotifications } from '../../lib/Notification'

@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Artwork01 from "../../assets/artworks/Artwork01";
 import { useTheme } from "@react-navigation/native";
 import { ScreenIndicators } from "../../components/ScreenIndicators";
-import { PrimaryButton } from "../../components/PrimaryButton";
+import { PrimaryButton } from "../../components/Button";
 import { useRouter } from "expo-router";
 
 const INTRO_SCREEN_01 = {

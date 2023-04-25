@@ -5,7 +5,7 @@ import { useTheme } from "@react-navigation/native";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import Artwork02 from "../../assets/artworks/Artwork02";
 import { ScreenIndicators } from "../../components/ScreenIndicators";
-import { PrimaryButton } from "../../components/PrimaryButton";
+import { PrimaryButton } from "../../components/Button";
 import { useRouter } from "expo-router";
 
 const INTRO_SCREEN_02 = {
