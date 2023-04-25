@@ -9,9 +9,9 @@ import { graphql } from '../../../gql';
 
 export default () => {
   const { api, user, maxDistance, location } = useAuth()
+  const user_id = user?.id!
   const [events, setEvents] = useState(null)
   const [matchResult, match] = useMutation(CREATE_MATCH)
-  const user_id = user?.id!
 
   // Get location and fetch close events
   useEffect(() => {

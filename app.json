@@ -18,17 +18,17 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.app.woogie",
-      "buildNumber": "5"
+      "buildNumber": "6"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#FFFCF7"
       }
     },
     "web": {
       "bundler": "metro",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/icon.png"
     },
     "extra": {
       "eas": {
