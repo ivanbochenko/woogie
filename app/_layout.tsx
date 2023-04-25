@@ -40,12 +40,16 @@ export default function RootLayout() {
     if (error) throw error;
   }, [error]);
 
-  if (loaded) return (
-    <Provider>
-      <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
-        <Slot/>
-      </ThemeProvider>
-    </Provider>
+  return (
+    <>
+      {loaded ? 
+        <Provider>
+          <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
+            <Slot/>
+          </ThemeProvider>
+        </Provider>
+        : <SplashScreen />
+      }
+    </>
   )
-  return <SplashScreen />
 }
