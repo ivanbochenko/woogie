@@ -9,17 +9,19 @@ import { LocationType, useLocation } from "./Location";
 type Context = {
   user: User,
   api: Axios,
-  signIn: (data: {id: string, token: string}) => void,
-  signOut: () => void,
+  signIn(data: Data): void,
+  signOut(): void,
   location: LocationType,
   maxDistance: number,
-  setMaxDistance: (num: number) => void,
+  setMaxDistance(num: number): void,
 }
 
-type User = {
+type Data = {
   id: string,
-  token: string,
-} | null | undefined
+  token: string
+}
+
+type User = Data | null | undefined
 
 const AuthContext = createContext<Context>(null!);
 
@@ -64,7 +66,7 @@ export function Provider(props: {children: JSX.Element}) {
   }, []);
   
   const appContext = useMemo(() => ({
-    signIn: (data: {id: string, token: string}) => {
+    signIn: (data: Data) => {
       setAuth(data);
       setItem(JSON.stringify(data));
     },
