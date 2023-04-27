@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Alert, View, TextInput, KeyboardAvoidingView } from 'react-native';
+import { SafeAreaView, Alert, View, TextInput, KeyboardAvoidingView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { useMutation } from 'urql';
 import { Button } from "../../../components/Button";
@@ -20,7 +20,13 @@ export default () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
   const [errorText, setErrorText] = useState('')
-
+  const styledInput = [
+    styles.input,
+    {
+      color: theme.colors.text,
+      backgroundColor: theme.colors.border
+    }
+  ]
   const onDelete = async () => {
     if (validator.isEmail(email) && password) {
       setError(false)
@@ -62,38 +68,34 @@ export default () => {
   return (
     <KeyboardAvoidingView
       behavior="position"
+      keyboardVerticalOffset={-150}
       style={{
         flex: 1,
-        justifyContent: 'center',
         padding: m
       }}
     >
-      <SafeAreaView
-        style={{
-          alignItems: "center",
-          justifyContent: 'center',
-          gap: 16
-        }}
-      >
-        <BoldText style={{color: 'red', opacity: 0.5 }}>
-          DANGER
-        </BoldText>
+      <SafeAreaView style={{ gap: 16, alignItems: 'center' }} >
+        <View style={[styles.row, styles.center, { width: '100%', justifyContent: 'space-between'}]}>
+          <TouchableOpacity
+            style={[styles.center, {height: 50, width: 50}]}
+            onPress={() => router.back()}
+          >
+            <Icons name="arrow-back-ios" size={24} color={theme.colors.text} />
+          </TouchableOpacity>
+          <BoldText style={styles.error}>
+            DANGER
+          </BoldText>
+          <View style={{width: 50}}/>
+        </View>
         <RegularText>
           You are going to delete your profile with all your data
         </RegularText>
+
         {error ?
-          <RegularText
-            style={{
-              fontFamily: 'Lato_400Regular',
-              opacity: 0.5,
-              fontSize: 16,
-              color: 'red',
-            }}
-          >
-            {errorText}
-          </RegularText>
+          <RegularText style={styles.error} > {errorText} </RegularText>
           : <View style={{height: 20}}/>
         }
+
         <View
           style={{ position: "relative", width: "100%" }}
         >
@@ -102,29 +104,13 @@ export default () => {
             placeholder="Your Email"
             value={email}
             onChangeText={(t) => setEmail(t.toLowerCase())}
-            style={{
-              fontFamily: 'Lato_400Regular',
-              fontSize: 16,
-              fontWeight: "500",
-              color: theme.colors.text,
-              paddingLeft: 48,
-              paddingRight: 12,
-              height: 48,
-              borderRadius: 12,
-              backgroundColor: theme.colors.border,
-              width: "100%",
-            }}
+            style={styledInput}
           />
           <Icons
             name="email"
             size={24}
             color={theme.colors.text}
-            style={{
-              position: "absolute",
-              left: 12,
-              top: 12,
-              opacity: 0.5,
-            }}
+            style={styles.icon}
           />
         </View>
         <View
@@ -135,29 +121,13 @@ export default () => {
             keyboardType="visible-password"
             value={password}
             onChangeText={(t) => setPassword(t)}
-            style={{
-              fontSize: 16,
-              fontFamily: 'Lato_400Regular',
-              fontWeight: "500",
-              color: theme.colors.text,
-              paddingLeft: 48,
-              paddingRight: 12,
-              height: 48,
-              borderRadius: 12,
-              backgroundColor: theme.colors.border,
-              width: "100%",
-            }}
+            style={styledInput}
           />
           <Icons
             name="lock"
             size={24}
             color={theme.colors.text}
-            style={{
-              position: "absolute",
-              left: 12,
-              top: 12,
-              opacity: 0.5,
-            }}
+            style={styles.icon}
           />
         </View>
         <Button title={'Delete'} onPress={launchAlert} />
@@ -165,6 +135,42 @@ export default () => {
     </KeyboardAvoidingView>
   )
 }
+
+const styles = StyleSheet.create({
+  center: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  row: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  input: {
+    fontSize: 16,
+    fontFamily: 'Lato_400Regular',
+    fontWeight: "500",
+    paddingLeft: 48,
+    paddingRight: 12,
+    height: 48,
+    borderRadius: 12,
+    width: "100%",
+  },
+  error: {
+    opacity: 0.5,
+    color: 'red',
+  },
+  icon: {
+    position: "absolute",
+    left: 12,
+    top: 12,
+    opacity: 0.5,
+  },
+});
 
 const DELETE_PROFILE = graphql(`
   mutation DELETE_PROFILE($id: ID!) {

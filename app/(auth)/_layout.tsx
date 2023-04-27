@@ -6,7 +6,7 @@ export default function AuthLayoutNav() {
       <Stack.Screen name="Intro1"/>
       <Stack.Screen name="Intro2"/>
       <Stack.Screen name="LogIn"/>
-      <Stack.Screen name="register"/>
+      <Stack.Screen name="Register"/>
     </Stack>
   );
 }

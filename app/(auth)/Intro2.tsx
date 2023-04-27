@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 
 const INTRO_SCREEN_02 = {
   title: "Get new social inspirations",
-  description: "Go out and meet people with shared activities",
+  description: "Go out and meet people with shared activities... or invite them over!",
 };
 
 const IntroScreen02 = () => {

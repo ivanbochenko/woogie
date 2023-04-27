@@ -30,19 +30,20 @@ export function useAuth() {
 }
 
 function useProtectedRoute(user: User) {
-  const rootSegment = useSegments()[0];
+  const segments = useSegments();
   const router = useRouter();
   useEffect(() => {
+    const inAuthGroup = segments[0] === "(auth)";
     if (user === undefined) return;
     // If the user is not signed in and the initial segment is not anything in the auth group.
-    if (!user && rootSegment !== "(auth)") {
+    if (!user && !inAuthGroup) {
       // Redirect to the sign-in page.
       router.replace("/Intro1");
-    } else if (user && rootSegment !== "(app)") {
+    } else if (user && inAuthGroup) {
       // Redirect away from the sign-in page.
       router.replace("/");
     }
-  }, [user, rootSegment]);
+  }, [user, segments]);
 }
 
 export function Provider(props: {children: JSX.Element}) {

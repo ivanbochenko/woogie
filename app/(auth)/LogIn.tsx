@@ -208,7 +208,7 @@ const LogInScreen = () => {
               />
             </Animated.View>
             <Animated.Text
-              onPress={() => router.push({pathname: 'register'})}
+              onPress={() => router.push({pathname: 'Register'})}
               entering={FadeInDown.delay(800).duration(1000).springify()}
               style={{
                 fontFamily: 'Lato_400Regular',

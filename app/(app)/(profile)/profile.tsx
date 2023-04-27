@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, ActivityIndicator, SafeAreaView, ScrollView, Image } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
-import { useRouter, Stack } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 import { View, Pressable, Icon } from '../../../components/Themed';
 import { s, m, l, xl } from '../../../constants/Spaces';
@@ -9,7 +9,7 @@ import { RegularText, BoldText } from '../../../components/StyledText';
 import { useQuery } from 'urql';
 import { graphql } from '../../../gql'
 import { useAuth } from '../../../lib/Auth'
-import Edit from './edit'
+import Edit, { UserData } from './edit'
 
 export default () => {
   const router = useRouter();
@@ -38,20 +38,17 @@ export default () => {
     </View>
   )
 
-  const { name, age, avatar, sex, bio } = data?.user!
+  const { name, age, avatar } = data?.user!
+  const img = avatar ? {uri: avatar} : require('../../../assets/images/avatar.png')
+  const userData = data?.user! as UserData
 
-  if (edit) return (
-    <Edit {...{ id: id!, name: name!, age: age!, avatar: avatar!, sex: sex!, bio: bio! } }/>
-    // <Edit {...data?.user! }/>
-  )
+  if (edit) return <Edit {...userData } />
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      
-      {/* <Stack.Screen options={{ title: 'Profile' }} /> */}
-
       <ScrollView contentContainerStyle={{alignItems: "center", padding: m}}>
-        <Image style={styles.profileImg} source={avatar ? {uri: avatar} : require('../../../assets/images/avatar.png')} />
+
+        <Image style={styles.profileImg} source={img} />
         <BoldText style={{fontSize: 25, marginTop: m}}>{name ?? 'Name'}, {age ?? 'age'}</BoldText>
         
         <View style={[styles.row, {marginTop: m}]}>

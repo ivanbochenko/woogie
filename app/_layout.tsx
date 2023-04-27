@@ -1,4 +1,3 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
@@ -15,7 +14,7 @@ export {
 } from 'expo-router';
 
 export const unstable_settings = {
-  initialRouteName: '(auth)',
+  initialRouteName: '(auth)'
 };
 
 Notifications.setNotificationHandler({
@@ -32,7 +31,6 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     Lato_400Regular,
     Lato_700Bold,
-    ...FontAwesome.font,
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
