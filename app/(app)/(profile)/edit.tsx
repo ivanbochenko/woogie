@@ -102,11 +102,12 @@ export default (props: UserData) => {
       </ScrollView>
 
       {/* Photo bottomsheet */}
-      <BottomSheet 
+      <BottomSheet
+        backgroundStyle={{backgroundColor: colors.border}}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
         index={-1}
-        snapPoints={useMemo(() => ['25%', '50%'], [])}
+        snapPoints={useMemo(() => ['25%'], [])}
       >
         <View style={[styles.center, styles.row, {justifyContent: 'space-evenly'}]}>
           <Square

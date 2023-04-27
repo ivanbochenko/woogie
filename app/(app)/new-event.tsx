@@ -26,6 +26,8 @@ const CREATE_EVENT = graphql(`
 
 const MAX_SLOTS = 20
 
+type Sheet = 'map' | 'time' | 'photo'
+
 export default (props: {
   refresh(): void,
   latitude: number,
@@ -36,7 +38,9 @@ export default (props: {
   const combinedInputStyles = [ styles.input, {backgroundColor: colors.border} ]
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const [showSheet, setShowSheet] = useState('')
+  const [showSheet, setShowSheet] = useState<Sheet>('photo')
+  
+  const snapPoints = useMemo(() => ['75%'], [])
   
   const { api, user } = useAuth()
 
@@ -197,26 +201,25 @@ export default (props: {
       </ScrollView>
 
       <BottomSheet
+        backgroundStyle={[styles.container, {backgroundColor: colors.border}]}
         enablePanDownToClose={true}
         ref={bottomSheetRef}
         index={-1}
-        snapPoints={useMemo(() => ['50%', '75%'], [])}
+        snapPoints={snapPoints}
       >
         {
           ({
-            'time':
-              <View style={styles.container}>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  mode='time'
-                  display='spinner'
-                  value={state.time}
-                  onChange={(event, time) => setState(state => ({...state, time: time ?? new Date()}))}
-                />
-              </View>,
+            time:
+              <DateTimePicker
+                testID="dateTimePicker"
+                mode='time'
+                display='spinner'
+                value={state.time}
+                onChange={(event, time) => setState(state => ({...state, time: time ?? new Date()}))}
+              />,
 
-            'map':
-              <View style={{flex: 1}}>
+            map:
+              <>
                 <MapView
                   style={{flex: 1}}
                   initialRegion={{
@@ -234,10 +237,10 @@ export default (props: {
                   name="map-pin"
                   style={styles.marker}
                 />
-              </View>,
+              </>,
 
-            'photo':
-              <View style={[styles.container, {flexDirection: 'row', gap: l}]}>
+            photo:
+              <View style={[styles.container, styles.row, {justifyContent: 'space-evenly'}]}>
                 <Square
                   onPress={async () => await launchPicker(true)}
                   icon={<Icon name="camera" size={xl}/>}
