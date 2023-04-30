@@ -39,7 +39,7 @@ export default () => {
   )
   
   const { name, age, bio, sex, avatar } = data?.user!
-  const img = data?.user?.avatar ? {uri: data?.user?.avatar} : require('../../../assets/images/avatar.png')
+  const img = avatar ? {uri: avatar} : require('../../../assets/images/avatar.png')
 
   if (edit) return <Edit id={id} name={name!} bio={bio!} sex={sex!} avatar={avatar!} age={age?.toString()!}/>
 
