@@ -14,16 +14,14 @@ import { useTheme } from '@react-navigation/native';
 import { graphql } from '../../../gql';
 import { getMediaPermissions } from '../../../lib/Media';
 
-export type UserData = {
+export default (props: {
   id: string,
   name: string,
-  age: number,
+  age: string,
   avatar: string,
   sex: string,
   bio: string
-}
-
-export default (props: UserData) => {
+}) => {
   const router = useRouter()
   const { colors } = useTheme()
   const { api } = useAuth()
@@ -57,12 +55,13 @@ export default (props: UserData) => {
 
   const [editProfileResult, editProfile] = useMutation(EDIT_PROFILE);
   const onSubmit = async () => {
-    if (!value.name || !value.age || !value.sex) {
+    if (value.name && value.age && value.sex) {
+      await editProfile({...value, age: parseInt(value.age)})
+      router.back()
+    } else {
       Alert.alert('Add name, age and sex')
       return
     }
-    await editProfile({...value})
-    router.back()
   }
 
   return (
@@ -81,8 +80,8 @@ export default (props: UserData) => {
           keyboardType='numeric'
           maxLength={2}
           placeholder={'Age...'}
-          onChangeText={ age => setValue(value => ({...value, age: parseInt(age)}))}
-          value={value.age.toString() ?? ''}
+          onChangeText={ age => setValue(value => ({...value, age}))}
+          value={value.age}
         />
         <Pressable
           style={[styles.input, {backgroundColor: colors.border}]}

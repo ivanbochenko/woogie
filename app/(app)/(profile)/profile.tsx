@@ -9,7 +9,7 @@ import { RegularText, BoldText } from '../../../components/StyledText';
 import { useQuery } from 'urql';
 import { graphql } from '../../../gql'
 import { useAuth } from '../../../lib/Auth'
-import Edit, { UserData } from './edit'
+import Edit from './edit'
 
 export default () => {
   const router = useRouter();
@@ -37,12 +37,11 @@ export default () => {
       </RegularText>
     </View>
   )
+  
+  const { name, age, bio, sex, avatar } = data?.user!
+  const img = data?.user?.avatar ? {uri: data?.user?.avatar} : require('../../../assets/images/avatar.png')
 
-  const { name, age, avatar } = data?.user!
-  const img = avatar ? {uri: avatar} : require('../../../assets/images/avatar.png')
-  const userData = data?.user! as UserData
-
-  if (edit) return <Edit {...userData } />
+  if (edit) return <Edit id={id} name={name!} bio={bio!} sex={sex!} avatar={avatar!} age={age?.toString()!}/>
 
   return (
     <SafeAreaView style={{flex: 1}}>
