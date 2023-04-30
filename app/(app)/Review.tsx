@@ -25,22 +25,23 @@ export default () => {
   })
   
   const onSubmit = async () => {
-    if (!value.text || !value.stars) {
-      Alert.alert('Add text and stars')
-      return
-    }
-    const result = await review(value)
-    if (result.error) {
-      Alert.alert('Error, review not sent')
+    if (value.text && value.stars) {
+      const result = await review(value)
+      if (result.error) {
+        Alert.alert('Error, review not sent')
+      } else {
+        Alert.alert('Review sent')
+      }
     } else {
-      Alert.alert('Review sent')
+      Alert.alert('Add text and stars')
     }
+    return
   }
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={styles.container}>
-        <BoldText>Review user</BoldText>
+        <BoldText>Send user one review</BoldText>
         <View style={[styles.row, styles.rating, { backgroundColor: colors.card }]}>
           {[...Array(5)].map(( item, index ) =>
             <Pressable
