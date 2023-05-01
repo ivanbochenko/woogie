@@ -10,13 +10,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTheme } from '@react-navigation/native';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
-import MapView, { Marker } from 'react-native-maps';
 import { LinearGradient } from 'expo-linear-gradient';
 import { s, m, l, xl } from '../constants/Spaces';
 import { height, width } from '../constants/Layout';
 import { RegularText, BoldText } from '../components/StyledText'
 import { Icon } from '../components/Themed'
 import User from '../components/User'
+import Map from './Map';
 
 const CIRCLE_RADIUS = 100
 
@@ -67,12 +67,9 @@ export const Card = (props: Event) => {
           </LinearGradient>
         </ImageBackground>
 
-        <View style={{paddingHorizontal: s*3}}>
-          <View style={{paddingTop: s*3}}/>
+        <View style={{padding: s*3, gap: s*3}}>
           <BoldText>{new Date(time).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}</BoldText>
-          <View style={{paddingTop: s*3}}/>
           <RegularText>{text}</RegularText>
-          <View style={{paddingTop: s*3}}/>
           <FlatList
             showsHorizontalScrollIndicator={false}
             overScrollMode={'never'}
@@ -80,22 +77,7 @@ export const Card = (props: Event) => {
             data={[author, ...users]}
             renderItem={({item}) => <User {...item!}/>}
           />
-          <View style={{paddingTop: s*3}}/>
-          <MapView
-            style={styles.map}
-            scrollEnabled={false}
-            initialRegion={{
-              latitude: latitude!,
-              longitude: longitude!,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}
-          >
-            <Marker coordinate={{ latitude: latitude!, longitude: longitude! }} >
-              <Icon name="map-pin" />
-            </Marker>
-          </MapView>
-          <View style={{paddingTop: s*3}}/>
+          <Map latitude={latitude} longitude={longitude} height={200}/>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -221,10 +203,5 @@ const styles = StyleSheet.create({
   distance: {
     borderRadius: l,
     padding: m,
-  },
-  map: {
-    borderRadius: l,
-    width: '100%',
-    height: 200,
   },
 });

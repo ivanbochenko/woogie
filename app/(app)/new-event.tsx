@@ -27,7 +27,7 @@ const CREATE_EVENT = graphql(`
 
 const MAX_SLOTS = 20
 
-type Sheet = 'map' | 'time' | 'photo'
+type Sheet = 'photo' | 'time' | 'map'
 
 export default (props: {
   refresh(): void,
@@ -211,6 +211,17 @@ export default (props: {
       >
         {
           ({
+            photo:
+              <View style={[styles.container, styles.row, {justifyContent: 'space-evenly'}]}>
+                <Square
+                  onPress={async () => await launchPicker(true)}
+                  icon={<Icon name="camera" size={xl}/>}
+                />
+                <Square
+                  onPress={async () => await launchPicker(false)}
+                  icon={<Icon name="photo" size={xl}/>}
+                />
+              </View>,
             time:
               <DateTimePicker
                 testID="dateTimePicker"
@@ -239,19 +250,7 @@ export default (props: {
                   name="map-pin"
                   style={styles.marker}
                 />
-              </>,
-
-            photo:
-              <View style={[styles.container, styles.row, {justifyContent: 'space-evenly'}]}>
-                <Square
-                  onPress={async () => await launchPicker(true)}
-                  icon={<Icon name="camera" size={xl}/>}
-                />
-                <Square
-                  onPress={async () => await launchPicker(false)}
-                  icon={<Icon name="photo" size={xl}/>}
-                />
-              </View>
+              </>
           })[showSheet]
         }
       </BottomSheet>
