@@ -28,6 +28,8 @@ export default (props: {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [value, setValue] = useState(props)
+  
+  const img = value.avatar ? {uri: value.avatar} : require('../../../assets/images/avatar.png')
 
   const launchPicker = async (pickFromCamera: boolean) => {
     getMediaPermissions();
@@ -68,7 +70,7 @@ export default (props: {
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={styles.center}>
         <Pressable style={{borderRadius: 90}} onPress={() => bottomSheetRef.current?.expand()}>
-          <Image style={styles.profileImg} source={value.avatar ? {uri: value.avatar} : require('../../../assets/images/avatar.png')} />
+          <Image style={styles.profileImg} source={img} />
         </Pressable>
         <TextInput
           maxLength={50}
