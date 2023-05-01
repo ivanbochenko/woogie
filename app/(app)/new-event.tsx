@@ -15,6 +15,7 @@ import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { useAuth } from '../../lib/Auth';
 import { graphql } from '../../gql';
 import { getMediaPermissions } from '../../lib/Media';
+import { getDistance } from '../../lib/Distance';
 
 const CREATE_EVENT = graphql(`
   mutation CREATE_EVENT($author_id: ID!, $title: String!, $text: String!, $photo: String!, $slots: Int!, $time: DateTime!, $latitude: Float!, $longitude: Float!) {
@@ -60,19 +61,20 @@ export default (props: {
   const [postEventResult, postEvent] = useMutation(CREATE_EVENT)
 
   const onSubmit = async () => {
-    if (!state.photo || !state.title || !state.text) {
+    if (state.photo && state.title && state.text) {
+      const photo = await getResizedAndCroppedPhotoUrl({
+        photo: state.photo, 
+        width: 576,
+        height: 864,
+        url: (await api.get(`s3url`)).data
+      })
+      const result = await postEvent({...state, photo})
+      if (result.error) console.error('Oh no!', result.error)
+      refresh()
+    } else {
       Alert.alert('Pick photo, title and text')
       return
     }
-    const photo = await getResizedAndCroppedPhotoUrl({
-      photo: state.photo, 
-      width: 576,
-      height: 864,
-      url: (await api.get(`s3url`)).data
-    })
-    const result = await postEvent({...state, photo})
-    if (result.error) console.error('Oh no!', result.error)
-    refresh()
   }
 
   const launchPicker = async (pickFromCamera: boolean) => {
@@ -168,7 +170,7 @@ export default (props: {
           }}
         >
           <Icon style={{paddingLeft: s}} name="map-pin" />
-          <BoldText>Location</BoldText>
+          <BoldText>Location: {getDistance(latitude, longitude, state.latitude, state.longitude)} km</BoldText>
           <View style={{width: l}}/>
         </Pressable>
 
