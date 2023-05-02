@@ -15,6 +15,7 @@ export default () => {
   const isFocused = useIsFocused()
   const { colors } = useTheme()
   const { event_id } = useSearchParams() as {event_id: string}
+  const cardHeigth = height-height/5.5-m
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: eventQuery,
@@ -42,13 +43,13 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: height - height/6 - l}}>
+      <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: cardHeigth}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           overScrollMode={'never'}
           bounces={false}
         >
-          <ImageBackground source={image} style={{height: height - height / 6 - l, justifyContent: 'flex-end'}}>
+          <ImageBackground source={image} style={{height: cardHeigth, justifyContent: 'flex-end'}}>
             <LinearGradient
               colors={['rgba(0,0,0,0.6)', 'transparent']}
               start={{x: 0.5, y: 1}}

@@ -41,17 +41,18 @@ type Event = {
 
 export const Card = (props: Event) => {
   const { colors } = useTheme()
+  const cardHeigth = height-height/5.5-m
   const { title, text, time, photo, author, matches, distance, latitude, longitude } = props
   const users = matches?.map(item => item?.user)
   const image = photo ? {uri: photo} : require('../assets/images/placeholder.png')
   return (
-    <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: height-height/6-l}}>
+    <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: cardHeigth}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         overScrollMode={'never'}
         bounces={false}
       >
-        <ImageBackground source={image} style={{height: height-height/6-m, justifyContent: 'flex-end'}}>
+        <ImageBackground source={image} style={{height: cardHeigth, justifyContent: 'flex-end'}}>
           <LinearGradient
             colors={['black', 'transparent']}
             start={{x: 0.5, y: 1}}
@@ -92,13 +93,16 @@ export const Stack = (props: {
 }) => {
   const {events, children, onSwipeRight, onSwipeLeft} = props
   const [remainingEvents, setRemainingEvents] = useState(events)
+  const firstEvent = remainingEvents[0]
+  const nextEvent = remainingEvents[1]
+
   useEffect(() => {
     setRemainingEvents(events)
   }, [events])
   
 
   const onRelease = (swipedRight: boolean) => {
-    const { id } = remainingEvents[0]
+    const { id } = firstEvent
     if (swipedRight) {
       onSwipeRight(id)
     } else {
@@ -180,8 +184,8 @@ export const Stack = (props: {
 
   return (
     <>
-      {remainingEvents[1] ? <NextCard {...remainingEvents[1]}/> : null}
-      {remainingEvents[0] ? <FirstCard {...remainingEvents[0]}/> : children}
+      {nextEvent ? <NextCard {...nextEvent}/> : null}
+      {firstEvent ? <FirstCard {...firstEvent}/> : children}
     </>
   );
 }
