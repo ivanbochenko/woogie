@@ -41,7 +41,7 @@ type Event = {
 
 export const Card = (props: Event) => {
   const { colors } = useTheme()
-  const cardHeigth = height-height/5.5-m
+  const cardHeigth = height-height/5.6-m
   const { title, text, time, photo, author, matches, distance, latitude, longitude } = props
   const users = matches?.map(item => item?.user)
   const image = photo ? {uri: photo} : require('../assets/images/placeholder.png')
