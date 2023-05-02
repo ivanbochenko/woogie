@@ -2,7 +2,7 @@
   "name": "woogie",
   "version": "1.0.0",
   "scripts": {
-    "graphql": "npx graphql-codegen --watch",
+    "gql": "npx graphql-codegen --watch",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@graphql-codegen/cli": "^3.2.2",
+    "@graphql-codegen/cli": "^3.3.1",
     "@graphql-codegen/client-preset": "^2.1.1",
     "@types/react": "~18.0.27",
     "@types/react-native-event-source": "^1.1.0",
@@ -71,7 +71,7 @@
     "jest-expo": "^48.0.0",
     "react-test-renderer": "18.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   },
   "private": true
 }
