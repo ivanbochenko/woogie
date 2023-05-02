@@ -42,13 +42,13 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: height-120-l}}>
+      <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: height - height/6 - l}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           overScrollMode={'never'}
           bounces={false}
         >
-          <ImageBackground source={image} style={{height: height-120-l, justifyContent: 'flex-end'}}>
+          <ImageBackground source={image} style={{height: height - height / 6 - l, justifyContent: 'flex-end'}}>
             <LinearGradient
               colors={['rgba(0,0,0,0.6)', 'transparent']}
               start={{x: 0.5, y: 1}}

@@ -45,13 +45,13 @@ export const Card = (props: Event) => {
   const users = matches?.map(item => item?.user)
   const image = photo ? {uri: photo} : require('../assets/images/placeholder.png')
   return (
-    <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: height-120-l}}>
+    <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: height-height/6-l}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         overScrollMode={'never'}
         bounces={false}
       >
-        <ImageBackground source={image} style={{height: height-120-l, justifyContent: 'flex-end'}}>
+        <ImageBackground source={image} style={{height: height-height/6-m, justifyContent: 'flex-end'}}>
           <LinearGradient
             colors={['black', 'transparent']}
             start={{x: 0.5, y: 1}}
