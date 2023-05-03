@@ -111,7 +111,7 @@ export const Stack = (props: {
     setTimeout(() => {
       setRemainingEvents(events => events.slice(1))
       translateX.value = 0
-    }, 100)
+    }, 150)
   }
 
   // Swipe gesturehandler
@@ -141,52 +141,47 @@ export const Stack = (props: {
     },
   });
 
-  const FirstCard = (props: Event) => {
-    const firstCardStyle = useAnimatedStyle(() => {
-      'worklet'
-      return {
-        transform: [
-          { translateX: translateX.value },
-          { rotateZ: `${ translateX.value / 16 }deg` },
-        ],
-      }
+  const firstCardStyle = useAnimatedStyle(() => {
+    'worklet'
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { rotateZ: `${ translateX.value / 16 }deg` },
+      ],
     }
-    );
-    return (
-      <GestureHandlerRootView>
-        <PanGestureHandler onGestureEvent={panGestureEvent} activeOffsetX={[-20,20]}>
-          <Animated.View style={firstCardStyle}>
-            <Card {...props}/>
-          </Animated.View>
-        </PanGestureHandler>
-      </GestureHandlerRootView>
-    )
-  }
+  });
+  const nextCardStyle = useAnimatedStyle(() => {
+    'worklet'
+    return {
+      position: 'absolute',
+      opacity: Math.abs(translateX.value) / 128,
+      transform: [
+        { 
+          scale: 1 - 2 / (0.1 + Math.abs(translateX.value))
+        }
+      ],
+    }
+  });
 
-  const NextCard = (props: Event) => {
-    const nextCardStyle = useAnimatedStyle(() => {
-      'worklet'
-      return {
-        opacity: Math.abs(translateX.value) / 128,
-        transform: [
-          { 
-            scale: 1 - 2 / (0.1 + Math.abs(translateX.value))
-          }
-        ],
-      }
-    });
-    return (
-      <Animated.View style={[{position: 'absolute'}, nextCardStyle]}>
+  const FirstCard = (props: Event) => (
+    <PanGestureHandler onGestureEvent={panGestureEvent} activeOffsetX={[-20,20]}>
+      <Animated.View style={firstCardStyle}>
         <Card {...props}/>
       </Animated.View>
-    )
-  }
+    </PanGestureHandler>
+  )
+
+  const NextCard = (props: Event) => (
+    <Animated.View style={nextCardStyle}>
+      <Card {...props}/>
+    </Animated.View>
+  )
 
   return (
-    <>
+    <GestureHandlerRootView>
       {nextEvent ? <NextCard {...nextEvent}/> : null}
       {firstEvent ? <FirstCard {...firstEvent}/> : children}
-    </>
+    </GestureHandlerRootView>
   );
 }
 
