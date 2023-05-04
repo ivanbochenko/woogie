@@ -15,6 +15,7 @@ export default () => {
   
   useEffect(() => {
     (async () => {
+      setEvents(null)
       if (user_id && location && maxDistance) {
         const { status, data } = await api.post('graphql', {
           query: FEED_QUERY,
@@ -30,25 +31,16 @@ export default () => {
     })()
   }, [user, maxDistance, location])
 
-  const onSwipeRight = async (event_id: string) => {
-    await match({user_id, event_id, dismissed: false})
-  }
-
-  const onSwipeLeft = async (event_id: string) => {
-    await match({user_id, event_id, dismissed: true})
+  const onSwipe = async (event_id: string, dismissed: boolean) => {
+    await match({user_id, event_id, dismissed})
   }
 
   if (!events) return <Fade/>
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack
-        events={events}
-        onSwipeRight={onSwipeRight}
-        onSwipeLeft={onSwipeLeft}
-      >
-        <RegularText>Thats all events in your area</RegularText>
-      </Stack>
+      <Stack events={events} onSwipe={onSwipe} />
+      <RegularText style={styles.deepText}>Thats all events in your area</RegularText>
     </SafeAreaView>
   );
 }
@@ -59,6 +51,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  deepText: {
+    zIndex: -2,
+    position: 'absolute',
+  }
 });
 
 const CREATE_MATCH = graphql(`
