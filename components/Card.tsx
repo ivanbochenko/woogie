@@ -17,8 +17,6 @@ import { Icon } from '../components/Themed'
 import User from '../components/User'
 import Map from './Map';
 
-const END_POSITION = 100
-
 export const Stack = (props: {
   events: Event[],
   onSwipe(event_id: string, dismissed: boolean): void,
@@ -36,26 +34,31 @@ export const Stack = (props: {
     onSwipe(event_id, swipedLeft)
   }, [])
 
-  const panGesture = Gesture.Pan()
-    .onBegin((e) => {
-      e.translationX = position.value
-    })
-    .onUpdate((e) => {
-      position.value = e.translationX
-    })
-    .onEnd((e) => {
-      const distance = Math.abs(position.value)
-      if (distance < END_POSITION) {
-        position.value = withSpring(0);
-      } else if (distance > END_POSITION && position.value > 0) {
-        position.value = withTiming(END_POSITION * 6, {duration: 250});
-        runOnJS(onRelease)(event_id, false);
-      } else if (distance > END_POSITION && position.value < 0) {
-        position.value = withTiming(END_POSITION * -6, {duration: 250});
-        runOnJS(onRelease)(event_id, true);
-      }
-    })
-    .activeOffsetX([-20,20]);
+  const panGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .onBegin((e) => {
+          e.translationX = position.value
+        })
+        .onUpdate((e) => {
+          position.value = e.translationX
+        })
+        .onEnd((e) => {
+          const distance = Math.abs(position.value)
+          const END_POSITION = 100
+          if (distance < END_POSITION) {
+            position.value = withSpring(0);
+          } else if (distance > END_POSITION && position.value > 0) {
+            position.value = withTiming(END_POSITION * 6, {duration: 250});
+            runOnJS(onRelease)(event_id, false);
+          } else if (distance > END_POSITION && position.value < 0) {
+            position.value = withTiming(END_POSITION * -6, {duration: 250});
+            runOnJS(onRelease)(event_id, true);
+          }
+        })
+        .activeOffsetX([-20,20]),
+    [position, event_id]
+  )
 
   const firstCardStyle = useAnimatedStyle(() => {
     'worklet'
@@ -71,10 +74,6 @@ export const Stack = (props: {
     'worklet'
     const distance = Math.abs(position.value)
     return {
-      zIndex: -1,
-      position: 'absolute',
-      top: '0%',
-      left: '0%',
       opacity: distance / 128,
       transform: [
         { scale: 1 - 2 / (0.1 + distance) }
@@ -84,30 +83,33 @@ export const Stack = (props: {
 
   return (
     <GestureHandlerRootView>
-      {events.map((event, index) => {
-        if (index===currentIndex) {
-          return (
-            <GestureDetector key={index} gesture={panGesture}>
-              <Animated.View style={firstCardStyle}>
+      <GestureDetector gesture={panGesture}>
+        <View style={{flex: 1, margin: m}}>
+          
+        {events.map((event, index) => {
+          if (index===currentIndex) {
+            return (
+              <Animated.View key={index} style={[firstCardStyle, {zIndex: 1, opacity: 100}]}>
                 <Card {...event}/>
               </Animated.View>
-            </GestureDetector>
-          )
-        } else if (index===currentIndex+1) {
-          return (
-            <Animated.View key={index} style={nextCardStyle}>
-              <Card {...event}/>
-            </Animated.View>
-          )
-        } else return null
-      })}
+            )
+          } else if (index===currentIndex+1) {
+            return (
+              <Animated.View key={index} style={[nextCardStyle, {zIndex: -1, position: 'absolute'}]}>
+                <Card {...event}/>
+              </Animated.View>
+            )
+          } else return null
+        })}
+        </View>
+      </GestureDetector>
     </GestureHandlerRootView>
   );
 }
 
 const Card = (props: Event) => {
   const { colors } = useTheme()
-  const cardHeigth = height-height/5.6-m
+  const cardHeigth = height-height/5.4-m
   const { title, text, time, photo, author, matches, distance, latitude, longitude } = props
   const image = photo ? {uri: photo} : require('../assets/images/placeholder.png')
   const date = new Date(time).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")
