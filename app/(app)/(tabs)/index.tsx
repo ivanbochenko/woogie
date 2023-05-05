@@ -12,7 +12,7 @@ export default () => {
   const user_id = user?.id!
   const [events, setEvents] = useState(null)
   const [matchResult, match] = useMutation(CREATE_MATCH)
-  
+
   useEffect(() => {
     (async () => {
       setEvents(null)
@@ -22,11 +22,11 @@ export default () => {
           variables: {
             user_id,
             maxDistance,
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: location?.latitude!,
+            longitude: location?.longitude!,
           }
         })
-        if (status == 200) setEvents(data.data.feed)
+        if (status === 200) setEvents(data.data.feed)
       }
     })()
   }, [user, maxDistance, location])
@@ -65,7 +65,7 @@ const CREATE_MATCH = graphql(`
   }
 `)
 
-const FEED_QUERY = graphql(`
+const FEED_QUERY = (`
   query FEED($user_id: ID!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
     feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
       id
