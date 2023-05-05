@@ -65,8 +65,8 @@ const CREATE_MATCH = graphql(`
   }
 `)
 
-const FEED_QUERY = `
-  query ($user_id: ID!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
+const FEED_QUERY = graphql(`
+  query FEED($user_id: ID!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
     feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
       id
       author_id
@@ -92,4 +92,4 @@ const FEED_QUERY = `
       }
     }
   }
-`
+`)
