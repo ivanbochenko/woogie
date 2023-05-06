@@ -51,12 +51,12 @@ export function Provider(props: {children: JSX.Element}) {
   const [user, setAuth] = useState<User>(undefined)
   const location = useLocation()
   const [maxDistance, setMaxDistance] = useState(100)
-  const client = gqlClient(user?.token)
+  const client = gqlClient(user?.token!)
   const api = apiClient(user?.token)
   
   useEffect(() => {
     getItem().then( async (json) => {
-      if (json != null) {
+      if (!!json) {
         const USER = JSON.parse(json)
         const data = await refreshToken(USER.token)
         setAuth(data)

@@ -17,13 +17,14 @@ export default () => {
     (async () => {
       setEvents(null)
       if (user_id && location && maxDistance) {
+        const { latitude, longitude } = location!
         const { status, data } = await api.post('graphql', {
           query: FEED_QUERY,
           variables: {
             user_id,
             maxDistance,
-            latitude: location?.latitude!,
-            longitude: location?.longitude!,
+            latitude,
+            longitude,
           }
         })
         if (status === 200) setEvents(data.data.feed)

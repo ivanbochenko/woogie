@@ -7,7 +7,7 @@ export const baseURL = 'https://woogie-server.herokuapp.com'
 const gqlUrl = baseURL + '/graphql'
 const timeout = 10000
 
-export const apiClient = (token: string | undefined) => axios.create({
+export const apiClient = (token?: string) => axios.create({
   baseURL,
   timeout,
   headers: {
@@ -16,11 +16,11 @@ export const apiClient = (token: string | undefined) => axios.create({
   }
 })
 
-export const gqlClient = (token: string | undefined) => createClient({
+export const gqlClient = (token: string) => createClient({
   url: gqlUrl,
   fetchOptions: () => {
     return {
-      headers: { Authorization: token ?? '' }
+      headers: { Authorization: token }
     };
   },
   exchanges: [
@@ -43,9 +43,6 @@ export const gqlClient = (token: string | undefined) => createClient({
             eventsource.addEventListener('message', (event) => {
               const data = JSON.parse(event.data!)
               sink.next(data)
-              // if (eventsource.readyState === 2) {
-              //   sink.complete()
-              // }
             })
             eventsource.addEventListener('error', (error) => {
               sink.error(error)
@@ -65,7 +62,7 @@ export const gqlClient = (token: string | undefined) => createClient({
 
 export const refreshToken = async (token: string) => {
   const pushToken = await registerNotifications()
-  const { status, data } = await apiClient('').post(`login`, {token, pushToken})
+  const { status, data } = await apiClient().post(`login`, {token, pushToken})
   if (status === 200) {
     return data
   } else {
