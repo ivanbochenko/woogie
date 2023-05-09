@@ -6,6 +6,13 @@ import { Axios } from 'axios'
 import { apiClient, gqlClient, refreshToken } from '../lib/Client'
 import { LocationType, useLocation } from "./Location";
 
+type Data = {
+  id: string,
+  token: string
+}
+
+type User = Data | null | undefined
+
 type Context = {
   user: User,
   api: Axios,
@@ -15,13 +22,6 @@ type Context = {
   maxDistance: number,
   setMaxDistance(num: number): void,
 }
-
-type Data = {
-  id: string,
-  token: string
-}
-
-type User = Data | null | undefined
 
 const AuthContext = createContext<Context>(null!);
 
