@@ -18,7 +18,10 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.app.woogie",
-      "buildNumber": "17"
+      "infoPlist": {
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location do show events near you"
+      },
+      "buildNumber": "18"
     },
     "android": {
       "adaptiveIcon": {
