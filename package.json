@@ -58,7 +58,8 @@
     "urql": "^3.0.3",
     "validator": "^13.9.0",
     "zod": "^3.21.4",
-    "zustand": "^4.3.6"
+    "zustand": "^4.3.6",
+    "expo-media-library": "~15.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

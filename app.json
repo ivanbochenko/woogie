@@ -16,13 +16,29 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
       "bundleIdentifier": "com.app.woogie",
       "infoPlist": {
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location do show events near you"
+        "NSCameraUsageDescription": "This app uses the camera to set profile and event photo.",
+        "NSLocationAlwaysUsageDescription": "We need your location to show events near you.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you."
       },
-      "buildNumber": "18"
+      "buildNumber": "19"
     },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow Woogie to access your photos."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "We need your location to show events near you."
+        }
+      ]
+    ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
