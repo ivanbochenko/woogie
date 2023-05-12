@@ -18,7 +18,7 @@ import User from '../components/User'
 import Map from './Map';
 
 export const Stack = (props: {
-  events: Event[],
+  events: any,
   onSwipe(event_id: string, dismissed: boolean): void,
 }) => {
   const {events, onSwipe} = props
@@ -86,7 +86,7 @@ export const Stack = (props: {
       <GestureDetector gesture={panGesture}>
         <View style={{flex: 1, margin: m}}>
           
-        {events.map((event, index) => {
+        {events.map((event: Event, index: number) => {
           if (index===currentIndex) {
             return (
               <Animated.View key={index} style={[firstCardStyle, {zIndex: 1, opacity: 100}]}>

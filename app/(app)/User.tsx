@@ -22,7 +22,7 @@ const USER_QUERY = graphql(`
       age
       stars
       bio
-      reviews {
+      recievedReviews {
         id
         time
         text
@@ -62,7 +62,7 @@ export default () => {
     </View>
   )
 
-  const { avatar, name, age, bio, stars, reviews } = data?.user!
+  const { avatar, name, age, bio, stars, recievedReviews } = data?.user!
   const image = avatar ? {uri: avatar} : require('../../assets/images/avatar.png')
 
   return (
@@ -92,7 +92,7 @@ export default () => {
 
         <RegularText>{bio}</RegularText>
 
-        {reviews!.map((review, index) => {
+        {recievedReviews!.map((review, index) => {
           const { author, stars, text, time } = review!
           return (
             <Animated.View

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { useMutation } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { Fade } from "../../../components/Fade";
 import { Stack } from '../../../components/Card';
 import { RegularText } from '../../../components/StyledText';
@@ -8,39 +8,35 @@ import { useAuth } from '../../../lib/Auth'
 import { graphql } from '../../../gql';
 
 export default () => {
-  const { api, user, maxDistance, location } = useAuth()
+  const { user, maxDistance, location } = useAuth()
   const user_id = user?.id!
-  const [events, setEvents] = useState(null)
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
-  useEffect(() => {
-    (async () => {
-      setEvents(null)
-      if (user_id && location && maxDistance) {
-        const { latitude, longitude } = location!
-        const { status, data } = await api.post('graphql', {
-          query: FEED_QUERY,
-          variables: {
-            user_id,
-            maxDistance,
-            latitude,
-            longitude,
-          }
-        })
-        if (status === 200) setEvents(data.data.feed)
-      }
-    })()
-  }, [user, maxDistance, location])
+  if (!location) {
+    <SafeAreaView style={styles.container}>
+      <RegularText>We need your location to show events near you</RegularText>
+    </SafeAreaView>
+  }
+
+  const [{ data, fetching, error }, refreshEvents] = useQuery({
+    query: FEED_QUERY,
+    variables: { 
+      user_id,
+      maxDistance,
+      latitude: location?.latitude!,
+      longitude: location?.longitude!
+    },
+  })
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
     await match({user_id, event_id, dismissed})
   }
 
-  if (!events) return <Fade/>
+  if (fetching || !data?.feed!) return <Fade/>
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack events={events} onSwipe={onSwipe} />
+      <Stack events={data?.feed!} onSwipe={onSwipe} />
       <RegularText style={styles.deepText}>Thats all events in your area</RegularText>
     </SafeAreaView>
   );
@@ -66,7 +62,7 @@ const CREATE_MATCH = graphql(`
   }
 `)
 
-const FEED_QUERY = (`
+const FEED_QUERY = graphql(`
   query FEED($user_id: ID!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
     feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
       id

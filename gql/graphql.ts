@@ -20,12 +20,12 @@ export type Event = {
   author?: Maybe<User>;
   author_id: Scalars['ID'];
   id: Scalars['ID'];
-  latitude?: Maybe<Scalars['Float']>;
-  longitude?: Maybe<Scalars['Float']>;
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
   matches?: Maybe<Array<Maybe<Match>>>;
-  photo?: Maybe<Scalars['String']>;
-  slots?: Maybe<Scalars['Int']>;
-  text?: Maybe<Scalars['String']>;
+  photo: Scalars['String'];
+  slots: Scalars['Int'];
+  text: Scalars['String'];
   time: Scalars['DateTime'];
   title: Scalars['String'];
 };
@@ -34,14 +34,14 @@ export type EventD = {
   __typename?: 'EventD';
   author?: Maybe<User>;
   author_id: Scalars['ID'];
-  distance?: Maybe<Scalars['Int']>;
+  distance: Scalars['Int'];
   id: Scalars['ID'];
-  latitude?: Maybe<Scalars['Float']>;
-  longitude?: Maybe<Scalars['Float']>;
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
   matches?: Maybe<Array<Maybe<Match>>>;
-  photo?: Maybe<Scalars['String']>;
-  slots?: Maybe<Scalars['Int']>;
-  text?: Maybe<Scalars['String']>;
+  photo: Scalars['String'];
+  slots: Scalars['Int'];
+  text: Scalars['String'];
   time: Scalars['DateTime'];
   title: Scalars['String'];
 };
@@ -228,7 +228,7 @@ export type User = {
   messages?: Maybe<Array<Maybe<Message>>>;
   name?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
-  reviews?: Maybe<Array<Maybe<Review>>>;
+  recievedReviews?: Maybe<Array<Maybe<Review>>>;
   sex?: Maybe<Scalars['String']>;
   stars?: Maybe<Scalars['Int']>;
 };
@@ -264,14 +264,14 @@ export type My_MatchesQueryVariables = Exact<{
 }>;
 
 
-export type My_MatchesQuery = { __typename?: 'Query', matches?: Array<{ __typename?: 'Match', id: string, event?: { __typename?: 'Event', id: string, title: string, time: any, photo?: string | null } | null } | null> | null };
+export type My_MatchesQuery = { __typename?: 'Query', matches?: Array<{ __typename?: 'Match', id: string, event?: { __typename?: 'Event', id: string, title: string, time: any, photo: string } | null } | null> | null };
 
 export type My_EventsQueryVariables = Exact<{
   author_id: Scalars['ID'];
 }>;
 
 
-export type My_EventsQuery = { __typename?: 'Query', events?: Array<{ __typename?: 'Event', id: string, title: string, time: any, photo?: string | null } | null> | null };
+export type My_EventsQuery = { __typename?: 'Query', events?: Array<{ __typename?: 'Event', id: string, title: string, time: any, photo: string } | null> | null };
 
 export type Delete_MatchMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -304,14 +304,14 @@ export type FeedQueryVariables = Exact<{
 }>;
 
 
-export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'EventD', id: string, author_id: string, title: string, text?: string | null, time: any, photo?: string | null, slots?: number | null, latitude?: number | null, longitude?: number | null, distance?: number | null, author?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null } | null, matches?: Array<{ __typename?: 'Match', user?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null } | null } | null> | null } | null> | null };
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'EventD', id: string, author_id: string, title: string, text: string, time: any, photo: string, slots: number, latitude: number, longitude: number, distance: number, author?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null } | null, matches?: Array<{ __typename?: 'Match', user?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null } | null } | null> | null } | null> | null };
 
 export type Last_EventQueryVariables = Exact<{
   author_id: Scalars['ID'];
 }>;
 
 
-export type Last_EventQuery = { __typename?: 'Query', lastEvent?: { __typename?: 'Event', id: string, title: string, photo?: string | null, matches?: Array<{ __typename?: 'Match', id: string, accepted?: boolean | null, user?: { __typename?: 'User', id: string, avatar?: string | null, name?: string | null } | null } | null> | null } | null };
+export type Last_EventQuery = { __typename?: 'Query', lastEvent?: { __typename?: 'Event', id: string, title: string, photo: string, matches?: Array<{ __typename?: 'Match', id: string, accepted?: boolean | null, user?: { __typename?: 'User', id: string, avatar?: string | null, name?: string | null } | null } | null> | null } | null };
 
 export type Accept_MatchMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -334,7 +334,7 @@ export type Event_QueryQueryVariables = Exact<{
 }>;
 
 
-export type Event_QueryQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, author_id: string, title: string, text?: string | null, time: any, slots?: number | null, photo?: string | null, latitude?: number | null, longitude?: number | null, author?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null } | null, matches?: Array<{ __typename?: 'Match', id: string, accepted?: boolean | null, user?: { __typename?: 'User', id: string, avatar?: string | null, name?: string | null } | null } | null> | null } | null };
+export type Event_QueryQuery = { __typename?: 'Query', event?: { __typename?: 'Event', id: string, author_id: string, title: string, text: string, time: any, slots: number, photo: string, latitude: number, longitude: number, author?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null } | null, matches?: Array<{ __typename?: 'Match', id: string, accepted?: boolean | null, user?: { __typename?: 'User', id: string, avatar?: string | null, name?: string | null } | null } | null> | null } | null };
 
 export type Post_ReviewMutationVariables = Exact<{
   author_id: Scalars['ID'];
@@ -358,7 +358,7 @@ export type User_QueryQueryVariables = Exact<{
 }>;
 
 
-export type User_QueryQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null, age?: number | null, stars?: number | null, bio?: string | null, reviews?: Array<{ __typename?: 'Review', id: string, time: any, text: string, stars: number, author?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null } | null } | null> | null } | null };
+export type User_QueryQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null, age?: number | null, stars?: number | null, bio?: string | null, recievedReviews?: Array<{ __typename?: 'Review', id: string, time: any, text: string, stars: number, author?: { __typename?: 'User', id: string, name?: string | null, avatar?: string | null } | null } | null> | null } | null };
 
 export type Create_EventMutationVariables = Exact<{
   author_id: Scalars['ID'];
@@ -390,5 +390,5 @@ export const Post_MessageDocument = {"kind":"Document","definitions":[{"kind":"O
 export const Event_QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"event_query"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}},{"kind":"Field","name":{"kind":"Name","value":"author_id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"slots"}},{"kind":"Field","name":{"kind":"Name","value":"photo"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"matches"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"accepted"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<Event_QueryQuery, Event_QueryQueryVariables>;
 export const Post_ReviewDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"POST_REVIEW"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"author_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"stars"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"text"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"postReview"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"author_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"author_id"}}},{"kind":"Argument","name":{"kind":"Name","value":"stars"},"value":{"kind":"Variable","name":{"kind":"Name","value":"stars"}}},{"kind":"Argument","name":{"kind":"Name","value":"text"},"value":{"kind":"Variable","name":{"kind":"Name","value":"text"}}},{"kind":"Argument","name":{"kind":"Name","value":"user_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<Post_ReviewMutation, Post_ReviewMutationVariables>;
 export const Reviews_QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"REVIEWS_QUERY"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"reviews"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"user_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"stars"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]} as unknown as DocumentNode<Reviews_QueryQuery, Reviews_QueryQueryVariables>;
-export const User_QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"USER_QUERY"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"stars"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"reviews"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"stars"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]}}]} as unknown as DocumentNode<User_QueryQuery, User_QueryQueryVariables>;
+export const User_QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"USER_QUERY"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"age"}},{"kind":"Field","name":{"kind":"Name","value":"stars"}},{"kind":"Field","name":{"kind":"Name","value":"bio"}},{"kind":"Field","name":{"kind":"Name","value":"recievedReviews"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"stars"}},{"kind":"Field","name":{"kind":"Name","value":"author"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}}]}}]}}]}}]}}]} as unknown as DocumentNode<User_QueryQuery, User_QueryQueryVariables>;
 export const Create_EventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CREATE_EVENT"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"author_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"text"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"photo"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slots"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"time"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"latitude"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"longitude"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"postEvent"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"author_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"author_id"}}},{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"Argument","name":{"kind":"Name","value":"text"},"value":{"kind":"Variable","name":{"kind":"Name","value":"text"}}},{"kind":"Argument","name":{"kind":"Name","value":"photo"},"value":{"kind":"Variable","name":{"kind":"Name","value":"photo"}}},{"kind":"Argument","name":{"kind":"Name","value":"slots"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slots"}}},{"kind":"Argument","name":{"kind":"Name","value":"time"},"value":{"kind":"Variable","name":{"kind":"Name","value":"time"}}},{"kind":"Argument","name":{"kind":"Name","value":"latitude"},"value":{"kind":"Variable","name":{"kind":"Name","value":"latitude"}}},{"kind":"Argument","name":{"kind":"Name","value":"longitude"},"value":{"kind":"Variable","name":{"kind":"Name","value":"longitude"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<Create_EventMutation, Create_EventMutationVariables>;

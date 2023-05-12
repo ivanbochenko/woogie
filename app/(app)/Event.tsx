@@ -15,7 +15,7 @@ export default () => {
   const isFocused = useIsFocused()
   const { colors } = useTheme()
   const { event_id } = useSearchParams() as {event_id: string}
-  const cardHeigth = height-height/5.6-m
+  const cardHeigth = height-height/5.5-m
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: eventQuery,
