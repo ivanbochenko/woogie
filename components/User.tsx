@@ -5,11 +5,13 @@ import { useRouter } from 'expo-router';
 import { RegularText } from './StyledText'
 import { m } from '../constants/Spaces';
 
-export default (props: {
+type UserData = {
+  id?: string | null | undefined,
+  name?: string | null | undefined,
   avatar?: string | null | undefined,
-  id: string,
-  name?: string | null | undefined
-}) => {
+}
+
+export default (props: UserData) => {
   const router = useRouter();
   const { avatar, id, name } = props
   const photo = avatar ? {uri: avatar} : require('../assets/images/avatar.png')

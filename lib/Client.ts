@@ -7,13 +7,9 @@ export const baseURL = 'https://woogie-server.herokuapp.com'
 const gqlUrl = baseURL + '/graphql'
 const timeout = 10000
 
-export const apiClient = (token?: string) => axios.create({
+export const apiClient = () => axios.create({
   baseURL,
   timeout,
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": token ?? '',
-  }
 })
 
 export const gqlClient = (token: string) => createClient({
@@ -46,6 +42,9 @@ export const gqlClient = (token: string) => createClient({
             })
             eventsource.addEventListener('error', (error) => {
               sink.error(error)
+            })
+            eventsource.addEventListener('complete', () => {
+              eventsource.close()
             })
             return {
               unsubscribe: () => {

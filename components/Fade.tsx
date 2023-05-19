@@ -32,7 +32,7 @@ export const Fade = () => {
       }}
     >
       <Image
-        style={{width: 200, height: 200}}
+        style={{width: 120, height: 120}}
         resizeMode={'cover'}
         source={require('../assets/images/logo.png')}
       />

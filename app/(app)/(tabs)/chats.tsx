@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Animated, Image, RefreshControl } from 'react-native'
 import { useQuery, useMutation } from 'urql';
-import { useIsFocused, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import {Swipeable, GestureHandlerRootView} from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons';
@@ -22,7 +22,6 @@ import { BoldText, RegularText } from '../../../components/StyledText';
 import { graphql } from '../../../gql';
 
 export default function Chats() {
-  const isFocused = useIsFocused()
   const [show, setShow] = useState(true)
   const { user } = useAuth()
   const {colors} = useTheme()
@@ -56,8 +55,7 @@ export default function Chats() {
 
     const [matches, refreshMatches] = useQuery({
       query: MY_MATCHES,
-      variables: { user_id },
-      pause: !isFocused
+      variables: { user_id }
     });
 
     if (matches.fetching) {
@@ -86,7 +84,7 @@ export default function Chats() {
           {matches.data?.matches!.length ? matches.data.matches.map( (match, index) => (
             <Swipe
               key={index}
-              event={match!.event}
+              event={match?.event!}
               leave={async () => await deleteMatch({ id: match!.id })}
             />
             )) : <View style={{alignItems: 'center'}}><BoldText>No matches</BoldText></View>}
@@ -106,8 +104,7 @@ export default function Chats() {
 
     const [events, refreshEvents] = useQuery({
       query: MY_EVENTS,
-      variables: { author_id: user_id },
-      pause: !isFocused
+      variables: { author_id: user_id }
     });
     
     if (events.fetching) {

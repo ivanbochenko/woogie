@@ -10,15 +10,19 @@ export function BoldText(props: TextProps) {
 }
 
 export function TextInput(props: InputProps) {
-  return <Input {...props} style={[
-    {
-      fontFamily: 'Lato_400Regular',
-      width: '100%',
-      padding: m,
-      borderRadius: m,
-      marginTop: m,
-      minHeight: 40,
-    },
-    props.style
-  ]} />;
+  return <Input
+    {...props} 
+    placeholderTextColor={"grey"}
+    style={[
+      {
+        fontFamily: 'Lato_400Regular',
+        width: '100%',
+        padding: m,
+        borderRadius: m,
+        marginTop: m,
+        minHeight: 40,
+      },
+      props.style
+    ]}
+  />
 }

@@ -1,71 +1,47 @@
-import React, { useState, useRef, useMemo } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, Alert, Image, View, Pressable } from 'react-native';
-import * as ImagePicker from "expo-image-picker";
-import { useRouter } from 'expo-router';
-import { useMutation } from 'urql';
-import { Button, Square } from "../../../components/Button";
-import { Icon } from '../../../components/Themed';
+import React, { useRef, useMemo } from 'react';
+import { StyleSheet, ScrollView, SafeAreaView, Image, View, Pressable } from 'react-native';
+import { Button, Square } from "./Button";
+import { Icon } from './Themed';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { getResizedPhotoUrl } from '../../../lib/getPhotoUrl'
-import { useAuth } from '../../../lib/Auth'
-import { s, m, l, xl } from '../../../constants/Spaces';
-import { RegularText, TextInput } from '../../../components/StyledText';
+import { s, m, l, xl } from '../constants/Spaces';
+import { RegularText, TextInput } from './StyledText';
 import { useTheme } from '@react-navigation/native';
-import { graphql } from '../../../gql';
-import { getMediaPermissions } from '../../../lib/Media';
+import { launchImagePicker } from '../lib/Media';
+import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
 
-export default (props: {
+export type UserData = {
   id: string,
   name: string,
-  age: string,
   avatar: string,
+  age: string,
+  bio: string,
   sex: string,
-  bio: string
+}
+
+export const EditProfileView = ({value, setValue, onSubmit}: {
+  value: UserData,
+  setValue: React.Dispatch<React.SetStateAction<UserData>>,
+  onSubmit(): Promise<void>
 }) => {
-  const router = useRouter()
   const { colors } = useTheme()
-  const { api } = useAuth()
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetRef = useRef<BottomSheet>(null)
+  const snapPoints = useMemo(() => ['25%'], [])
+  const img = value.avatar ? {uri: value.avatar} : require('../assets/images/avatar.png')
 
-  const [value, setValue] = useState(props)
-  
-  const img = value.avatar ? {uri: value.avatar} : require('../../../assets/images/avatar.png')
-
-  const launchPicker = async (pickFromCamera: boolean) => {
-    getMediaPermissions();
-    const options = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    }
-    const photo = pickFromCamera ?
-      (await ImagePicker.launchCameraAsync(options)) :
-      (await ImagePicker.launchImageLibraryAsync(options))
-
+  const getPhoto = async (camera:boolean) => {
+    const photo = await launchImagePicker(camera)
     bottomSheetRef.current?.close()
-
-    if (!photo.canceled) {
-      const avatar = await getResizedPhotoUrl({
-        photo: photo.assets[0],
-        width: 240, 
-        height: 240, 
-        url: (await api.get(`s3url`)).data
-      })
+    if (photo) {
+      const resizedImg = await manipulateAsync(
+        photo.uri,
+        [{ resize: { width: 240, height: 240 } }],
+        { compress: 1, format: SaveFormat.JPEG },
+      )
+      const avatar = resizedImg.uri
       setValue(value => ({...value, avatar}))
     }
   }
-
-  const [editProfileResult, editProfile] = useMutation(EDIT_PROFILE);
-  const onSubmit = async () => {
-    if (value.name && value.age && value.sex) {
-      await editProfile({...value, age: parseInt(value.age)})
-      router.back()
-    } else {
-      Alert.alert('Add name, age and sex')
-      return
-    }
-  }
-
+  
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={styles.center}>
@@ -108,21 +84,21 @@ export default (props: {
         enablePanDownToClose={true}
         ref={bottomSheetRef}
         index={-1}
-        snapPoints={useMemo(() => ['25%'], [])}
+        snapPoints={snapPoints}
       >
         <View style={[styles.center, styles.row, {justifyContent: 'space-evenly'}]}>
           <Square
-            onPress={async () => await launchPicker(true)}
+            onPress={async () => getPhoto(true)}
             icon={<Icon name="camera" size={xl} />}
           />
           <Square
-            onPress={async () => await launchPicker(false)}
+            onPress={async () => getPhoto(false)}
             icon={<Icon name="image" size={xl}/>}
           />
         </View>
       </BottomSheet>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -154,11 +130,3 @@ const styles = StyleSheet.create({
     borderRadius: l*10/2,
   },
 });
-
-const EDIT_PROFILE = graphql(`
-  mutation EDIT_PROFILE($id: ID!, $name: String!, $bio: String, $age: Int!, $sex: String!, $avatar: String) {
-    editUser(id: $id, name: $name, bio: $bio, age: $age, sex: $sex, avatar: $avatar) {
-      id
-    }
-  }
-`)

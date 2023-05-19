@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, View } from 'react-native';
-import { useIsFocused, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { useSearchParams } from 'expo-router';
 import Animated, {
   FadeOutRight,
@@ -16,12 +16,10 @@ import { graphql } from '../../gql';
 
 export default () => {
   const { colors } = useTheme()
-  const isFocused = useIsFocused()
   const { user_id } = useSearchParams() as { user_id: string }
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: REVIEWS_QUERY,
-    variables: { user_id },
-    pause: !isFocused
+    variables: { user_id }
   });
 
   if (fetching) return (

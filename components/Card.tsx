@@ -23,8 +23,8 @@ export const Stack = (props: {
 }) => {
   const {events, onSwipe} = props
   const [currentIndex, setCurrentIndex] = useState(0)
-  const position = useSharedValue(0)
   const event_id = events[currentIndex]?.id
+  const position = useSharedValue(0)
 
   const onRelease = useMemo(() => (event_id: string, swipedLeft: boolean) => {
     setTimeout(() => {

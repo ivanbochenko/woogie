@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, Pressable, ActivityIndicator, Image, View } from 'react-native';
-import { useIsFocused, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { useQuery } from 'urql';
 import { useSearchParams, useRouter, Stack } from 'expo-router'
 import Animated, {
@@ -38,14 +38,12 @@ const USER_QUERY = graphql(`
 `)
 
 export default () => {
-  const isFocused = useIsFocused()
   const { id, review } = useSearchParams() as { id: string, review: string }
   const router = useRouter()
   const { colors } = useTheme()
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: USER_QUERY,
-    variables: { id },
-    pause: !isFocused
+    variables: { id }
   });
   
   if (fetching) return (

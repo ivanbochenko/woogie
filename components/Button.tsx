@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
-  View,
   Text,
   TouchableOpacity,
   ViewStyle,
   StyleProp,
   TextStyle,
   ActivityIndicator,
+  PressableProps,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Pressable } from './Themed';
@@ -14,13 +14,13 @@ import { BoldText } from './StyledText';
 import { s, m, l, xl } from '../constants/Spaces'
 
 export const Button = (
-  props: {
-    title?: string;
-    onPress: (() => Promise<{}>) | (() => void);
+  props: PressableProps & {
+    title: string,
+    onPress: (() => Promise<{}>) | (() => void),
   }
 ) => {
 
-  const { title, onPress, ...other } = props
+  const { title, onPress, style, ...other } = props
   const [loading, setLoading] = useState(false)
 
   return (
@@ -31,7 +31,8 @@ export const Button = (
         setLoading(false)
       }}
       style={{
-        height: xl+l,
+        paddingVertical: m,
+        minHeight: xl+4,
         borderRadius: xl,
         width: 150,
         alignItems: "center",
@@ -41,7 +42,7 @@ export const Button = (
       {...other}
     >
       {loading
-        ? <ActivityIndicator size="large" color={'gray'} />
+        ? <ActivityIndicator size='small' color={'gray'} />
         : <BoldText>{title}</BoldText>
       }
     </Pressable>

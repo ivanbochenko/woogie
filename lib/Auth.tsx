@@ -51,8 +51,14 @@ export function Provider(props: {children: JSX.Element}) {
   const [user, setAuth] = useState<User>(undefined)
   const location = useLocation()
   const [maxDistance, setMaxDistance] = useState(100)
+
   const client = gqlClient(user?.token!)
-  const api = apiClient(user?.token)
+  const api = apiClient()
+  api.interceptors.request.use(function (config) {
+    config.headers.Authorization = user?.token!
+    return config
+  });
+  api.defaults.headers.post['Accept'] = 'application/json'
   
   useEffect(() => {
     getItem().then( async (json) => {

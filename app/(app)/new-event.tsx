@@ -1,20 +1,19 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import * as ImagePicker from "expo-image-picker";
 import MapView from 'react-native-maps';
 import { useMutation } from 'urql'
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
 
 import { s, m, l, xl } from '../../constants/Spaces';
-import { getResizedAndCroppedPhotoUrl } from '../../lib/getPhotoUrl'
 import { Button, Square } from '../../components/Button';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Icon } from '../../components/Themed';
 import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { useAuth } from '../../lib/Auth';
 import { graphql } from '../../gql';
-import { getMediaPermissions } from '../../lib/Media';
+import { launchImagePicker } from '../../lib/Media';
 import { getDistance } from '../../lib/Distance';
 
 const CREATE_EVENT = graphql(`
@@ -37,17 +36,16 @@ export default (props: {
   const {refresh, latitude, longitude} = props
   const { colors } = useTheme()
   const combinedInputStyles = [ styles.input, {backgroundColor: colors.border} ]
-  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [showSheet, setShowSheet] = useState<Sheet>('photo')
-  
+  const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['75%'], [])
   
   const { api, user } = useAuth()
 
   const initialState = {
     author_id: user?.id!,
-    photo: {} as ImagePicker.ImagePickerAsset,
+    photo: '',
     title: '',
     text: '',
     time: new Date(),
@@ -60,39 +58,41 @@ export default (props: {
 
   const [postEventResult, postEvent] = useMutation(CREATE_EVENT)
 
-  const onSubmit = async () => {
-    if (state.photo && state.title && state.text) {
-      const photo = await getResizedAndCroppedPhotoUrl({
-        photo: state.photo, 
-        width: 576,
-        height: 864,
-        url: (await api.get(`s3url`)).data
-      })
-      const result = await postEvent({...state, photo})
-      if (result.error) console.error('Oh no!', result.error)
-      refresh()
-    } else {
-      Alert.alert('Pick photo, title and text')
-      return
+  const getPhoto = async (camera: boolean) => {
+    const image = await launchImagePicker(camera)
+    bottomSheetRef.current?.close()
+    if (image) {
+      const croppedImg = await manipulateAsync(
+        image.uri,
+        [{crop: { width: image.width * 2/3, height: image.height, originX: image.width * 1/3, originY: 0 }}]
+      )
+      const resizedImg = await manipulateAsync(
+        croppedImg.uri,
+        [{ resize: { width: 576, height: 864 } }],
+        { compress: 1, format: SaveFormat.JPEG },
+      )
+      const photo = resizedImg.uri
+      setState(state => ({...state, photo}))
     }
   }
 
-  const launchPicker = async (pickFromCamera: boolean) => {
-    getMediaPermissions();
-    const options = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    }
-    const result = pickFromCamera
-      ? (await ImagePicker.launchCameraAsync(options))
-      : (await ImagePicker.launchImageLibraryAsync(options))
+  const uploadPhoto = async (uri: string) => {
+    const photo = { uri, type: 'image/jpeg', name: 'photo.jpg', }
+    const data = new FormData()
+    data.append('file', photo as unknown as File)
+    const req = await api.post('images', data, {headers: {'Content-Type': 'multipart/form-data'} })
+    return req.data.image
+  }
 
-    bottomSheetRef.current?.close()
-    if (!result.canceled) {
-      const photo = result.assets[0]
-      setState(state => ({...state, photo}))
+  const onSubmit = async () => {
+    if (!state.photo || !state.title || !state.text) {
+      Alert.alert('Pick photo, title and text')
+      return
     }
+    const photo = await uploadPhoto(state.photo)
+    const result = await postEvent({...state, photo})
+    if (result.error) console.error('Oh no!', result.error)
+    refresh()
   }
 
   return (
@@ -112,14 +112,14 @@ export default (props: {
           <RegularText style={styles.text}>Select the best picture for your event</RegularText>
         </View>
         <Pressable
-          style={[styles.addImg, {backgroundColor: colors.border}]}
+          style={[styles.addImg, {backgroundColor: colors.border, marginTop: s}]}
           onPress={() => {
             setShowSheet('photo')
             bottomSheetRef.current?.expand()
           }}
         >
-          {state.photo.uri
-            ? <Image style={styles.addImg} source={state.photo}/>
+          {state.photo
+            ? <Image style={styles.addImg} source={{uri: state.photo}}/>
             : <Icon name="camera" size={xl}/>
           }
         </Pressable>
@@ -212,24 +212,29 @@ export default (props: {
         {
           ({
             photo:
-              <View style={[styles.container, styles.row, {justifyContent: 'space-evenly'}]}>
-                <Square
-                  onPress={async () => await launchPicker(true)}
-                  icon={<Icon name="camera" size={xl}/>}
-                />
-                <Square
-                  onPress={async () => await launchPicker(false)}
-                  icon={<Icon name="photo" size={xl}/>}
-                />
+              <View style={styles.container}>
+                <View style={[styles.row, { width: '100%', justifyContent: 'space-evenly'}]}>
+                  <Square
+                    onPress={async () => await getPhoto(true)}
+                    icon={<Icon name="camera" size={xl}/>}
+                  />
+                  <Square
+                    onPress={async () => await getPhoto(false)}
+                    icon={<Icon name="photo" size={xl}/>}
+                  />
+                </View>
               </View>,
             time:
-              <DateTimePicker
-                testID="dateTimePicker"
-                mode='time'
-                display='spinner'
-                value={state.time}
-                onChange={(event, time) => setState(state => ({...state, time: time ?? new Date()}))}
-              />,
+              <View style={styles.container}>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  mode='time'
+                  display='spinner'
+                  value={state.time}
+                  onChange={(event, time) => setState(state => ({...state, time: time ?? new Date()}))}
+                />
+                <Button title='Ok' onPress={() => bottomSheetRef.current?.close()}/>
+              </View>,
 
             map:
               <>
@@ -250,6 +255,9 @@ export default (props: {
                   name="map-pin"
                   style={styles.marker}
                 />
+                <View style={styles.ok}>
+                  <Button title='Ok' onPress={() => bottomSheetRef.current?.close()}/>
+                </View>
               </>
           })[showSheet]
         }
@@ -306,5 +314,12 @@ const styles = StyleSheet.create({
     marginTop: -m,
     position: 'absolute',
     top: '50%'
+  },
+  ok: {
+    position: 'absolute',
+    width: '100%',
+    alignItems: 'center',
+    bottom: '0%',
+    marginBottom: m
   }
 });

@@ -12,6 +12,10 @@ export default () => {
   const user_id = user?.id!
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
+  const onSwipe = async (event_id: string, dismissed: boolean) => {
+    await match({user_id, event_id, dismissed})
+  }
+
   if (!location) {
     <SafeAreaView style={styles.container}>
       <RegularText>We need your location to show events near you</RegularText>
@@ -20,7 +24,7 @@ export default () => {
 
   const [{ data, fetching, error }, refreshEvents] = useQuery({
     query: FEED_QUERY,
-    variables: { 
+    variables: {
       user_id,
       maxDistance,
       latitude: location?.latitude!,
@@ -28,15 +32,11 @@ export default () => {
     },
   })
 
-  const onSwipe = async (event_id: string, dismissed: boolean) => {
-    await match({user_id, event_id, dismissed})
-  }
-
-  if (fetching || !data?.feed!) return <Fade/>
+  if (fetching || !data?.feed) return <Fade/>
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack events={data?.feed!} onSwipe={onSwipe} />
+      <Stack events={data?.feed} onSwipe={onSwipe} />
       <RegularText style={styles.deepText}>Thats all events in your area</RegularText>
     </SafeAreaView>
   );

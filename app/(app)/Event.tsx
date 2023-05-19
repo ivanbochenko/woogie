@@ -2,7 +2,7 @@ import React from 'react'
 import { View, ActivityIndicator, StyleSheet, SafeAreaView, ScrollView, FlatList, ImageBackground } from 'react-native'
 import { useQuery } from 'urql'
 import { useSearchParams } from 'expo-router';
-import { useIsFocused, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { s, m, l, xl } from '../../constants/Spaces';
 import { height, width } from '../../constants/Layout';
@@ -12,15 +12,13 @@ import { graphql } from '../../gql';
 import Map from '../../components/Map';
 
 export default () => {
-  const isFocused = useIsFocused()
   const { colors } = useTheme()
   const { event_id } = useSearchParams() as {event_id: string}
   const cardHeigth = height-height/5.5-m
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: eventQuery,
-    variables: { id: event_id },
-    pause: !isFocused
+    variables: { id: event_id }
   })
   
   if (fetching) return (

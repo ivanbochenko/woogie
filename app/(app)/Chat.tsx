@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Image, Pressable, TextInput, SafeAreaView, ScrollView, Keyboard, ActivityIndicator } from 'react-native';
-import { useIsFocused, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { useSubscription, useMutation } from 'urql';
 import { useSearchParams, useRouter, Stack } from 'expo-router'
 import Animated, {
@@ -18,7 +18,6 @@ import { useAuth } from '../../lib/Auth'
 import { graphql } from '../../gql';
 
 export default () => {
-  const isFocused = useIsFocused()
   const { title, event_id } = useSearchParams() as { title: string, event_id: string }
   const router = useRouter()
   const { colors } = useTheme()
@@ -70,8 +69,7 @@ export default () => {
   // Subscribe to new messages
 
   const [res] = useSubscription({
-    query: MessagesSubscription, variables: { event_id },
-    pause: !isFocused
+    query: MessagesSubscription, variables: { event_id }
   },
     (messages = [], response) => [ ...messages, response.messages ] 
   )

@@ -110,7 +110,7 @@ export default () => {
           </Pressable>
         </Animated.View>
 
-        {matches?.length ? matches.map( (match: any, index) => (
+        {matches?.length ? matches.map( (match, index) => (
           <Match
             key={index}
             index={index}
