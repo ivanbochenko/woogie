@@ -24,7 +24,7 @@
         "NSLocationWhenInUseUsageDescription": "We need your location to show events near you.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you."
       },
-      "buildNumber": "21"
+      "buildNumber": "22"
     },
     "plugins": [
       [
