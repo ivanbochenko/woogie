@@ -5,11 +5,11 @@ import { registerNotifications } from './Notification'
 
 export const baseURL = 'https://woogie-server.herokuapp.com'
 const gqlUrl = baseURL + '/graphql'
-const timeout = 10000
 
 export const apiClient = () => axios.create({
   baseURL,
-  timeout,
+  timeout: 10000,
+  headers: { 'Content-Type': 'application/json' },
 })
 
 export const gqlClient = (token: string) => createClient({
