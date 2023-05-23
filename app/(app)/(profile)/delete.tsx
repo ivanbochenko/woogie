@@ -13,8 +13,7 @@ export default () => {
   const theme = useTheme()
   const { api, signOut } = useAuth()
   const [password, setPassword] = useState('')
-  const [repeatPassword, setRepeatPassword] = useState('')
-  const [errorText, setErrorText] = useState<null | string>(null)
+  const [error, setError] = useState<null | string>(null)
   const styledInput = [
     styles.input,
     {
@@ -24,6 +23,7 @@ export default () => {
   ]
 
   const onDelete = async () => {
+    setError(null)
     Alert.alert(
       "",
       "Are you sure?",
@@ -36,16 +36,11 @@ export default () => {
         {
           text: "Yes",
           onPress: async () => {
-            setErrorText(null)
-            if (password !== repeatPassword) {
-              setErrorText('Passwords dont match')
-              return
-            }
             const { data } = await api.post('login/delete', { password })
             if (data.success) {
               signOut()
             } else {
-              setErrorText(data.message ?? 'Wrong data, try again')
+              setError(data.message ?? 'Wrong data, try again')
             }
           }
         }
@@ -62,23 +57,22 @@ export default () => {
         padding: m
       }}
     >
-      <SafeAreaView style={{ gap: 16, alignItems: 'center' }} >
+      <SafeAreaView style={{ gap: 15, alignItems: 'center' }} >
         <View style={[styles.row, styles.center, { width: '100%', justifyContent: 'space-between'}]}>
           <TouchableOpacity
-            style={[styles.center, {height: 50, width: 50}]}
+            style={[styles.center, {height: xl, width: xl}]}
             onPress={() => router.back()}
           >
             <Icons name="arrow-back-ios" size={24} color={theme.colors.text} />
           </TouchableOpacity>
           <BoldText style={styles.error}>DANGER</BoldText>
-          <View style={{width: 50}}/>
+          <View style={{width: xl}}/>
         </View>
         <RegularText>
           You are going to delete your profile with all your data
         </RegularText>
-
-        {errorText ?
-          <RegularText style={styles.error}>{errorText}</RegularText>
+        {error ?
+          <RegularText style={styles.error}>{error}</RegularText>
           : <View style={{height: 20}}/>
         }
         <View
@@ -90,24 +84,6 @@ export default () => {
             secureTextEntry={true}
             value={password}
             onChangeText={(t) => setPassword(t)}
-            style={styledInput}
-          />
-          <Icons
-            name="lock"
-            size={24}
-            color={theme.colors.text}
-            style={styles.icon}
-          />
-        </View>
-        <View
-          style={{ position: "relative", width: "100%" }}
-        >
-          <TextInput
-            placeholder="Repeat Your Password"
-            keyboardType='visible-password'
-            secureTextEntry={true}
-            value={repeatPassword}
-            onChangeText={(t) => setRepeatPassword(t)}
             style={styledInput}
           />
           <Icons

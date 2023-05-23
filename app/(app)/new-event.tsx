@@ -76,22 +76,20 @@ export default (props: {
     }
   }
 
-  const uploadPhoto = async (uri: string) => {
-    const photo = { uri, type: 'image/jpeg', name: 'photo.jpg', }
-    const data = new FormData()
-    data.append('file', photo as unknown as File)
-    const req = await api.post('images', data, {headers: {'Content-Type': 'multipart/form-data'} })
-    return req.data.image
-  }
-
   const onSubmit = async () => {
     if (!state.photo || !state.title || !state.text) {
       Alert.alert('Pick photo, title and text')
       return
     }
-    const photo = await uploadPhoto(state.photo)
-    const result = await postEvent({...state, photo})
-    if (result.error) console.error('Oh no!', result.error)
+    const file = { uri: state.photo, type: 'image/jpeg', name: 'photo.jpg' } as unknown as File
+    const FD = new FormData()
+    FD.append('file', file)
+    const { status, data } = await api.post('images', FD, {headers: {"Content-Type": 'multipart/form-data'}})
+    if (status !== 201) {
+      Alert.alert(data.message)
+      return
+    }
+    await postEvent({...state, photo: data.image})
     refresh()
   }
 

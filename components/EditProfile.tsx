@@ -11,11 +11,11 @@ import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
 
 export type UserData = {
   id: string,
-  name: string,
-  avatar: string,
-  age: string,
-  bio: string,
-  sex: string,
+  name: string | null,
+  avatar: string | null,
+  age: string | null,
+  bio: string | null,
+  sex: string | null,
 }
 
 export const EditProfileView = ({value, setValue, onSubmit}: {
@@ -52,14 +52,14 @@ export const EditProfileView = ({value, setValue, onSubmit}: {
           maxLength={50}
           placeholder={'Name...'}
           onChangeText={ name => setValue(value => ({...value, name}))}
-          value={value.name}
+          value={value.name ?? ''}
         />
         <TextInput
           keyboardType='numeric'
           maxLength={2}
           placeholder={'Age...'}
           onChangeText={ age => setValue(value => ({...value, age}))}
-          value={value.age}
+          value={value.age ?? ''}
         />
         <Pressable
           style={[styles.input, {backgroundColor: colors.border}]}
@@ -72,7 +72,7 @@ export const EditProfileView = ({value, setValue, onSubmit}: {
           maxLength={500}
           placeholder={'Bio...'}
           onChangeText={ bio => setValue(value => ({...value, bio}))}
-          value={value.bio}
+          value={value.bio ?? ''}
         />
 
         <Button title={'Save'} onPress={onSubmit}/>

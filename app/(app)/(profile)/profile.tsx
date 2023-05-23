@@ -24,21 +24,27 @@ export default () => {
     variables: { id },
   });
 
-  const uploadPhoto = async (uri: string) => {
-    const photo = { uri, type: 'image/jpeg', name: 'photo.jpg', }
-    const data = new FormData()
-    data.append('file', photo as unknown as File)
-    const req = await api.post('images', data, {headers: {'Content-Type': 'multipart/form-data'} })
-    return req.data.image
-  }
-
   const onSubmit = async () => {
     if (!value.name || !value.age || !value.sex) {
       Alert.alert('Add name, age and sex')
       return
     }
-    const res = await uploadPhoto(value.avatar)
-    await editProfile({...value, age: Number(value.age), avatar: res})
+    const file = { uri: value.avatar, type: 'image/jpeg', name: 'photo.jpg'} as unknown as File
+    const FD = new FormData()
+    FD.append('file', file)
+    const {status, data} = await api.post('images', FD, {headers: {'Content-Type': 'multipart/form-data'} })
+    if (status !== 201) {
+      Alert.alert(data.message)
+      return
+    }
+    await editProfile({
+      id,
+      name: value.name!,
+      bio: value.bio!,
+      sex: value.sex!,
+      age: Number(value.age),
+      avatar: data.image
+    })
     setEdit(false)
   }
 
@@ -92,13 +98,15 @@ export default () => {
             <Pressable
               style={styles.circle}
               onPress={() => {
+                const { id, name, age, bio, sex, avatar } = data?.user!
+                const ageString = age ? age.toString() : ''
                 setValue({
-                  id: data?.user?.id!,
-                  name: data?.user?.name!,
-                  age: data?.user?.age!.toString()!,
-                  bio: data?.user?.bio!,
-                  sex: data?.user?.sex!,
-                  avatar: data?.user?.avatar!,
+                  id: id!,
+                  name: name!,
+                  age: ageString,
+                  bio: bio!,
+                  sex: sex!,
+                  avatar: avatar!,
                 })
                 setEdit(true)
               }}
