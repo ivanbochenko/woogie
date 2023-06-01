@@ -38,7 +38,7 @@ export default () => {
       setFetching(true)
       const { status, data } = await api.post('graphql', {
         query: `
-          query ($event_id: ID!) {
+          query ($event_id: String!) {
             messages(event_id: $event_id) {
               id
               time
@@ -98,14 +98,16 @@ export default () => {
   )
   
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, padding: m, alignItems: 'center'}}>
       <Stack.Screen
         options={{
           title,
           headerRight: () =>
-            <Pressable onPress={() => router.push({pathname: 'Event', params: { event_id }})}>
-              <Icon style={{marginRight: s}} name="ticket" color={'gray'} />
-            </Pressable>
+            <Icon
+              onPress={() => router.push({pathname: 'Event', params: { event_id }})}
+              name="ticket"
+              color={'gray'}
+            />
         }}
       />
       <ScrollView
@@ -118,10 +120,8 @@ export default () => {
         {[...(messages ?? []), ...(res.data ?? [])].map((item, index, array) =>
           <Message
             key={item?.id}
-            id={id}
             data={item}
             renderAvatar={(array[index-1]?.author.id ?? null) !== item.author.id}
-            onPress={()=>router.push({pathname: "User", params: {id: item.author.id, review: true}})}
           />
         )}
       </ScrollView>
@@ -129,13 +129,13 @@ export default () => {
         position: 'absolute',
         alignItems: "center",
         flexDirection: "row",
-        width: width-l,
+        flex: 1, 
         borderRadius: l,
-        marginHorizontal: m,
         minHeight: xl+m,
         padding: m,
+        margin: m,
         backgroundColor: colors.card,
-        bottom: keyboardHeight + m
+        bottom: keyboardHeight,
       }}>
         <TextInput
           ref={inputRef}
@@ -168,12 +168,15 @@ const Message = (props: {
       id: string,
     }
   },
-  renderAvatar: boolean,
-  onPress(): void,
-  id: string
+  renderAvatar: boolean
 }) => {
-  const {data, renderAvatar, onPress, id} = props
+  const { data, renderAvatar } = props
+  const user_id = useAuth().user?.id!
   const { colors } = useTheme()
+  const router = useRouter()
+  const backgroundColor = data.author.id === user_id ? colors.card : colors.border
+  const time = new Date(data.time).toLocaleTimeString().replace(/(:\d{2}| [AP]M)$/, "")
+  const image = data.author.avatar ? {uri: data.author.avatar} : require('../../assets/images/avatar.png')
   return (
     <Animated.View
       entering={FadeInLeft}
@@ -181,20 +184,20 @@ const Message = (props: {
       layout={Layout.springify()}
       style={styles.row}
     >
-      {!renderAvatar
-        ? <View style={{width: 60 + m}}/>
-        : <Pressable onPress={onPress}>
+      {renderAvatar
+        ? <Pressable
+            onPress={() => router.push({pathname: "User", params: {id: data.author.id, review: true}})}
+          >
             <Image
               style={styles.profileImg}
-              source={data.author.avatar ? {uri: data.author.avatar} : require('../../assets/images/avatar.png')}
+              source={image}
             />
           </Pressable>
+        : <View style={{width: 60 + m}}/>
       }
-      <View style={[styles.card, { backgroundColor: data.author.id === id ? colors.card : colors.border }]}>
+      <View style={[styles.card, { backgroundColor }]}>
         <RegularText>{data.text}</RegularText>
-        <RegularText style={{color: 'gray', marginTop: s }}>
-          {new Date(data.time).toLocaleTimeString().replace(/(:\d{2}| [AP]M)$/, "")}
-        </RegularText>
+        <RegularText style={{color: 'gray', marginTop: s }}>{time}</RegularText>
       </View>
     </Animated.View>
   )
@@ -215,7 +218,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginTop: m,
-    paddingHorizontal: m,
   },
   profileImg: {
     width: 60,
@@ -227,7 +229,7 @@ const styles = StyleSheet.create({
 });
 
 const POST_MESSAGE = graphql(`
-  mutation POST_MESSAGE($text: String!, $event_id: ID!, $author_id: ID!) {
+  mutation POST_MESSAGE($text: String!, $event_id: String!, $author_id: String!) {
     postMessage(text: $text, event_id: $event_id, author_id: $author_id) {
       id
     }
@@ -235,7 +237,7 @@ const POST_MESSAGE = graphql(`
 `)
 
 const MessagesSubscription = `
-  subscription MESSAGES_SUB($event_id: ID!) {
+  subscription MESSAGES_SUB($event_id: String!) {
     messages(event_id: $event_id) {
       id
       time

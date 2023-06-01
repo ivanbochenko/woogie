@@ -55,21 +55,21 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Feed',
-          tabBarIcon: ({ color }) => <Icon size={30} name="search" color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} style={{width: 30}} name="search" color={color} />,
         }}
       />
       <Tabs.Screen
         name="last-event"
         options={{
           title: 'Last Event',
-          tabBarIcon: ({ color }) => <Icon size={30} name="ticket" color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} style={{width: 30}} name="ticket" color={color} />,
         }}
       />
       <Tabs.Screen
         name="chats"
         options={{
           title: 'Chats',
-          tabBarIcon: ({ color }) => <Icon size={30} name="comments" color={color} />,
+          tabBarIcon: ({ color }) => <Icon size={30} style={{width: 30}} name="comments" color={color} />,
         }}
       />
     </Tabs>

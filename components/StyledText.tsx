@@ -20,7 +20,7 @@ export function TextInput(props: InputProps) {
         padding: m,
         borderRadius: m,
         marginTop: m,
-        minHeight: 40,
+        minHeight: xl,
       },
       props.style
     ]}

@@ -30,25 +30,22 @@ const LogInScreen = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(false)
-  const [errorText, setErrorText] = useState('')
+  const [error, setError] = useState<null | string>(null)
 
   const onPress = async () => {
     if (validator.isEmail(email) && password) {
-      setError(false)
-      const { data } = await api.post('login/password', {
+      setError(null)
+      api.post('login/password', {
         email,
         password,
+      }).then((res) => {
+        signIn(res.data)
+        return
+      }).catch((err) => {
+        setError('Wrong data, try again or restore')
       })
-      if (data.success) {
-        signIn(data)
-      } else {
-        setError(true)
-        setErrorText('Wrong data, try again or register')
-      }
     } else {
-      setError(true)
-      setErrorText('Enter valid email and password')
+      setError('Enter valid email and password')
     }
   }
 
@@ -125,7 +122,7 @@ const LogInScreen = () => {
                 color: 'red',
               }}
             >
-              {errorText}
+              {error}
             </Animated.Text>
             : <View style={{height: 52}}/>
           }
@@ -208,19 +205,48 @@ const LogInScreen = () => {
                 onPress={onPress}
               />
             </Animated.View>
-            <Animated.Text
-              onPress={() => router.push({pathname: 'Register'})}
+            <Animated.View
+              style={{flexDirection: 'row'}}
               entering={FadeInDown.delay(800).duration(1000).springify()}
-              style={{
-                fontFamily: 'Lato_400Regular',
-                opacity: 0.5,
-                fontSize: 16,
-                color: 'gray',
-                textDecorationLine: 'underline',
-              }}
             >
-              Register
-            </Animated.Text>
+              <Text 
+                onPress={() => router.push({pathname: 'Register'})}
+                style={{
+                  fontFamily: 'Lato_400Regular',
+                  opacity: 0.5,
+                  fontSize: 16,
+                  color: 'gray',
+                  textDecorationLine: 'underline',
+                }}
+              >
+                Register
+              </Text>
+              <View style={{width: 6}}/>
+              <Text
+                onPress={() => {
+                  if (validator.isEmail(email)) {
+                    api.post('login/restore', { email })
+                      .then((res) => {
+                        setError('Check your email')
+                      })
+                      .catch((err) => {
+                        setError('Wrong data')
+                      })
+                  } else {
+                    setError('Enter valid email')
+                  }
+                }}
+                style={{
+                  fontFamily: 'Lato_400Regular',
+                  opacity: 0.5,
+                  fontSize: 16,
+                  color: 'gray',
+                  textDecorationLine: 'underline',
+                }}
+              >
+                Restore
+              </Text>
+            </Animated.View>
           </View>
         </View>
       </SafeAreaView>

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, SafeAreaView, ScrollView, FlatList, ImageBackground } from 'react-native';
+import { View, SafeAreaView, ScrollView, FlatList, ImageBackground, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -16,6 +16,7 @@ import { RegularText, BoldText } from '../components/StyledText'
 import { Icon } from '../components/Themed'
 import User from '../components/User'
 import Map from './Map';
+import { useRouter } from 'expo-router';
 
 export const Stack = (props: {
   events: any,
@@ -25,6 +26,8 @@ export const Stack = (props: {
   const [currentIndex, setCurrentIndex] = useState(0)
   const event_id = events[currentIndex]?.id
   const position = useSharedValue(0)
+
+  const undo = () => setCurrentIndex(i => i>0 ? i-1 : 0)
 
   const onRelease = useMemo(() => (event_id: string, swipedLeft: boolean) => {
     setTimeout(() => {
@@ -84,13 +87,13 @@ export const Stack = (props: {
   return (
     <GestureHandlerRootView>
       <GestureDetector gesture={panGesture}>
-        <View style={{flex: 1, margin: m}}>
+        <View style={{flex: 1, justifyContent: 'center', marginHorizontal: s}}>
           
         {events.map((event: Event, index: number) => {
           if (index===currentIndex) {
             return (
               <Animated.View key={index} style={[firstCardStyle, {zIndex: 1, opacity: 100}]}>
-                <Card {...event}/>
+                <Card {...event} undo={undo}/>
               </Animated.View>
             )
           } else if (index===currentIndex+1) {
@@ -107,17 +110,18 @@ export const Stack = (props: {
   );
 }
 
-const Card = (props: Event) => {
+const Card = (props: Event & {undo?(): void}) => {
   const { colors } = useTheme()
-  const cardHeigth = height-height/5.4-m
-  const { title, text, time, photo, author, matches, distance, latitude, longitude } = props
+  const router = useRouter()
+  const cardHeigth = height-height/4.7
+  const { id, title, text, time, photo, author, matches, distance, latitude, longitude } = props
   const image = photo ? {uri: photo} : require('../assets/images/placeholder.png')
   const date = new Date(time).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")
   const users = matches?.map(item => item.user)
   return (
     <SafeAreaView 
       style={{
-        backgroundColor: colors.card,
+        backgroundColor: colors.border,
         borderRadius: l,
         overflow: 'hidden',
         width: width-m,
@@ -129,23 +133,22 @@ const Card = (props: Event) => {
         overScrollMode={'never'}
         bounces={false}
       >
-        <ImageBackground source={image} style={{height: cardHeigth, justifyContent: 'flex-end'}}>
+        <ImageBackground source={image} style={{height: cardHeigth, justifyContent: 'space-between'}}>
+          <View style={styles.bar}>
+            <Icon
+              name='exclamation-circle'
+              color="white"
+              onPress={() => router.push({pathname: 'Report', params: {event_id: id}})}
+            />
+            <Icon name='undo' color='white' onPress={props.undo}/>
+          </View>
           <LinearGradient
             colors={['black', 'transparent']}
             start={{x: 0.5, y: 1}}
             end={{x: 0.5, y: 0}}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: s*3,
-                minHeight: xl*2,
-              }}
-            >
-              <BoldText style={{ fontSize: l, color: 'white', maxWidth: width-xl*3 }}>{title}</BoldText>
+            <View style={styles.bar}>
+              <BoldText style={{ color: 'white', maxWidth: width-xl*3 }}>{title}</BoldText>
               <View
                 style={{
                   backgroundColor: colors.border,
@@ -156,14 +159,14 @@ const Card = (props: Event) => {
                   flexWrap: "wrap",
                 }}
               >
-                <Icon style={{marginRight: s}} name="map-marker" />
+                <Icon style={{marginRight: s}} color={colors.text} name="map-marker" />
                 <RegularText>{distance} km</RegularText>
               </View>
             </View>
           </LinearGradient>
         </ImageBackground>
 
-        <View style={{padding: s*3, gap: s*3}}>
+        <View style={{padding: s*3, gap: m}}>
           <BoldText>{date}</BoldText>
           <RegularText>{text}</RegularText>
           <FlatList
@@ -179,6 +182,17 @@ const Card = (props: Event) => {
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  bar: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: s*3,
+    minHeight: xl*2,
+  }
+});
 
 type User = {
   id: string,

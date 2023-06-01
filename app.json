@@ -17,6 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
+      "orientation": "portrait",
       "bundleIdentifier": "com.app.woogie",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to set profile and event photo.",

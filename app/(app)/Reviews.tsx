@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
 });
 
 const REVIEWS_QUERY = graphql(`
-  query REVIEWS_QUERY($user_id: ID!) {
+  query REVIEWS_QUERY($user_id: String!) {
     reviews(user_id: $user_id) {
       id
       stars

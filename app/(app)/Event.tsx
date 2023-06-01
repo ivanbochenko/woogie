@@ -14,7 +14,6 @@ import Map from '../../components/Map';
 export default () => {
   const { colors } = useTheme()
   const { event_id } = useSearchParams() as {event_id: string}
-  const cardHeigth = height-height/5.5-m
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: eventQuery,
@@ -41,13 +40,13 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={{backgroundColor: colors.card, borderRadius: l, overflow: 'hidden', width: width-m, height: cardHeigth}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.border, borderRadius: l, overflow: 'hidden', width: '100%'}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           overScrollMode={'never'}
           bounces={false}
         >
-          <ImageBackground source={image} style={{height: cardHeigth, justifyContent: 'flex-end'}}>
+          <ImageBackground source={image} style={{height: height-height/6.3, justifyContent: 'flex-end'}}>
             <LinearGradient
               colors={['rgba(0,0,0,0.6)', 'transparent']}
               start={{x: 0.5, y: 1}}
@@ -59,7 +58,7 @@ export default () => {
             </LinearGradient>
           </ImageBackground>
 
-          <View style={{padding: s*3, gap: s*3}}>
+          <View style={{padding: s*3, gap: m}}>
             
             <BoldText>{new Date(time).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")}</BoldText>
             
@@ -87,6 +86,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    margin: s
   },
   row: {
     flexDirection: "row",
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
 });
 
 const eventQuery = graphql(`
-  query event_query($id: ID!) {
+  query event_query($id: String!) {
     event(id: $id) {
       id
       author {

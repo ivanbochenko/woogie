@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 });
 
 const CREATE_MATCH = graphql(`
-  mutation CREATE_MATCH($dismissed: Boolean!, $event_id: ID!, $user_id: ID!) {
+  mutation CREATE_MATCH($dismissed: Boolean!, $event_id: String!, $user_id: String!) {
     createMatch(dismissed: $dismissed, event_id: $event_id, user_id: $user_id) {
       id
     }
@@ -63,7 +63,7 @@ const CREATE_MATCH = graphql(`
 `)
 
 const FEED_QUERY = graphql(`
-  query FEED($user_id: ID!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
+  query FEED($user_id: String!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
     feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
       id
       author_id

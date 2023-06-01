@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
 });
 
 const LAST_EVENT = graphql(`
-  query LAST_EVENT($author_id: ID!) {
+  query LAST_EVENT($author_id: String!) {
     lastEvent(author_id: $author_id) {
       id
       title
@@ -182,7 +182,7 @@ const LAST_EVENT = graphql(`
 `)
 
 const ACCEPT_MATCH = graphql(`
-  mutation ACCEPT_MATCH($id: ID!) {
+  mutation ACCEPT_MATCH($id: String!) {
     acceptMatch(id: $id) {
       id
     }

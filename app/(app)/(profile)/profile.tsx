@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
 });
 
 const EDIT_PROFILE = graphql(`
-  mutation EDIT_PROFILE($id: ID!, $name: String!, $bio: String, $age: Int!, $sex: String!, $avatar: String) {
+  mutation EDIT_PROFILE($id: String!, $name: String!, $bio: String, $age: Int!, $sex: String!, $avatar: String) {
     editUser(id: $id, name: $name, bio: $bio, age: $age, sex: $sex, avatar: $avatar) {
       id
     }
@@ -159,7 +159,7 @@ const EDIT_PROFILE = graphql(`
 `)
 
 const query = graphql(`
-  query Edit_PROFILE_QUERY($id: ID!) {
+  query Edit_PROFILE_QUERY($id: String!) {
     user(id: $id) {
       id
       name

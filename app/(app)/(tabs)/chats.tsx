@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
 });
 
 const MY_MATCHES = graphql(`
-  query MY_MATCHES($user_id: ID!) {
+  query MY_MATCHES($user_id: String!) {
     matches(user_id: $user_id) {
       id
       event {
@@ -287,7 +287,7 @@ const MY_MATCHES = graphql(`
 `)
 
 const MY_EVENTS = graphql(`
-  query MY_EVENTS($author_id: ID!) {
+  query MY_EVENTS($author_id: String!) {
     events(author_id: $author_id) {
       id
       title
@@ -298,7 +298,7 @@ const MY_EVENTS = graphql(`
 `)
 
 const DELETE_MATCH = graphql(`
-  mutation DELETE_MATCH($id: ID!) {
+  mutation DELETE_MATCH($id: String!) {
     deleteMatch(id: $id) {
       id
     }
@@ -306,7 +306,7 @@ const DELETE_MATCH = graphql(`
 `)
 
 const DELETE_EVENT = graphql(`
-  mutation DELETE_EVENT($id: ID!) {
+  mutation DELETE_EVENT($id: String!) {
     deleteEvent(id: $id) {
       id
     }

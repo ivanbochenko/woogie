@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, Pressable, ActivityIndicator, Image, View } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, Image, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useQuery } from 'urql';
 import { useSearchParams, useRouter, Stack } from 'expo-router'
@@ -14,7 +14,7 @@ import User from "../../components/User";
 import { graphql } from '../../gql';
 
 const USER_QUERY = graphql(`
-  query USER_QUERY($id: ID!) {
+  query USER_QUERY($id: String!) {
     user(id: $id) {
       id
       name
@@ -66,14 +66,26 @@ export default () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={[styles.center, {padding: m}]}>
-        {review === 'true' ? 
-          <Stack.Screen options={{
-            headerRight: () =>
-              <Pressable onPress={() => router.push({pathname: 'Review', params: { user_id: id }})}>
-                <Icon style={{marginRight: s}} name="star" color={'gray'} />
-              </Pressable>
-          }}/> : null
-        }
+        <Stack.Screen
+          options={{
+            headerRight: () => (
+              review === 'true' ?
+                <Icon
+                  name="star"
+                  color={'gray'}
+                  onPress={() => router.push({pathname: 'Review', params: { user_id: id }})}
+                  style={{marginRight: s}}
+                />
+              : null
+            ),
+            headerLeft: () => 
+              <Icon
+                name='exclamation-circle'
+                color="gray"
+                onPress={() => router.push({pathname: 'Report', params: {user_id: id}})}
+              />
+          }}
+        />
         <Image style={styles.profileImg} source={image} />
 
         <BoldText style={{ marginTop: m}}>{name ?? 'Name'}, {age ?? 'age'}</BoldText>

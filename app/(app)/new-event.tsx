@@ -17,7 +17,7 @@ import { launchImagePicker } from '../../lib/Media';
 import { getDistance } from '../../lib/Distance';
 
 const CREATE_EVENT = graphql(`
-  mutation CREATE_EVENT($author_id: ID!, $title: String!, $text: String!, $photo: String!, $slots: Int!, $time: DateTime!, $latitude: Float!, $longitude: Float!) {
+  mutation CREATE_EVENT($author_id: String!, $title: String!, $text: String!, $photo: String!, $slots: Int!, $time: DateTime!, $latitude: Float!, $longitude: Float!) {
     postEvent(author_id: $author_id, title: $title, text: $text, photo: $photo, slots: $slots, time: $time, latitude: $latitude, longitude: $longitude) {
       id
     }

@@ -39,6 +39,7 @@ export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
 export type PressableProps = ThemeProps & DefaultPressableProps;
 export type InputProps = ThemeProps & TextInput['props'];
+export type IconProps = React.ComponentProps<typeof FontAwesome>
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -73,14 +74,10 @@ export function Input(props: InputProps) {
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
-export function Icon({name, color, size = 25, style}: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  size?: number;
-  color?: string;
-  style?: ViewStyle
-}) {
+export function Icon(props: IconProps) {
+  const { style, color, ...otherProps } = props;
   const theme = useColorScheme() ?? 'light';
   const defaultColor = Colors[theme]['tint'];
 
-  return <FontAwesome name={name} style={[{ color: color ?? defaultColor }, style]} size={size}/>;
+  return <FontAwesome size={25} style={[{ color: color ?? defaultColor }, style]} {...otherProps}/>;
 }

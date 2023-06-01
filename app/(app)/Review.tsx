@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
 });
 
 const POST_REVIEW = graphql(`
-  mutation POST_REVIEW($author_id: ID!, $user_id: ID!, $stars: Int!, $text: String!) {
+  mutation POST_REVIEW($author_id: String!, $user_id: String!, $stars: Int!, $text: String!) {
     postReview(author_id: $author_id, stars: $stars, text: $text, user_id: $user_id) {
       id
     }

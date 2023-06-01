@@ -22,7 +22,8 @@ export default function RootLayoutNav() {
       <Stack.Screen name="Chat" />
       <Stack.Screen name="User" />
       <Stack.Screen name="Event" />
-      {/* <Stack.Screen name="Upgrade" /> */}
+      <Stack.Screen name="Report" />
+      <Stack.Screen name="Password" />
     </Stack>
   );
 }

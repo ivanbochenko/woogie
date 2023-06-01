@@ -23,11 +23,9 @@ type Context = {
   setMaxDistance(num: number): void,
 }
 
-const AuthContext = createContext<Context>(null!);
+const AuthContext = createContext<Context>(null!)
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export const useAuth = () => useContext(AuthContext)
 
 function useProtectedRoute(user: User) {
   const segments = useSegments();
@@ -49,15 +47,15 @@ function useProtectedRoute(user: User) {
 export function Provider(props: {children: JSX.Element}) {
   const { getItem, setItem, removeItem } = useAsyncStorage("USER")
   const [user, setAuth] = useState<User>(undefined)
-  const location = useLocation()
   const [maxDistance, setMaxDistance] = useState(100)
+  const location = useLocation()
 
   const client = gqlClient(user?.token!)
   const api = apiClient()
   api.interceptors.request.use(function (config) {
     config.headers.Authorization = user?.token!
     return config
-  });
+  })
   api.defaults.headers.post['Accept'] = 'application/json'
   
   useEffect(() => {
@@ -92,7 +90,7 @@ export function Provider(props: {children: JSX.Element}) {
 
   return (
     <GqlProvider value={client}>
-      <AuthContext.Provider value={appContext} >
+      <AuthContext.Provider value={appContext}>
         {props.children}
       </AuthContext.Provider>
     </GqlProvider>

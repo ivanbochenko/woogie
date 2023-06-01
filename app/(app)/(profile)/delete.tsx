@@ -36,8 +36,8 @@ export default () => {
         {
           text: "Yes",
           onPress: async () => {
-            const { data } = await api.post('login/delete', { password })
-            if (data.success) {
+            const { status, data } = await api.post('password/user/delete', { password })
+            if (status === 200) {
               signOut()
             } else {
               setError(data.message ?? 'Wrong data, try again')

@@ -7,7 +7,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { useRouter } from "expo-router";
+import { useRouter, Link } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 import validator from "validator";
 import { PrimaryButton } from "../../components/Button";
@@ -21,6 +21,8 @@ const REGISTER_SCREEN = {
   description: "To register for an account, enter your details",
 };
 
+const termsUrl = 'https://www.termsfeed.com/live/7dfca65f-69df-48fb-bc8c-837f6df38b68'
+
 export default () => {
   const theme = useTheme();
   const dimensions = useWindowDimensions();
@@ -30,43 +32,54 @@ export default () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
-  const [error, setError] = useState(false)
-  const [errorText, setErrorText] = useState('')
+  const [error, setError] = useState<string | null>()
+
+  const isStrong = (pass: string) => validator.isStrongPassword(pass, {
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 0
+  })
 
   useEffect(() => {
-    setError(false)
+    setError(null)
+
+    if (!email && !password) return
+
+    if (!validator.isEmail(email)) {
+      setError('Enter valid email')
+      return
+    }
+    
+    if (!password) return
+
+    if (!isStrong(password)) {
+      setError('Weak password. Min length of 8, one uppercase and one number')
+      return
+    }
+
     if (password !== repeatPassword) {
-      setError(true)
-      setErrorText('Passwords dont match')
-    }
-
-    if (password && !validator.isStrongPassword(password)) {
-      setError(true)
-      setErrorText('Weak password')
-    }
-
-    if (email && !validator.isEmail(email)) {
-      setError(true)
-      setErrorText('Enter valid email')
+      setError('Passwords dont match')
+      return  
     }
 
   }, [email, password, repeatPassword])
   
   
   const onPress = async () => {
-    setError(false)
-    if (validator.isEmail(email) && (password === repeatPassword) && validator.isStrongPassword(password)) {
+    setError(null)
+    if (validator.isEmail(email) && (password === repeatPassword) && isStrong(password)) {
       const pushToken = await registerNotifications()
-      const { data } = await api.post('login/register', {
+      const { status, data } = await api.post('login/register', {
         email,
         pushToken,
         password,
       })
-      if (data.success) {
+      if (status === 200) {
         signIn(data)
       } else {
-        setError(true)
-        setErrorText(data.message ?? 'Error')
+        setError(data.message ?? 'Error')
       }
     }
   }
@@ -121,7 +134,7 @@ export default () => {
               {REGISTER_SCREEN.description}
             </Animated.Text>
           </View>
-            {error ?
+            {!!error ?
               <Animated.Text
                 entering={FadeInDown.duration(1000).springify()}
                 style={{
@@ -131,7 +144,7 @@ export default () => {
                   fontFamily: 'Lato_400Regular',
                 }}
               >
-                {errorText}
+                {error}
               </Animated.Text>
               : <View style={{height: 20}}/>
             }
@@ -239,6 +252,17 @@ export default () => {
                 }}
               />
             </Animated.View>
+            <Animated.Text
+              entering={FadeInDown.delay(800).duration(1000).springify()}
+              style={{
+                fontFamily: 'Lato_400Regular',
+                opacity: 0.5,
+                fontSize: 16,
+                color: 'gray',
+              }}
+            >
+              By pressing Register you agree with our <Link style={{textDecorationLine: 'underline'}} href={termsUrl}>terms</Link>
+            </Animated.Text>
             <Animated.View
               entering={FadeInDown.delay(800).duration(1000).springify()}
             >
