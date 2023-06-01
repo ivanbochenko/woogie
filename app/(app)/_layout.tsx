@@ -24,6 +24,7 @@ export default function RootLayoutNav() {
       <Stack.Screen name="Event" />
       <Stack.Screen name="Report" />
       <Stack.Screen name="Password" />
+      <Stack.Screen name="Agreement" />
     </Stack>
   );
 }

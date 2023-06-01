@@ -35,13 +35,18 @@ export default function Settings() {
         />
       </View>
 
-      <Button title={'Feedback'} onPress={() => openURL('mailto:woogie.ceo@gmail.com')}/>
-      
+      <Button
+        title={'Feedback'}
+        onPress={() => openURL('mailto:woogie.ceo@gmail.com')}
+      />
+      <Button
+        title={'Agreement'}
+        onPress={ () => router.push({pathname: 'Agreement'}) }
+      />
       <Button
         title={'Password'}
         onPress={ () => router.push({pathname: 'Password'}) }
       />
-
       <Button onPress={signOut} title={'Sign Out'}/>
 
     </View>
