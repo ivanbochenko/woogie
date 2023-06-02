@@ -107,17 +107,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: m,
+    // gap: m,
   },
   textStyle: {
     fontFamily: 'Lato_400Regular',
     textDecorationLine: 'none'
   },
   row: {
-    marginTop: m,
+    width: '100%',
     flexDirection: "row",
     flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "center",
+    marginTop: m
   },
 });
 

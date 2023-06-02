@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Animated, Image, RefreshControl } from 'react-native'
+import { View, SafeAreaView, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Animated, Image, RefreshControl } from 'react-native'
 import { useQuery, useMutation } from 'urql';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
@@ -17,7 +17,7 @@ import ReAnimated, {
 import { height, width } from '../../../constants/Layout';
 import { s, m, l, xl } from '../../../constants/Spaces';
 import { useAuth } from '../../../lib/Auth'
-import { View, Pressable } from '../../../components/Themed';
+import { Pressable } from '../../../components/Themed';
 import { BoldText, RegularText } from '../../../components/StyledText';
 import { graphql } from '../../../gql';
 
@@ -230,7 +230,7 @@ const Swipe = (props: {
       <Swipeable ref={ref} renderRightActions={renderRightActions}>
         <Pressable
           key={id}
-          style={[styles.row, {backgroundColor: colors.background}]}
+          style={[styles.row, {backgroundColor: colors.border}]}
           onPress={() => router.push({pathname: 'Chat', params: {event_id: id, title}})}
         >
           <Image style={styles.chatImg} source={image} />
@@ -263,6 +263,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: l,
     marginBottom: m,
+    padding: m
   },
   switch: {
     flexDirection: 'row',
