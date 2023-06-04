@@ -58,7 +58,6 @@ export default () => {
         >
           <TextInput
             placeholder="Your Password"
-            keyboardType="visible-password"
             secureTextEntry={true}
             value={password}
             onChangeText={(t) => setPassword(t)}
@@ -74,7 +73,6 @@ export default () => {
         >
           <TextInput
             placeholder="New Password"
-            keyboardType="visible-password"
             secureTextEntry={true}
             value={newPassword}
             onChangeText={(t) => setNewPassword(t)}
@@ -90,7 +88,6 @@ export default () => {
         >
           <TextInput
             placeholder="Repeat New Password"
-            keyboardType="visible-password"
             secureTextEntry={true}
             value={repeatNewPassword}
             onChangeText={(t) => setRepeatNewPassword(t)}

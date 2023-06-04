@@ -80,7 +80,6 @@ export default () => {
         >
           <TextInput
             placeholder="Your Password"
-            keyboardType="visible-password"
             secureTextEntry={true}
             value={password}
             onChangeText={(t) => setPassword(t)}
