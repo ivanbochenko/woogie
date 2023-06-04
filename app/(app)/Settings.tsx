@@ -36,6 +36,10 @@ export default function Settings() {
       </View>
 
       <Button
+        title={'Upgrade'}
+        onPress={ () => {} }
+      />
+      <Button
         title={'Feedback'}
         onPress={() => openURL('mailto:woogie.ceo@gmail.com')}
       />

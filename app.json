@@ -17,15 +17,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "orientation": "portrait",
       "bundleIdentifier": "com.app.woogie",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to set profile and event photo.",
+        "NSPhotoLibraryAddUsageDescription": "This app uses the camera to set profile and event photo.",
         "NSLocationAlwaysUsageDescription": "We need your location to show events near you.",
         "NSLocationWhenInUseUsageDescription": "We need your location to show events near you.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you."
       },
-      "buildNumber": "25"
+      "buildNumber": "26"
     },
     "plugins": [
       [
