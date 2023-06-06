@@ -25,7 +25,7 @@ export default function RootLayoutNav() {
       <Stack.Screen name="Report" />
       <Stack.Screen name="Password" />
       <Stack.Screen name="Agreement" />
-      <Stack.Screen name="Upgrade" />
+      <Stack.Screen name="Upgrade" options={{headerShown: false}} />
     </Stack>
   );
 }

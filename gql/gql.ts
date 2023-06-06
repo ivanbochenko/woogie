@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  mutation EDIT_PROFILE($id: String!, $name: String!, $bio: String, $age: Int!, $sex: String!, $avatar: String) {\n    editUser(id: $id, name: $name, bio: $bio, age: $age, sex: $sex, avatar: $avatar) {\n      id\n    }\n  }\n": types.Edit_ProfileDocument,
-    "\n  query Edit_PROFILE_QUERY($id: String!) {\n    user(id: $id) {\n      id\n      name\n      avatar\n      age\n      bio\n      sex\n    }\n  }\n": types.Edit_Profile_QueryDocument,
+    "\n  query PROFILE_QUERY($id: String!) {\n    user(id: $id) {\n      id\n      name\n      avatar\n      age\n      bio\n      sex\n    }\n  }\n": types.Profile_QueryDocument,
     "\n  query MY_MATCHES($user_id: String!) {\n    matches(user_id: $user_id) {\n      id\n      event {\n        id\n        title\n        time\n        photo\n      }\n    }\n  }\n": types.My_MatchesDocument,
     "\n  query MY_EVENTS($author_id: String!) {\n    events(author_id: $author_id) {\n      id\n      title\n      time\n      photo\n    }\n  }\n": types.My_EventsDocument,
     "\n  mutation DELETE_MATCH($id: String!) {\n    deleteMatch(id: $id) {\n      id\n    }\n  }\n": types.Delete_MatchDocument,
@@ -53,7 +53,7 @@ export function graphql(source: "\n  mutation EDIT_PROFILE($id: String!, $name: 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Edit_PROFILE_QUERY($id: String!) {\n    user(id: $id) {\n      id\n      name\n      avatar\n      age\n      bio\n      sex\n    }\n  }\n"): (typeof documents)["\n  query Edit_PROFILE_QUERY($id: String!) {\n    user(id: $id) {\n      id\n      name\n      avatar\n      age\n      bio\n      sex\n    }\n  }\n"];
+export function graphql(source: "\n  query PROFILE_QUERY($id: String!) {\n    user(id: $id) {\n      id\n      name\n      avatar\n      age\n      bio\n      sex\n    }\n  }\n"): (typeof documents)["\n  query PROFILE_QUERY($id: String!) {\n    user(id: $id) {\n      id\n      name\n      avatar\n      age\n      bio\n      sex\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

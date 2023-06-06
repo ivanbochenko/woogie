@@ -7,11 +7,13 @@ import {
   TextStyle,
   ActivityIndicator,
   PressableProps,
+  View,
 } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { Pressable } from './Themed';
 import { BoldText } from './StyledText';
 import { s, m, l, xl } from '../constants/Spaces'
+import { Sparkles } from '../assets/artworks/Sparkles';
 
 export const Button = (
   props: PressableProps & {
@@ -49,6 +51,49 @@ export const Button = (
   );
 }
 
+export const SparkleButton = (
+  props: PressableProps & {
+    title: string,
+    onPress: (() => Promise<{}>) | (() => void),
+  }
+) => {
+
+  const { title, onPress, style, ...other } = props
+  const [loading, setLoading] = useState(false)
+
+  return (
+    <Pressable
+      onPress={async () => {
+        setLoading(true)
+        await onPress()
+        setLoading(false)
+      }}
+      style={{
+        paddingVertical: m,
+        minHeight: xl+4,
+        borderRadius: xl,
+        width: 150,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: m,
+      }}
+      {...other}
+    >
+      {loading
+        ? <ActivityIndicator size='small' color={'gray'} />
+        :
+        <View style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+        }}>
+          <Sparkles/>
+          <BoldText style={{marginHorizontal: m}}>{title}</BoldText>
+          <Sparkles/>
+        </View>
+      }
+    </Pressable>
+  );
+}
 
 export const Square = (props: {
   icon: JSX.Element;

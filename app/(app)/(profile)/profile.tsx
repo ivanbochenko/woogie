@@ -14,6 +14,7 @@ export default () => {
   const router = useRouter()
   const { user, api } = useAuth()
   const id = user?.id!
+  console.warn(id)
   const [value, setValue] = useState({} as UserData)
   const [edit, setEdit] = useState(false)
   
@@ -159,7 +160,7 @@ const EDIT_PROFILE = graphql(`
 `)
 
 const query = graphql(`
-  query Edit_PROFILE_QUERY($id: String!) {
+  query PROFILE_QUERY($id: String!) {
     user(id: $id) {
       id
       name

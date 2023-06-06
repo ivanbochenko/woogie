@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, Text, View, Alert } from 'react-native';
-
-import Purchases, { PurchasesOffering, PurchasesPackage, LOG_LEVEL, CustomerInfo } from 'react-native-purchases';
-import { APIKeys } from '../../constants/Keys';
-import { Pressable } from '../../components/Themed';
+import { Platform, View, Alert, StyleSheet, ActivityIndicator, SafeAreaView, Image, ScrollView } from 'react-native';
+import Purchases, { PurchasesOffering, PurchasesPackage, LOG_LEVEL } from 'react-native-purchases';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+import { APIKeys } from '../../constants/Keys';
 import { useAuth } from '../../lib/Auth';
+import { SparkleButton } from '../../components/Button';
+import { BoldText, RegularText } from '../../components/StyledText';
+import { s, m, l, xl } from '../../constants/Spaces'
 
 export default function Upgrade() {
   const router = useRouter()
+  const { colors } = useTheme()
   const { api, user  } = useAuth()
   const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
-  const [info, setInfo] = useState<CustomerInfo>()
   
   useEffect(() => {
     const fetchData = async () => {
       const offerings = await Purchases.getOfferings();
-      const { customerInfo, created } = await Purchases.logIn(user?.id!);
-      if (created) {
-        setInfo(customerInfo)
-      }
       setCurrentOffering(offerings.current);
     };
 
@@ -37,6 +37,7 @@ export default function Upgrade() {
   
   const onSelection = async (purchasePackage: PurchasesPackage) => {
     try {
+      const { created } = await Purchases.logIn(user?.id!);
       const { productIdentifier, customerInfo } = await Purchases.purchasePackage(purchasePackage);
 
       if (typeof customerInfo.entitlements.active['pro'] !== 'undefined') {
@@ -50,27 +51,78 @@ export default function Upgrade() {
     }
   };
 
-  if (!currentOffering) {
-    return <Text>Loading...</Text>
-  } else {
-    return (
-      <View>
-        <Text>Current Offering: {currentOffering.identifier}</Text>
-        <Text>Active Subscriptions{info?.activeSubscriptions}</Text>
-        {
-          currentOffering.availablePackages.map((pkg) => {
-            const { product: { title, description, priceString } } = pkg;
-            return (
-              <View>
-                <Text>{ title }</Text>
-                <Text>{ description }</Text>
-                <Text>{ priceString }</Text>
-                <Pressable onPress={() => onSelection(pkg)}>Buy</Pressable>
+  if (!currentOffering) return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={'gray'} />
+    </View>
+  )
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <LinearGradient
+        style={{width: '100%'}}
+        colors={[colors.card, colors.background]}
+        start={{x: 0.5, y: 0}}
+        end={{x: 0.5, y: 1}}
+      >
+        <View style={styles.row}>
+          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.7, marginTop: xl+m}]} source={require('../../assets/memojis/girlHat.png')}/>
+          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.8, marginTop: l}]} source={require('../../assets/memojis/guyHair.png')}/>
+          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.9}]} source={require('../../assets/memojis/guyHipster.png')}/>
+          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.8, marginTop: l+m}]} source={require('../../assets/memojis/girlMask.png')}/>
+          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.7, marginTop: xl+l}]} source={require('../../assets/memojis/guyGlasses.png')}/>
+        </View>
+      </LinearGradient>
+      {currentOffering.availablePackages.map((pkg, index) => {
+        const { product: { title, description, priceString } } = pkg;
+        return (
+          <ScrollView contentContainerStyle={[{ width: '100%'}, styles.center]} key={index}>
+            <View style={styles.text}>
+              <BoldText>{ title }</BoldText>
+              <RegularText>{ description }</RegularText>
+              <View style={styles.priceRow}>
+                <BoldText>{ priceString }</BoldText>
+                <RegularText style={{color: 'green', opacity: 0.6, marginLeft: m}}>
+                  { index === 1 ? '22% saving' : (index === 2 ? '45% saving' : null) }
+                </RegularText>
               </View>
-            )
-          })
-        }
-      </View>
-    );
-  }
+            </View>
+            <SparkleButton title='Buy' onPress={() => onSelection(pkg)}/>
+          </ScrollView>
+        )
+      })}
+    </SafeAreaView>
+  )
 }
+
+const styles = StyleSheet.create({
+  center: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  row: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: 'space-between',
+    padding: m
+  },
+  priceRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginVertical: s,
+    alignItems: 'flex-end',
+  },
+  text: {
+    marginTop: m,
+    width: '100%',
+    paddingHorizontal: xl+m
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emoji: {
+    width: xl+l,
+    height: xl+l+m,
+  }
+});

@@ -25,7 +25,7 @@ export default function Chats() {
   const [show, setShow] = useState(true)
   const { user } = useAuth()
   const {colors} = useTheme()
-  const user_id = useRef(user?.id!).current
+  const user_id = user?.id!
 
   const [deleteEventResult, deleteEvent] = useMutation(DELETE_EVENT)
   const [deleteMatchResult, deleteMatch] = useMutation(DELETE_MATCH)
@@ -95,7 +95,6 @@ export default function Chats() {
 
   const ShowEvents = () => {
     const [refreshing, setRefreshing] = useState(false)
-
     const onRefresh = useCallback(() => {
       setRefreshing(true)
       refreshEvents({requestPolicy: 'cache-and-network'})
