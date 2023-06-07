@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Axios } from 'axios'
-import { createSelectors, getToken, removeToken, setToken } from './Storage';
+import { createSelectors } from './Selectors'
+import { getToken, removeToken, setToken, getSwipes, setSwipes } from './Storage';
 import { apiClient, refreshToken } from '../lib/Client'
 import { LocationType, getLocation } from "./Location";
 
@@ -12,27 +13,45 @@ type Data = {
 interface AuthState {
   token: string | null | undefined,
   id: string | undefined,
+  swipes: number,
+  location: LocationType,
+  maxDistance: number,
+  setMaxDistance(num: number): void,
+  getLocation: () => Promise<void>,
+  hydrateSwipes: () => Promise<void>,
+  incSwipes: () => Promise<void>,
   api(): Axios,
   signIn(data: Data): void,
   signOut(): void,
   hydrate: () => Promise<void>,
-  location: LocationType,
-  getLocation: () => Promise<void>
-  maxDistance: number,
-  setMaxDistance(num: number): void,
 }
 
 const _useAuth = create<AuthState>((set, get) => ({
   token: undefined,
   id: undefined,
+  swipes: 0,
   location: null,
   maxDistance: 100,
+  setMaxDistance: (maxDistance: number) => {
+    set({maxDistance})
+  },
   getLocation: async () => {
     const location = await getLocation();
     set({ location });
   },
-  setMaxDistance: (maxDistance: number) => {
-    set({maxDistance})
+  hydrateSwipes: async () => {
+    const swipes = await getSwipes()
+    if (swipes) {
+      const dayAgoDate = () => new Date(new Date().getTime() - 60 * 60 * 24 * 1000)
+      const freshSwipes = swipes.filter(swipe => new Date(swipe).getTime() > dayAgoDate().getTime())
+      await setSwipes(freshSwipes)
+      set({swipes: freshSwipes.length})
+    }
+  },
+  incSwipes: async () => {
+    const swipes = await getSwipes()
+    await setSwipes([...swipes, new Date().toISOString()])
+    set(state => ({swipes: state.swipes + 1}))
   },
   api: () => {
     apiClient.defaults.headers.common['Authorization'] = get().token
@@ -50,7 +69,7 @@ const _useAuth = create<AuthState>((set, get) => ({
     try {
       let hasToSignOut = true
       const userToken = await getToken();
-      if (userToken !== null) {
+      if (!!userToken) {
         const data = await refreshToken(userToken)
         if (data) {
           hasToSignOut = false

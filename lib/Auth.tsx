@@ -24,6 +24,7 @@ function useProtectedRoute(token: string | null | undefined) {
 export function Provider(props: {children: JSX.Element}) {
   const token = useAuth.use.token()
   useAuth.use.getLocation()()
+  useAuth.use.hydrateSwipes()()
   const client = gqlClient(token!)
   useProtectedRoute(token)
 

@@ -1,5 +1,4 @@
 import * as Location from 'expo-location'
-import { useEffect, useState } from 'react'
 
 export const getLocation = async () => {
   const { status } = await Location.requestForegroundPermissionsAsync()
@@ -9,17 +8,6 @@ export const getLocation = async () => {
   } else {
     return null
   }
-}
-
-export const useLocation = () => {
-  const [location, setLocation] = useState<LocationType>(null)
-  useEffect(() => {
-    (async () => {
-      const freshLocation = await getLocation()
-      setLocation(freshLocation)
-    })()
-  }, [])
-  return location
 }
 
 export type LocationType = {

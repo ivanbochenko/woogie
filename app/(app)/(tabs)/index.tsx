@@ -9,6 +9,7 @@ import { graphql } from '../../../gql';
 
 export default () => {
   const id = useAuth.use.id()
+  const incSwipes = useAuth.use.incSwipes()
   const maxDistance = useAuth.use.maxDistance()
   const location = useAuth.use.location()
   const user_id = id!
@@ -16,6 +17,9 @@ export default () => {
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
     await match({user_id, event_id, dismissed})
+    if (!dismissed) {
+      await incSwipes()
+    }
   }
 
   if (!location) {
