@@ -14,7 +14,7 @@ import { PrimaryButton } from "../../components/Button";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import Icons from "@expo/vector-icons/MaterialIcons";
-import { useAuth } from "../../lib/Auth";
+import { api, signIn } from "../../lib/State";
 import validator from "validator";
 
 const LOG_IN_SCREEN = {
@@ -26,7 +26,6 @@ const LogInScreen = () => {
   const theme = useTheme();
   const dimensions = useWindowDimensions();
   const router = useRouter()
-  const { signIn, api } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -35,17 +34,32 @@ const LogInScreen = () => {
   const onPress = async () => {
     if (validator.isEmail(email) && password) {
       setError(null)
-      api.post('login/password', {
+      api().post('login/password', {
         email,
         password,
       }).then((res) => {
         signIn(res.data)
         return
       }).catch((err) => {
+        console.error(err)
         setError('Wrong data, try again or restore')
       })
     } else {
       setError('Enter valid email and password')
+    }
+  }
+
+  const onRestore = () => {
+    if (validator.isEmail(email)) {
+      api().post('login/restore', { email })
+        .then((res) => {
+          setError('Check your email')
+        })
+        .catch((err) => {
+          setError('Wrong data')
+        })
+    } else {
+      setError('Enter valid email')
     }
   }
 
@@ -222,19 +236,7 @@ const LogInScreen = () => {
               </Text>
               <View style={{width: 6}}/>
               <Text
-                onPress={() => {
-                  if (validator.isEmail(email)) {
-                    api.post('login/restore', { email })
-                      .then((res) => {
-                        setError('Check your email')
-                      })
-                      .catch((err) => {
-                        setError('Wrong data')
-                      })
-                  } else {
-                    setError('Enter valid email')
-                  }
-                }}
+                onPress={onRestore}
                 style={{
                   fontFamily: 'Lato_400Regular',
                   opacity: 0.5,

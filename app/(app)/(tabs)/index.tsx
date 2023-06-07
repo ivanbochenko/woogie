@@ -4,12 +4,14 @@ import { useMutation, useQuery } from 'urql';
 import { Fade } from "../../../components/Fade";
 import { Stack } from '../../../components/Card';
 import { RegularText } from '../../../components/StyledText';
-import { useAuth } from '../../../lib/Auth'
+import { useAuth } from '../../../lib/State'
 import { graphql } from '../../../gql';
 
 export default () => {
-  const { user, maxDistance, location } = useAuth()
-  const user_id = user?.id!
+  const id = useAuth.use.id()
+  const maxDistance = useAuth.use.maxDistance()
+  const location = useAuth.use.location()
+  const user_id = id!
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {

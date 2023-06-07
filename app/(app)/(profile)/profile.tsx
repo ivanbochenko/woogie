@@ -6,15 +6,14 @@ import { s, m, l, xl } from '../../../constants/Spaces';
 import { RegularText, BoldText } from '../../../components/StyledText';
 import { useMutation, useQuery } from 'urql';
 import { graphql } from '../../../gql'
-import { useAuth } from '../../../lib/Auth'
+import { useAuth } from '../../../lib/State'
 import { useState } from 'react';
 import { EditProfileView, UserData } from '../../../components/EditProfile';
 
 export default () => {
   const router = useRouter()
-  const { user, api } = useAuth()
-  const id = user?.id!
-  console.warn(id)
+  const id = useAuth.use.id()
+  const api = useAuth.use.api()()
   const [value, setValue] = useState({} as UserData)
   const [edit, setEdit] = useState(false)
   
@@ -22,7 +21,7 @@ export default () => {
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query,
-    variables: { id },
+    variables: { id: id! },
   });
 
   const onSubmit = async () => {
@@ -39,7 +38,7 @@ export default () => {
       return
     }
     await editProfile({
-      id,
+      id: id!,
       name: value.name!,
       bio: value.bio!,
       sex: value.sex!,

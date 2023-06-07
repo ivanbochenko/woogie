@@ -11,7 +11,7 @@ import { Button, Square } from '../../components/Button';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Icon } from '../../components/Themed';
 import { BoldText, RegularText, TextInput } from '../../components/StyledText'
-import { useAuth } from '../../lib/Auth';
+import { useAuth } from '../../lib/State';
 import { graphql } from '../../gql';
 import { launchImagePicker } from '../../lib/Media';
 import { getDistance } from '../../lib/Distance';
@@ -41,10 +41,11 @@ export default (props: {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['75%'], [])
   
-  const { api, user } = useAuth()
+  const id = useAuth.use.id()
+  const api = useAuth.use.api()()
 
   const initialState = {
-    author_id: user?.id!,
+    author_id: id!,
     photo: '',
     title: '',
     text: '',

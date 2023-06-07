@@ -4,14 +4,13 @@ import { useRouter } from 'expo-router';
 import { Button } from "../../../components/Button";
 import { s, m, l, xl } from '../../../constants/Spaces';
 import { RegularText, BoldText } from '../../../components/StyledText';
-import { useAuth } from '../../../lib/Auth'
+import { api, signOut } from '../../../lib/State'
 import { useTheme } from '@react-navigation/native';
 import Icons from "@expo/vector-icons/MaterialIcons";
 
 export default () => {
   const router = useRouter()
   const theme = useTheme()
-  const { api, signOut } = useAuth()
   const [password, setPassword] = useState('')
   const [error, setError] = useState<null | string>(null)
   const styledInput = [
@@ -36,7 +35,7 @@ export default () => {
         {
           text: "Yes",
           onPress: async () => {
-            const { status, data } = await api.post('password/user/delete', { password })
+            const { status, data } = await api().post('password/user/delete', { password })
             if (status === 200) {
               signOut()
             } else {

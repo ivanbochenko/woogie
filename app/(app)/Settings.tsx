@@ -6,13 +6,14 @@ import { openURL } from 'expo-linking';
 import { View } from '../../components/Themed';
 import { Button } from '../../components/Button';
 import { BoldText } from '../../components/StyledText';
-import { useAuth } from '../../lib/Auth'
+import { useAuth, signOut } from '../../lib/State'
 import { useRouter } from 'expo-router';
 
 export default function Settings() {
   const router = useRouter()
   const { colors } = useTheme()
-  const { signOut, maxDistance, setMaxDistance } = useAuth()
+  const maxDistance = useAuth.use.maxDistance()
+  const setMaxDistance = useAuth.use.setMaxDistance()
 
   return (
     <SafeAreaView style={{flex: 1}}>

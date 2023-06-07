@@ -16,16 +16,16 @@ import ReAnimated, {
 
 import { height, width } from '../../../constants/Layout';
 import { s, m, l, xl } from '../../../constants/Spaces';
-import { useAuth } from '../../../lib/Auth'
+import { useAuth } from '../../../lib/State'
 import { Pressable } from '../../../components/Themed';
 import { BoldText, RegularText } from '../../../components/StyledText';
 import { graphql } from '../../../gql';
 
 export default function Chats() {
   const [show, setShow] = useState(true)
-  const { user } = useAuth()
+  const id = useAuth.use.id()
   const {colors} = useTheme()
-  const user_id = user?.id!
+  const user_id = id!
 
   const [deleteEventResult, deleteEvent] = useMutation(DELETE_EVENT)
   const [deleteMatchResult, deleteMatch] = useMutation(DELETE_MATCH)

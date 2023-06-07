@@ -12,7 +12,7 @@ import { useTheme } from "@react-navigation/native";
 import validator from "validator";
 import { PrimaryButton } from "../../components/Button";
 import Icons from "@expo/vector-icons/MaterialIcons";
-import { useAuth } from "../../lib/Auth";
+import { api, signIn } from "../../lib/State";
 import { registerNotifications } from '../../lib/Notification'
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -27,7 +27,6 @@ export default () => {
   const theme = useTheme();
   const dimensions = useWindowDimensions();
   const router = useRouter()
-  const { signIn, api } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -71,7 +70,7 @@ export default () => {
     setError(null)
     if (validator.isEmail(email) && (password === repeatPassword) && isStrong(password)) {
       const pushToken = await registerNotifications()
-      const { status, data } = await api.post('login/register', {
+      const { status, data } = await api().post('login/register', {
         email,
         pushToken,
         password,

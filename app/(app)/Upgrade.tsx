@@ -14,9 +14,8 @@ import { s, m, l, xl } from '../../constants/Spaces'
 export default function Upgrade() {
   const router = useRouter()
   const { colors } = useTheme()
-  const { id } = useAuth()
   const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
-  const appUserID = id
+  const appUserID = useAuth.use.id()
 
   useEffect(() => {
     const fetchData = async () => {

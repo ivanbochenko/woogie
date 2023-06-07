@@ -10,7 +10,7 @@ import { useMutation } from 'urql'
 import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { s, m, l, xl } from '../../constants/Spaces';
 import { Button } from '../../components/Button';
-import { useAuth } from '../../lib/Auth';
+import { useAuth } from '../../lib/State';
 import { graphql } from '../../gql';
 import { View } from '../../components/Themed';
 
@@ -27,7 +27,8 @@ type ValueData = Params & {reason: string | null, text: string}
 
 export default () => {
   const { colors } = useTheme();
-  const { api, user } = useAuth()
+  const id = useAuth.use.id()
+  const api = useAuth.use.api()()
   const router = useRouter()
   const { user_id, event_id } = useSearchParams() as Params
   const [blockUser, setBlockUser] = useState(false)
@@ -59,7 +60,7 @@ export default () => {
     let res
     event_id && (res = await api.post('report/event', value))
     user_id && (res = await api.post('report/user', value))
-    blockUser && (await block({id: user?.id!, user_id: user_id!}))
+    blockUser && (await block({id: id!, user_id: user_id!}))
 
     if (res?.status !== 200 ) {
       Alert.alert(res?.data?.message ?? 'Error, try again')

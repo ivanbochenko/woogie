@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider } from '../lib/Auth'
 import { MyDarkTheme, MyLightTheme } from '../constants/Colors'
+import { hydrateAuth } from '../lib/State';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -25,8 +26,10 @@ Notifications.setNotificationHandler({
   }),
 });
 
+hydrateAuth()
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme()
 
   const [loaded, error] = useFonts({
     Lato_400Regular,

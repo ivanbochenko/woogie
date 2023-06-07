@@ -3,14 +3,13 @@ import { SafeAreaView, View, KeyboardAvoidingView, StyleSheet } from 'react-nati
 import { Button } from "../../components/Button";
 import { s, m, l, xl } from '../../constants/Spaces';
 import { RegularText, TextInput } from '../../components/StyledText';
-import { useAuth } from '../../lib/Auth'
+import { api, signOut } from '../../lib/State'
 import { useTheme } from '@react-navigation/native';
 import validator from 'validator';
 import { Icon } from '../../components/Themed';
 
 export default () => {
   const theme = useTheme()
-  const { api, signOut } = useAuth()
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
@@ -34,7 +33,7 @@ export default () => {
       setError('Passwords dont match')
       return
     }
-    const { status, data } = await api.post('password/reset', { password, newPassword })
+    const { status, data } = await api().post('password/reset', { password, newPassword })
     if (status === 200) {
       signOut()
     } else {

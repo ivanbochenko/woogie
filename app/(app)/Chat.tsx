@@ -14,15 +14,15 @@ import { s, m, l, xl } from '../../constants/Spaces'
 import { height, width } from '../../constants/Layout';
 import { RegularText } from '../../components/StyledText'
 import { View, Icon } from '../../components/Themed'
-import { useAuth } from '../../lib/Auth'
+import { useAuth } from '../../lib/State'
 import { graphql } from '../../gql';
 
 export default () => {
   const { title, event_id } = useSearchParams() as { title: string, event_id: string }
   const router = useRouter()
   const { colors } = useTheme()
-  const { user, api } = useAuth()
-  const id = user?.id!
+  const id = useAuth.use.id()
+  const api = useAuth.use.api()()
 
   const [fetching, setFetching] = useState(true)
   const [messages, setMessages] = useState([])
@@ -53,16 +53,16 @@ export default () => {
         `,
         variables: { event_id }
       })
-      if (status == 200) {
+      if (status === 200) {
         setMessages(data.data.messages)
       }
       setFetching(false)
     })()
-    Keyboard.addListener('keyboardWillShow', (e) => setKeyboardHeight(e.endCoordinates.height))
-    Keyboard.addListener('keyboardWillHide', () => setKeyboardHeight(0))
+    const keyboardWillShow = Keyboard.addListener('keyboardWillShow', (e) => setKeyboardHeight(e.endCoordinates.height))
+    const keyboardWillHide = Keyboard.addListener('keyboardWillHide', () => setKeyboardHeight(0))
     return () => {
-      Keyboard.removeAllListeners('keyboardWillShow')
-      Keyboard.removeAllListeners('keyboardWillHide')
+      keyboardWillShow.remove()
+      keyboardWillHide.remove()      
     }
   }, [])
   
@@ -85,7 +85,7 @@ export default () => {
       const result = await messagePost({
         text,
         event_id,
-        author_id: id,
+        author_id: id!,
       })
       if (result.error) console.error('Oh no!', result.error);
     }
@@ -171,7 +171,7 @@ const Message = (props: {
   renderAvatar: boolean
 }) => {
   const { data, renderAvatar } = props
-  const user_id = useAuth().user?.id!
+  const user_id = useAuth().id!
   const { colors } = useTheme()
   const router = useRouter()
   const backgroundColor = data.author.id === user_id ? colors.card : colors.border

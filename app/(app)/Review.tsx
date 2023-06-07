@@ -8,13 +8,13 @@ import { BoldText, TextInput } from '../../components/StyledText'
 import { s, m, l, xl } from '../../constants/Spaces';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Themed'
-import { useAuth } from '../../lib/Auth';
+import { useAuth } from '../../lib/State';
 import { graphql } from '../../gql';
 
 export default () => {
   const { colors } = useTheme();
-  const { user } = useAuth()
-  const author_id = user?.id!
+  const id = useAuth.use.id()
+  const author_id = id!
   const { user_id } = useSearchParams() as { user_id: string }
   const [reviewResult, review] = useMutation(POST_REVIEW)
   const [value, setValue] = useState({

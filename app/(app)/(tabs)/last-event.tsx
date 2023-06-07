@@ -10,7 +10,7 @@ import Animated, {
 import { RegularText, BoldText } from '../../../components/StyledText';
 import { Icon } from '../../../components/Themed';
 import { s, m, l, xl } from '../../../constants/Spaces';
-import { useAuth } from '../../../lib/Auth';
+import { useAuth } from '../../../lib/State';
 import { useRouter } from 'expo-router';
 import User from "../../../components/User";
 import NewEvent from '../new-event';
@@ -46,7 +46,8 @@ const Match = (props: {
 
 export default () => {
   const router = useRouter()
-  const { user, location } = useAuth()
+  const id = useAuth.use.id()
+  const location = useAuth.use.location()
   
   const [refreshing, setRefreshing] = useState(false)
   const refresh = () => reexecuteQuery({requestPolicy: 'network-only'})
@@ -59,7 +60,7 @@ export default () => {
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: LAST_EVENT,
-    variables: { author_id: user?.id! },
+    variables: { author_id: id! },
   });
   
   
