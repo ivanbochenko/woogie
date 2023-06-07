@@ -21,18 +21,6 @@ export default () => {
   const user_id = id!
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
-  const onSwipe = async (event_id: string, dismissed: boolean) => {
-    if (!dismissed && !proAccess) await addSwipe()
-    if (swipes > NUMBER_OF_FREE_SWIPES) router.push({pathname: 'Upgrade'})
-    await match({user_id, event_id, dismissed})
-  }
-
-  if (!location) {
-    <SafeAreaView style={styles.container}>
-      <RegularText>We need your location to show events near you</RegularText>
-    </SafeAreaView>
-  }
-
   const [{ data, fetching, error }, refreshEvents] = useQuery({
     query: FEED_QUERY,
     variables: {
@@ -43,7 +31,21 @@ export default () => {
     },
   })
 
-  if (fetching || !data?.feed) return <Fade/>
+  const onSwipe = async (event_id: string, dismissed: boolean) => {
+    if (swipes > NUMBER_OF_FREE_SWIPES) {
+      return router.push({pathname: 'Upgrade'})
+    }
+    if (!dismissed && !proAccess) await addSwipe()
+    await match({user_id, event_id, dismissed})
+  }
+
+  if (fetching || !data?.feed) {
+    return <Fade/>
+  } else if (!location) return (
+    <SafeAreaView style={styles.container}>
+      <RegularText>We need your location to show events near you</RegularText>
+    </SafeAreaView>
+  )
 
   return (
     <SafeAreaView style={styles.container}>

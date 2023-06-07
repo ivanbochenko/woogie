@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, View, Alert, StyleSheet, ActivityIndicator, SafeAreaView, Image, ScrollView } from 'react-native';
-import Purchases, { PurchasesOffering, PurchasesPackage, LOG_LEVEL } from 'react-native-purchases';
+import { View, Alert, StyleSheet, ActivityIndicator, SafeAreaView, Image, ScrollView } from 'react-native';
+import Purchases, { PurchasesOffering, PurchasesPackage } from 'react-native-purchases';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-
-import { APIKeys } from '../../constants/Keys';
-import { useAuth } from '../../lib/State';
 import { SparkleButton } from '../../components/Button';
 import { BoldText, RegularText } from '../../components/StyledText';
 import { s, m, l, xl } from '../../constants/Spaces'
@@ -15,24 +12,13 @@ export default function Upgrade() {
   const router = useRouter()
   const { colors } = useTheme()
   const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
-  const appUserID = useAuth.use.id()
 
   useEffect(() => {
     const fetchData = async () => {
       const offerings = await Purchases.getOfferings();
       setCurrentOffering(offerings.current);
-    };
-
-    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
-
-    if (Platform.OS == "ios") {
-      Purchases.configure({ apiKey: APIKeys.apple, appUserID });
-    } else {
-      Purchases.configure({ apiKey: APIKeys.google, appUserID });
     }
-
-    fetchData().catch(console.error);
-
+    fetchData().catch(console.error)
   }, []);
   
   const onSelection = async (purchasePackage: PurchasesPackage) => {

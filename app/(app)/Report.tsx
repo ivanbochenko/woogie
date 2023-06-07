@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Alert, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Alert, KeyboardAvoidingView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useRouter, useSearchParams } from 'expo-router'
 import BouncyCheckboxGroup, {
@@ -12,7 +12,6 @@ import { s, m, l, xl } from '../../constants/Spaces';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../lib/State';
 import { graphql } from '../../gql';
-import { View } from '../../components/Themed';
 
 const reasons = [
   'There`s nudity or something sexually explicit',
@@ -23,27 +22,27 @@ const reasons = [
 ]
 
 type Params = { user_id: string | undefined, event_id: string | undefined }
-type ValueData = Params & {reason: string | null, text: string}
+type ValueData = Params & {reason: string, text: string}
 
 export default () => {
-  const { colors } = useTheme();
+  const { colors } = useTheme()
+  const router = useRouter()
   const id = useAuth.use.id()
   const api = useAuth.use.api()()
-  const router = useRouter()
   const { user_id, event_id } = useSearchParams() as Params
   const [blockUser, setBlockUser] = useState(false)
   const [blockResult, block] = useMutation(BLOCK)
   const [value, setValue] = useState<ValueData>({
     event_id,
     user_id,
-    reason: null,
+    reason: '',
     text: '',
   })
   
-  const verticalStaticData = reasons.map((value, index) => (
+  const verticalStaticData = reasons.map((reason, index) => (
     {
-      id: index,
-      text: value,
+      id: index.toString(),
+      text: reason,
       unfillColor: colors.card,
       fillColor: colors.primary,
       textStyle: styles.textStyle,

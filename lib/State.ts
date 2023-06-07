@@ -1,15 +1,20 @@
 import { create } from 'zustand';
 import { Axios } from 'axios'
+import * as Location from 'expo-location'
 import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes } from './Storage';
 import { apiClient } from '../lib/Client'
-import { LocationType, getLocation } from "./Location";
 import { registerNotifications } from './Notification';
-import { isPro } from './Pro';
+import { isPro } from './Purchases';
 
 type Data = {
   id: string,
   token: string
+}
+
+type Location = {
+  latitude: number,
+  longitude: number
 }
 
 interface AuthState {
@@ -17,7 +22,7 @@ interface AuthState {
   id: string | undefined,
   pro: boolean,
   swipes: number,
-  location: LocationType,
+  location: Location | null,
   maxDistance: number,
   setMaxDistance(num: number): void,
   getLocation(): Promise<void>,
@@ -41,8 +46,8 @@ const _useAuth = create<AuthState>((set, get) => ({
     set({maxDistance})
   },
   getLocation: async () => {
-    const location = await getLocation();
-    set({ location });
+    const { status } = await Location.requestForegroundPermissionsAsync()
+    set({ location: status === 'granted' ? (await Location.getCurrentPositionAsync({})).coords : null })
   },
   hydrateSwipes: async () => {
     const swipes = await getSwipes()
@@ -59,7 +64,7 @@ const _useAuth = create<AuthState>((set, get) => ({
     set(state => ({swipes: state.swipes + 1}))
   },
   getProAccess: async () => {
-    set({pro: await isPro()})
+    set({pro: await isPro(get().id!)})
   },
   api: () => {
     apiClient.defaults.headers.common['Authorization'] = get().token
