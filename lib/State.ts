@@ -22,7 +22,7 @@ interface AuthState {
   setMaxDistance(num: number): void,
   getLocation(): Promise<void>,
   hydrateSwipes(): Promise<void>,
-  incSwipes(): Promise<void>,
+  addSwipe(): Promise<void>,
   getProAccess(): Promise<void>,
   api(): Axios,
   signIn(data: Data): void,
@@ -53,7 +53,7 @@ const _useAuth = create<AuthState>((set, get) => ({
       set({swipes: freshSwipes.length})
     }
   },
-  incSwipes: async () => {
+  addSwipe: async () => {
     const swipes = await getSwipes()
     await setSwipes([...swipes, new Date().toISOString()])
     set(state => ({swipes: state.swipes + 1}))

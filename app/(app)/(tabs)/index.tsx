@@ -15,14 +15,14 @@ export default () => {
   const id = useAuth.use.id()
   const swipes = useAuth.use.swipes()
   const proAccess = useAuth.use.pro()
-  const incSwipes = useAuth.use.incSwipes()
+  const addSwipe = useAuth.use.addSwipe()
   const maxDistance = useAuth.use.maxDistance()
   const location = useAuth.use.location()
   const user_id = id!
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
-    if (!dismissed && !proAccess) await incSwipes()
+    if (!dismissed && !proAccess) await addSwipe()
     if (swipes > NUMBER_OF_FREE_SWIPES) router.push({pathname: 'Upgrade'})
     await match({user_id, event_id, dismissed})
   }
