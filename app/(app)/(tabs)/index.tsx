@@ -1,14 +1,20 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { useMutation, useQuery } from 'urql';
+import { useRouter } from 'expo-router';
 import { Fade } from "../../../components/Fade";
 import { Stack } from '../../../components/Card';
 import { RegularText } from '../../../components/StyledText';
 import { useAuth } from '../../../lib/State'
 import { graphql } from '../../../gql';
 
+const NUMBER_OF_FREE_SWIPES = 5
+
 export default () => {
+  const router = useRouter()
   const id = useAuth.use.id()
+  const swipes = useAuth.use.swipes()
+  const proAccess = useAuth.use.pro()
   const incSwipes = useAuth.use.incSwipes()
   const maxDistance = useAuth.use.maxDistance()
   const location = useAuth.use.location()
@@ -16,7 +22,8 @@ export default () => {
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
-    if (!dismissed) await incSwipes()
+    if (!dismissed && !proAccess) await incSwipes()
+    if (swipes > NUMBER_OF_FREE_SWIPES) router.push({pathname: 'Upgrade'})
     await match({user_id, event_id, dismissed})
   }
 

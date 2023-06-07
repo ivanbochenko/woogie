@@ -5,6 +5,7 @@ import { getToken, removeToken, setToken, getSwipes, setSwipes } from './Storage
 import { apiClient } from '../lib/Client'
 import { LocationType, getLocation } from "./Location";
 import { registerNotifications } from './Notification';
+import { isPro } from './Pro';
 
 type Data = {
   id: string,
@@ -14,22 +15,25 @@ type Data = {
 interface AuthState {
   token: string | null | undefined,
   id: string | undefined,
+  pro: boolean,
   swipes: number,
   location: LocationType,
   maxDistance: number,
   setMaxDistance(num: number): void,
-  getLocation: () => Promise<void>,
-  hydrateSwipes: () => Promise<void>,
-  incSwipes: () => Promise<void>,
+  getLocation(): Promise<void>,
+  hydrateSwipes(): Promise<void>,
+  incSwipes(): Promise<void>,
+  getProAccess(): Promise<void>,
   api(): Axios,
   signIn(data: Data): void,
   signOut(): void,
-  hydrate: () => Promise<void>,
+  hydrate(): Promise<void>,
 }
 
 const _useAuth = create<AuthState>((set, get) => ({
   token: undefined,
   id: undefined,
+  pro: false,
   swipes: 0,
   location: null,
   maxDistance: 100,
@@ -43,8 +47,8 @@ const _useAuth = create<AuthState>((set, get) => ({
   hydrateSwipes: async () => {
     const swipes = await getSwipes()
     if (swipes) {
-      const dayAgoDate = () => new Date(new Date().getTime() - 60 * 60 * 24 * 1000)
-      const freshSwipes = swipes.filter(swipe => new Date(swipe).getTime() > dayAgoDate().getTime())
+      const dayAgoDate = new Date(new Date().getTime() - 60 * 60 * 24 * 1000)
+      const freshSwipes = swipes.filter(swipe => new Date(swipe).getTime() > dayAgoDate.getTime())
       await setSwipes(freshSwipes)
       set({swipes: freshSwipes.length})
     }
@@ -53,6 +57,9 @@ const _useAuth = create<AuthState>((set, get) => ({
     const swipes = await getSwipes()
     await setSwipes([...swipes, new Date().toISOString()])
     set(state => ({swipes: state.swipes + 1}))
+  },
+  getProAccess: async () => {
+    set({pro: await isPro()})
   },
   api: () => {
     apiClient.defaults.headers.common['Authorization'] = get().token
