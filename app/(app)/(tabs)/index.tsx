@@ -16,10 +16,8 @@ export default () => {
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
+    if (!dismissed) await incSwipes()
     await match({user_id, event_id, dismissed})
-    if (!dismissed) {
-      await incSwipes()
-    }
   }
 
   if (!location) {

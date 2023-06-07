@@ -1,7 +1,6 @@
 import { createClient, defaultExchanges, subscriptionExchange } from 'urql'
 import axios from 'axios'
 import RNEventSource from 'react-native-event-source'
-import { registerNotifications } from './Notification'
 
 export const baseURL = 'https://woogie-server.herokuapp.com'
 const gqlUrl = baseURL + '/graphql'
@@ -61,13 +60,3 @@ export const gqlClient = (token: string) => createClient({
     }),
   ],
 })
-
-export const refreshToken = async (token: string) => {
-  const pushToken = await registerNotifications()
-  const { status, data } = await apiClient.post(`login`, {token, pushToken})
-  if (status === 200) {
-    return data as { token: string, id: string }
-  } else {
-    return null
-  }
-}

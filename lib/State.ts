@@ -2,8 +2,9 @@ import { create } from 'zustand';
 import { Axios } from 'axios'
 import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes } from './Storage';
-import { apiClient, refreshToken } from '../lib/Client'
+import { apiClient } from '../lib/Client'
 import { LocationType, getLocation } from "./Location";
+import { registerNotifications } from './Notification';
 
 type Data = {
   id: string,
@@ -68,10 +69,11 @@ const _useAuth = create<AuthState>((set, get) => ({
   hydrate: async () => {
     try {
       let hasToSignOut = true
-      const userToken = await getToken();
-      if (!!userToken) {
-        const data = await refreshToken(userToken)
-        if (data) {
+      const token = await getToken();
+      if (!!token) {
+        const pushToken = await registerNotifications()
+        const { status, data } = await apiClient.post(`login`, {token, pushToken})
+        if (status === 200) {
           hasToSignOut = false
           get().signIn(data)
         }
