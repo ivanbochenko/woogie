@@ -6,7 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import { APIKeys } from '../../constants/Keys';
-import { useAuth } from '../../lib/Auth';
+import { useAuth } from '../../lib/State';
 import { SparkleButton } from '../../components/Button';
 import { BoldText, RegularText } from '../../components/StyledText';
 import { s, m, l, xl } from '../../constants/Spaces'
@@ -14,9 +14,10 @@ import { s, m, l, xl } from '../../constants/Spaces'
 export default function Upgrade() {
   const router = useRouter()
   const { colors } = useTheme()
-  const { api, user  } = useAuth()
+  const { id } = useAuth()
   const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
-  
+  const appUserID = id
+
   useEffect(() => {
     const fetchData = async () => {
       const offerings = await Purchases.getOfferings();
@@ -26,9 +27,9 @@ export default function Upgrade() {
     Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
 
     if (Platform.OS == "ios") {
-      Purchases.configure({ apiKey: APIKeys.apple });
+      Purchases.configure({ apiKey: APIKeys.apple, appUserID });
     } else {
-      Purchases.configure({ apiKey: APIKeys.google });
+      Purchases.configure({ apiKey: APIKeys.google, appUserID });
     }
 
     fetchData().catch(console.error);
@@ -37,11 +38,9 @@ export default function Upgrade() {
   
   const onSelection = async (purchasePackage: PurchasesPackage) => {
     try {
-      const { created } = await Purchases.logIn(user?.id!);
       const { productIdentifier, customerInfo } = await Purchases.purchasePackage(purchasePackage);
 
       if (typeof customerInfo.entitlements.active['pro'] !== 'undefined') {
-
         router.back();
       }
     } catch (e: any) {
@@ -65,31 +64,33 @@ export default function Upgrade() {
         end={{x: 0.5, y: 1}}
       >
         <View style={styles.row}>
-          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.7, marginTop: xl+m}]} source={require('../../assets/memojis/girlHat.png')}/>
-          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.8, marginTop: l}]} source={require('../../assets/memojis/guyHair.png')}/>
-          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.9}]} source={require('../../assets/memojis/guyHipster.png')}/>
-          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.8, marginTop: l+m}]} source={require('../../assets/memojis/girlMask.png')}/>
-          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.7, marginTop: xl+l}]} source={require('../../assets/memojis/guyGlasses.png')}/>
+          <Image resizeMode='contain' style={styles.emoji} source={require('../../assets/memojis/girlHat.png')}/>
+          <Image resizeMode='contain' style={{width: xl+m, height: xl+l, opacity: 0.7, marginTop: xl}} source={require('../../assets/memojis/guyHair.png')}/>
+          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.9, marginTop: 0}]} source={require('../../assets/memojis/guyHipster.png')}/>
+          <Image resizeMode='contain' style={{width: xl+m+s, height: xl+l+m, opacity: 0.7, marginTop: l+m}} source={require('../../assets/memojis/girlMask.png')}/>
+          <Image resizeMode='contain' style={styles.emoji} source={require('../../assets/memojis/guyGlasses.png')}/>
         </View>
       </LinearGradient>
-      {currentOffering.availablePackages.map((pkg, index) => {
-        const { product: { title, description, priceString } } = pkg;
-        return (
-          <ScrollView contentContainerStyle={[{ width: '100%'}, styles.center]} key={index}>
-            <View style={styles.text}>
-              <BoldText>{ title }</BoldText>
-              <RegularText>{ description }</RegularText>
-              <View style={styles.priceRow}>
-                <BoldText>{ priceString }</BoldText>
-                <RegularText style={{color: 'green', opacity: 0.6, marginLeft: m}}>
-                  { index === 1 ? '22% saving' : (index === 2 ? '45% saving' : null) }
-                </RegularText>
+      <ScrollView>
+        {currentOffering.availablePackages.map((pkg, index) => {
+          const { product: { title, description, priceString } } = pkg;
+          return (
+            <View style={styles.center} key={index}>
+              <View style={styles.text}>
+                <BoldText>{ title }</BoldText>
+                <RegularText>{ description }</RegularText>
+                <View style={styles.priceRow}>
+                  <BoldText>{ priceString }</BoldText>
+                  <RegularText style={{color: 'green', opacity: 0.6, marginLeft: m}}>
+                    { index === 1 ? 'save 22%' : (index === 2 ? 'save 45%' : null) }
+                  </RegularText>
+                </View>
               </View>
+              <SparkleButton title='Buy' onPress={() => onSelection(pkg)}/>
             </View>
-            <SparkleButton title='Buy' onPress={() => onSelection(pkg)}/>
-          </ScrollView>
-        )
-      })}
+          )
+        })}
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -98,6 +99,8 @@ const styles = StyleSheet.create({
   center: {
     alignItems: "center",
     justifyContent: "center",
+    marginVertical: m,
+    width: '100%'
   },
   row: {
     flexDirection: "row",
@@ -112,7 +115,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   text: {
-    marginTop: m,
     width: '100%',
     paddingHorizontal: xl+m
   },
@@ -124,5 +126,7 @@ const styles = StyleSheet.create({
   emoji: {
     width: xl+l,
     height: xl+l+m,
+    opacity: 0.8,
+    marginTop: l
   }
 });

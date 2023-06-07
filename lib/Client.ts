@@ -6,10 +6,13 @@ import { registerNotifications } from './Notification'
 export const baseURL = 'https://woogie-server.herokuapp.com'
 const gqlUrl = baseURL + '/graphql'
 
-export const apiClient = () => axios.create({
+export const api = axios.create({
   baseURL,
   timeout: 10000,
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    "Accept": 'application/json'
+  },
 })
 
 export const gqlClient = (token: string) => createClient({
@@ -61,9 +64,9 @@ export const gqlClient = (token: string) => createClient({
 
 export const refreshToken = async (token: string) => {
   const pushToken = await registerNotifications()
-  const { status, data } = await apiClient().post(`login`, {token, pushToken})
+  const { status, data } = await api.post(`login`, {token, pushToken})
   if (status === 200) {
-    return data
+    return data as { token: string, id: string }
   } else {
     return null
   }
