@@ -47,7 +47,10 @@ const _useAuth = create<AuthState>((set, get) => ({
   },
   getLocation: async () => {
     const { status } = await Location.requestForegroundPermissionsAsync()
-    set({ location: status === 'granted' ? (await Location.getCurrentPositionAsync({})).coords : null })
+    if (status === 'granted') {
+      const location = (await Location.getCurrentPositionAsync({})).coords
+      set({ location })
+    }
   },
   hydrateSwipes: async () => {
     const swipes = await getSwipes()

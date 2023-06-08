@@ -26,7 +26,7 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you.",
         "NSPhotoLibraryUsageDescription": "Allow Woogie to access your photos."
       },
-      "buildNumber": "27"
+      "buildNumber": "28"
     },
     "plugins": [
       [
