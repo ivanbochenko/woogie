@@ -17,6 +17,11 @@ async function getItem<T>(key: string): Promise<T> {
   return !!value ? JSON.parse(value) : null;
 }
 
+async function getArray<T>(key: string): Promise<T> {
+  const value = await AsyncStorage.getItem(key);
+  return !!value ? JSON.parse(value) : [];
+}
+
 async function removeItem(key: string) {
   await AsyncStorage.removeItem(key);
 }
@@ -26,5 +31,5 @@ export const getToken = () => getItem<string>(TOKEN);
 export const removeToken = () => removeItem(TOKEN);
 
 export const setSwipes = (value: string[]) => setItem<string[]>(SWIPES, value);
-export const getSwipes = () => getItem<string[]>(SWIPES);
+export const getSwipes = () => getArray<string[]>(SWIPES);
 export const removeSwipes = () => removeItem(SWIPES);

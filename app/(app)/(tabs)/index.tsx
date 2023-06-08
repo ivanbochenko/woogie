@@ -32,10 +32,12 @@ export default () => {
   })
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
-    if (swipes > NUMBER_OF_FREE_SWIPES) {
+    if (swipes >= NUMBER_OF_FREE_SWIPES) {
       return router.push({pathname: 'Upgrade'})
     }
-    if (!dismissed && !proAccess) await addSwipe()
+    if (!dismissed && !proAccess) {
+      await addSwipe()
+    }
     await match({user_id, event_id, dismissed})
   }
 

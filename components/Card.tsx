@@ -29,13 +29,13 @@ export const Stack = (props: {
 
   const undo = () => setCurrentIndex(i => i>0 ? i-1 : 0)
 
-  const onRelease = useMemo(() => (event_id: string, swipedLeft: boolean) => {
+  const onRelease = (event_id: string, swipedLeft: boolean) => {
     setTimeout(() => {
       setCurrentIndex(i => i+1)
       position.value = 0
     }, 250);
     onSwipe(event_id, swipedLeft)
-  }, [])
+  }
 
   const panGesture = useMemo(
     () =>

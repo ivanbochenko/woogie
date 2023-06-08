@@ -2,10 +2,13 @@ import { create } from 'zustand';
 import { Axios } from 'axios'
 import * as Location from 'expo-location'
 import { createSelectors } from './Selectors'
-import { getToken, removeToken, setToken, getSwipes, setSwipes } from './Storage';
+import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } from './Storage';
 import { apiClient } from '../lib/Client'
 import { registerNotifications } from './Notification';
 import { isPro } from './Purchases';
+
+const HOURS_TO_NEW_SWIPES = 12
+const bridge = () => new Date(new Date().getTime() - 3600000 * HOURS_TO_NEW_SWIPES)
 
 type Data = {
   id: string,
@@ -54,17 +57,16 @@ const _useAuth = create<AuthState>((set, get) => ({
   },
   hydrateSwipes: async () => {
     const swipes = await getSwipes()
-    if (swipes) {
-      const dayAgoDate = new Date(new Date().getTime() - 60 * 60 * 24 * 1000)
-      const freshSwipes = swipes.filter(swipe => new Date(swipe).getTime() > dayAgoDate.getTime())
+    if (swipes.length) {
+      const freshSwipes = swipes.filter(swipe => new Date(swipe).getTime() > bridge().getTime())
       await setSwipes(freshSwipes)
       set({swipes: freshSwipes.length})
     }
   },
   addSwipe: async () => {
+    set(state => ({swipes: state.swipes + 1}))
     const swipes = await getSwipes()
     await setSwipes([...swipes, new Date().toISOString()])
-    set(state => ({swipes: state.swipes + 1}))
   },
   getProAccess: async () => {
     set({pro: await isPro(get().id!)})
