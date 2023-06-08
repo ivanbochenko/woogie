@@ -1,12 +1,10 @@
 import { createClient, defaultExchanges, subscriptionExchange } from 'urql'
 import axios from 'axios'
 import RNEventSource from 'react-native-event-source'
-
-export const baseURL = 'https://woogie-server.herokuapp.com'
-const gqlUrl = baseURL + '/graphql'
+import { API_URL } from '../constants/Config'
 
 export const apiClient = axios.create({
-  baseURL,
+  baseURL: API_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -15,7 +13,7 @@ export const apiClient = axios.create({
 })
 
 export const gqlClient = (token: string) => createClient({
-  url: gqlUrl,
+  url: API_URL + '/graphql',
   fetchOptions: () => {
     return {
       headers: { Authorization: token }
@@ -25,7 +23,7 @@ export const gqlClient = (token: string) => createClient({
     ...defaultExchanges,
     subscriptionExchange({
       forwardSubscription(operation) {
-        const url = new URL(gqlUrl)
+        const url = new URL(API_URL + '/graphql')
         url.searchParams.append('query', operation.query)
         if (operation.variables) {
           url.searchParams.append(
