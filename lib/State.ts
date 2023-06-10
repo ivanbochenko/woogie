@@ -64,7 +64,7 @@ const _useAuth = create<AuthState>((set, get) => ({
   addSwipe: async () => {
     set(state => ({swipes: state.swipes + 1}))
     const swipes = await getSwipes()
-    await setSwipes([...swipes, new Date().toISOString()])
+    setSwipes([...swipes, new Date().toISOString()])
   },
   getProAccess: async () => {
     set({pro: await isPro(get().id!)})
@@ -95,8 +95,7 @@ const _useAuth = create<AuthState>((set, get) => ({
       }
       if (hasToSignOut) get().signOut();
     } catch (e) {
-      // catch error here
-      // Maybe sign_out user!
+      get().signOut()
     }
   },
 }));

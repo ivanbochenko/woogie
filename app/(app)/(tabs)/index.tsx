@@ -50,7 +50,7 @@ export default () => {
     <SafeAreaView style={styles.container}>
       {data?.feed?.length && <Stack events={data.feed} onSwipe={onSwipe}/>}
       <RegularText style={styles.deepText}>
-        {location ? 'Thats all events in your area' : 'We need your location to show events near you'}
+        {location ? 'Thats all events in your area' : 'We need your location to show events nearby'}
       </RegularText>
     </SafeAreaView>
   );
