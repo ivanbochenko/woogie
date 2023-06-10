@@ -17,7 +17,6 @@ export default () => {
   const addSwipe = useAuth.use.addSwipe()
   const maxDistance = useAuth.use.maxDistance()
   const location = useAuth.use.location()
-  console.warn(location)
   const user_id = useAuth.use.id()!
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
