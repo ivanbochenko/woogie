@@ -7,8 +7,8 @@ import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } f
 import { apiClient } from '../lib/Client'
 import { registerNotifications } from './Notification';
 import { isPro } from './Purchases';
+import { HOURS_TO_NEW_SWIPES } from '../constants/Config'
 
-const HOURS_TO_NEW_SWIPES = 12
 const bridge = () => new Date(new Date().getTime() - 3600000 * HOURS_TO_NEW_SWIPES)
 
 type Data = {

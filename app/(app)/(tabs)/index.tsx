@@ -7,8 +7,7 @@ import { Stack } from '../../../components/Card';
 import { RegularText } from '../../../components/StyledText';
 import { useAuth } from '../../../lib/State'
 import { graphql } from '../../../gql';
-
-const NUMBER_OF_FREE_SWIPES = 5
+import { NUMBER_OF_FREE_SWIPES } from '../../../constants/Config'
 
 export default () => {
   const router = useRouter()
@@ -32,16 +31,20 @@ export default () => {
   })
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
+    if (proAccess) {
+      await match({user_id, event_id, dismissed})
+      return
+    }
     if (swipes >= NUMBER_OF_FREE_SWIPES) {
       return router.push({pathname: 'Upgrade'})
     }
-    if (!dismissed && !proAccess) {
+    if (!dismissed) {
       await addSwipe()
     }
     await match({user_id, event_id, dismissed})
   }
 
-  if (typeof location === "undefined" || fetching) return <Fade/>
+  if (location === undefined || fetching) return <Fade/>
 
   return (
     <SafeAreaView style={styles.container}>
