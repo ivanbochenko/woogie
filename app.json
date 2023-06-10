@@ -20,19 +20,19 @@
       "bundleIdentifier": "com.app.woogie",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to set profile and event photo.",
-        "NSPhotoLibraryAddUsageDescription": "This app uses the camera to set profile and event photo.",
+        "NSPhotoLibraryUsageDescription": "This app uses photo library to set profile and event photo.",
+        "NSPhotoLibraryAddUsageDescription": "This app uses photo library to set profile and event photo.",
         "NSLocationAlwaysUsageDescription": "We need your location to show events near you.",
         "NSLocationWhenInUseUsageDescription": "We need your location to show events near you.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you.",
-        "NSPhotoLibraryUsageDescription": "Allow Woogie to access your photos."
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you."
       },
-      "buildNumber": "28"
+      "buildNumber": "29"
     },
     "plugins": [
       [
         "expo-media-library",
         {
-          "photosPermission": "Allow Woogie to access your photos."
+          "photosPermission": "This app uses the camera to set profile and event photo."
         }
       ],
       [
