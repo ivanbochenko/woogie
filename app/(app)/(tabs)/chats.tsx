@@ -53,24 +53,15 @@ export default function Chats() {
       setRefreshing(false)
     }, []);
 
-    const [matches, refreshMatches] = useQuery({
+    const [{data, fetching, error}, refreshMatches] = useQuery({
       query: MY_MATCHES,
       variables: { user_id }
     });
 
-    if (matches.fetching) {
-      return (
-        <View style={[styles.container, {width, height: 100}]}>
-          <ActivityIndicator size="large" color={'gray'} />
-        </View>
-      )
-    }
-
-    if (matches.error) return (
-      <View style={styles.container}>
-        <RegularText>
-          Server error
-        </RegularText>
+    if (fetching || error) return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        {fetching && <ActivityIndicator size="large" color={'gray'} /> }
+        {error && <RegularText>Server error</RegularText> }
       </View>
     )
 
@@ -81,7 +72,7 @@ export default function Chats() {
           exiting={SlideOutLeft}
           layout={Layout.duration(200)}
         >
-          {matches.data?.matches!.length ? matches.data.matches.map( (match, index) => (
+          {data?.matches!.length ? data.matches.map( (match, index) => (
             <Swipe
               key={index}
               event={match?.event!}
@@ -101,24 +92,15 @@ export default function Chats() {
       setRefreshing(false)
     }, []);
 
-    const [events, refreshEvents] = useQuery({
+    const [{data, fetching, error}, refreshEvents] = useQuery({
       query: MY_EVENTS,
       variables: { author_id: user_id }
     });
-    
-    if (events.fetching) {
-      return (
-        <View style={[styles.container, {width, height: 100}]}>
-          <ActivityIndicator size="large" color={'gray'} />
-        </View>
-      )
-    }
 
-    if (events.error) return (
-      <View style={styles.container}>
-        <RegularText>
-          Server error
-        </RegularText>
+    if (fetching || error) return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        {fetching && <ActivityIndicator size="large" color={'gray'} /> }
+        {error && <RegularText>Server error</RegularText> }
       </View>
     )
 
@@ -129,8 +111,8 @@ export default function Chats() {
           exiting={SlideOutRight}
           layout={Layout.duration(200)}
         >
-          {events.data?.events!.length
-            ? events.data.events.map( (event, index) =>
+          {data?.events!.length
+            ? data.events.map( (event, index) =>
               <Swipe
                 key={index}
                 event={event!}

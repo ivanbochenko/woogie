@@ -48,15 +48,10 @@ export default () => {
     setEdit(false)
   }
 
-  if (fetching) return (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" color={'gray'} />
-    </View>
-  )
-
-  if (error) return (
-    <View style={styles.container}>
-      <RegularText>Server error</RegularText>
+  if (fetching || error) return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      {fetching && <ActivityIndicator size="large" color={'gray'} /> }
+      {error && <RegularText>Server error</RegularText> }
     </View>
   )
 

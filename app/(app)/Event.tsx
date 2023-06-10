@@ -19,18 +19,11 @@ export default () => {
     query: eventQuery,
     variables: { id: event_id }
   })
-  
-  if (fetching) return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <ActivityIndicator size="large" color={'gray'} />
-    </View>
-  )
 
-  if (error) return (
+  if (fetching || error) return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <RegularText>
-        Server error
-      </RegularText>
+      {fetching && <ActivityIndicator size="large" color={'gray'} /> }
+      {error && <RegularText>Server error</RegularText> }
     </View>
   )
 

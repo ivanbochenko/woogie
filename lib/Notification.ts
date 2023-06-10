@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
+import type { Notification, NotificationResponse } from 'expo-notifications'
 import { useEffect, useRef } from 'react'
 
 export const registerNotifications = async () => {
@@ -33,7 +34,10 @@ export const registerNotifications = async () => {
   return data
 }
 
-export const useNotifications = (onRecieved: ({})=>void, onResponse: ({})=>void) => {
+export const useNotifications = (
+  onRecieved: (notification: Notification) => void,
+  onResponse: (responce: NotificationResponse) => void
+) => {
   
   const notificationListener = useRef<Notifications.Subscription>()
   const responseListener = useRef<Notifications.Subscription>()

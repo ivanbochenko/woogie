@@ -12,13 +12,13 @@ const NUMBER_OF_FREE_SWIPES = 5
 
 export default () => {
   const router = useRouter()
-  const id = useAuth.use.id()
   const swipes = useAuth.use.swipes()
   const proAccess = useAuth.use.pro()
   const addSwipe = useAuth.use.addSwipe()
   const maxDistance = useAuth.use.maxDistance()
   const location = useAuth.use.location()
-  const user_id = id!
+  console.warn(location)
+  const user_id = useAuth.use.id()!
   const [matchResult, match] = useMutation(CREATE_MATCH)
 
   const [{ data, fetching, error }, refreshEvents] = useQuery({
@@ -29,6 +29,7 @@ export default () => {
       latitude: location?.latitude!,
       longitude: location?.longitude!
     },
+    pause: !location
   })
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
@@ -41,18 +42,14 @@ export default () => {
     await match({user_id, event_id, dismissed})
   }
 
-  if (fetching || !data?.feed) {
-    return <Fade/>
-  } else if (!location) return (
-    <SafeAreaView style={styles.container}>
-      <RegularText>We need your location to show events near you</RegularText>
-    </SafeAreaView>
-  )
+  if (typeof location === "undefined" || fetching) return <Fade/>
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack events={data?.feed} onSwipe={onSwipe} />
-      <RegularText style={styles.deepText}>Thats all events in your area</RegularText>
+      {data?.feed?.length && <Stack events={data.feed} onSwipe={onSwipe}/>}
+      <RegularText style={styles.deepText}>
+        {location ? 'Thats all events in your area' : 'We need your location to show events near you'}
+      </RegularText>
     </SafeAreaView>
   );
 }

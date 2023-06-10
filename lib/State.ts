@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Axios } from 'axios'
 import * as Location from 'expo-location'
+import type { LocationObjectCoords } from 'expo-location'
 import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } from './Storage';
 import { apiClient } from '../lib/Client'
@@ -15,17 +16,12 @@ type Data = {
   token: string
 }
 
-type Location = {
-  latitude: number,
-  longitude: number
-}
-
 interface AuthState {
   token: string | null | undefined,
   id: string | undefined,
   pro: boolean,
   swipes: number,
-  location: Location | null,
+  location: LocationObjectCoords | null | undefined,
   maxDistance: number,
   setMaxDistance(num: number): void,
   getLocation(): Promise<void>,
@@ -43,7 +39,7 @@ const _useAuth = create<AuthState>((set, get) => ({
   id: undefined,
   pro: false,
   swipes: 0,
-  location: null,
+  location: undefined,
   maxDistance: 100,
   setMaxDistance: (maxDistance: number) => {
     set({maxDistance})
@@ -53,14 +49,16 @@ const _useAuth = create<AuthState>((set, get) => ({
     if (status === 'granted') {
       const location = (await Location.getCurrentPositionAsync({})).coords
       set({ location })
+    } else {
+      set({ location: null })
     }
   },
   hydrateSwipes: async () => {
     const swipes = await getSwipes()
     if (swipes.length) {
       const freshSwipes = swipes.filter(swipe => new Date(swipe).getTime() > bridge().getTime())
-      await setSwipes(freshSwipes)
       set({swipes: freshSwipes.length})
+      await setSwipes(freshSwipes)
     }
   },
   addSwipe: async () => {
