@@ -14,14 +14,14 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FFFCF7"
+      "backgroundColor": "#222844"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
       "bundleIdentifier": "com.app.woogie",
+      "buildNumber": "35",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to set profile and event photo.",
         "NSPhotoLibraryUsageDescription": "This app uses the camera to set profile and event photo.",
@@ -29,8 +29,7 @@
         "NSLocationAlwaysUsageDescription": "We need your location to show events near you.",
         "NSLocationWhenInUseUsageDescription": "We need your location to show events near you.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you."
-      },
-      "buildNumber": "34"
+      }
     },
     "plugins": [
       [
@@ -46,19 +45,6 @@
         }
       ]
     ],
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
-        "backgroundColor": "#FFFCF7"
-      },
-      "permissions": [
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.FOREGROUND_SERVICE"
-      ]
-    },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/images/icon.png"

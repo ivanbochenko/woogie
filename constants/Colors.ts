@@ -1,12 +1,14 @@
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 
-const platinum = '#ECE9EA'
-const primary = '#C4E5FD'
-const action = '#46aef7'
 const white = '#FFFCF7'
-const black = '#071013'
+const platinum = '#E2E2E2'
+// Colombia blue
+const primary = '#C4E5FD'
+// Argentinian blue
+const action = '#46aef7'
 const space = '#222844'
 const eerie = '#191F24'
+const black = '#071013'
 
 export default {
   light: {
