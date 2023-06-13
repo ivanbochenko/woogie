@@ -7,7 +7,6 @@ import { useRouter, Link } from 'expo-router';
 import { Button } from '../../components/Button';
 import { BoldText, RegularText } from '../../components/StyledText';
 import { useAuth, signOut } from '../../lib/State'
-import { ExternalLink } from '../../components/ExternalLink'
 import { m } from '../../constants/Spaces';
 
 export default function Settings() {
@@ -43,6 +42,10 @@ export default function Settings() {
           title={'Password'}
           onPress={ () => router.push({pathname: 'Password'}) }
         />
+        {/* <Button
+          title={'Test'}
+          onPress={ () => router.push({pathname: 'Test'}) }
+        /> */}
         <Button onPress={signOut} title={'Sign Out'}/>
 
         <View style={styles.row}>

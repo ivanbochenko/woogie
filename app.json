@@ -2,7 +2,11 @@
   "expo": {
     "name": "Woogie",
     "slug": "woogie",
-    "version": "0.0.1",
+    "version": "0.0.2",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/7d2a71cb-d30f-425f-8b73-38e105704c23"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "woogie",
@@ -20,13 +24,13 @@
       "bundleIdentifier": "com.app.woogie",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to set profile and event photo.",
-        "NSPhotoLibraryUsageDescription": "This app uses photo library to set profile and event photo.",
+        "NSPhotoLibraryUsageDescription": "This app uses the camera to set profile and event photo.",
         "NSPhotoLibraryAddUsageDescription": "This app uses photo library to set profile and event photo.",
         "NSLocationAlwaysUsageDescription": "We need your location to show events near you.",
         "NSLocationWhenInUseUsageDescription": "We need your location to show events near you.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you."
       },
-      "buildNumber": "29"
+      "buildNumber": "30"
     },
     "plugins": [
       [
@@ -46,7 +50,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#FFFCF7"
-      }
+      },
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ]
     },
     "web": {
       "bundler": "metro",

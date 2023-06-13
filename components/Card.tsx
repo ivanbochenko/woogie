@@ -19,7 +19,7 @@ import Map from './Map';
 import { useRouter } from 'expo-router';
 
 export const Stack = (props: {
-  events: any,
+  events: any[],
   onSwipe(event_id: string, dismissed: boolean): void,
 }) => {
   const {events, onSwipe} = props

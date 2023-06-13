@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { SafeAreaView, ScrollView, View, Pressable, StyleSheet, RefreshControl, ActivityIndicator, ImageBackground } from 'react-native'
 import { useTheme } from '@react-navigation/native';
-import { useQuery, useMutation,  } from 'urql';
+import { useQuery, useMutation } from 'urql';
 import Animated, {
   FadeInUp,
   FadeOutRight,
@@ -66,8 +66,8 @@ export default () => {
   
   if (fetching || error) return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      {fetching && <ActivityIndicator size="large" color={'gray'} /> }
-      {error && <RegularText>Server error</RegularText> }
+      {fetching && <ActivityIndicator size="large" color='gray'/>}
+      {error && <RegularText>Server error</RegularText>}
     </View>
   )
 

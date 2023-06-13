@@ -5,6 +5,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   useWindowDimensions,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -30,6 +31,7 @@ const LogInScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<null | string>(null)
+  const [disabled, setDisabled] = useState(false)
 
   const onPress = async () => {
     if (validator.isEmail(email) && password) {
@@ -38,8 +40,7 @@ const LogInScreen = () => {
         email,
         password,
       }).then((res) => {
-        signIn(res.data)
-        return
+        return signIn(res.data)
       }).catch((err) => {
         console.error(err)
         setError('Wrong data, try again or restore')
@@ -51,13 +52,15 @@ const LogInScreen = () => {
 
   const onRestore = () => {
     if (validator.isEmail(email)) {
+      setDisabled(true)
       api().post('login/restore', { email })
         .then((res) => {
-          setError('Check your email')
+          Alert.alert('Check your email')
         })
         .catch((err) => {
           setError('Wrong data')
         })
+      setDisabled(false)
     } else {
       setError('Enter valid email')
     }
@@ -236,6 +239,7 @@ const LogInScreen = () => {
               </Text>
               <View style={{width: 6}}/>
               <Text
+                disabled={disabled}
                 onPress={onRestore}
                 style={{
                   fontFamily: 'Lato_400Regular',

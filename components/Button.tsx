@@ -18,7 +18,7 @@ import { Sparkles } from '../assets/artworks/Sparkles';
 export const Button = (
   props: PressableProps & {
     title: string,
-    onPress: (() => Promise<{}>) | (() => void),
+    onPress(): Promise<void> | void,
   }
 ) => {
 
@@ -27,6 +27,7 @@ export const Button = (
 
   return (
     <Pressable
+      disabled={loading}
       onPress={async () => {
         setLoading(true)
         await onPress()
@@ -54,7 +55,7 @@ export const Button = (
 export const SparkleButton = (
   props: PressableProps & {
     title: string,
-    onPress: (() => Promise<{}>) | (() => void),
+    onPress(): Promise<void> | void,
   }
 ) => {
 
@@ -63,6 +64,7 @@ export const SparkleButton = (
 
   return (
     <Pressable
+      disabled={loading}
       onPress={async () => {
         setLoading(true)
         await onPress()
@@ -129,14 +131,16 @@ export const PrimaryButton = ({
   style,
   labelStyle,
 }: {
-  onPress?: () => void;
+  onPress(): Promise<void> | void;
   label: string;
   style?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
 }) => {
   const theme = useTheme();
+  const [loading, setLoading] = useState(false)
   return (
     <TouchableOpacity
+      disabled={loading}
       style={[
         {
           backgroundColor: theme.colors.primary,
@@ -148,7 +152,11 @@ export const PrimaryButton = ({
         },
         style,
       ]}
-      onPress={onPress}
+      onPress={async () => {
+        setLoading(true)
+        await onPress()
+        setLoading(false)
+      }}
     >
       <Text
         style={[

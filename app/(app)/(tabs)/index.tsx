@@ -44,11 +44,17 @@ export default () => {
     await match({user_id, event_id, dismissed})
   }
 
-  if (location === undefined || fetching) return <Fade/>
+  if (typeof location === 'undefined' || fetching) return <Fade/>
+
+  if (error) return (
+    <SafeAreaView style={styles.container}>
+      <RegularText>Server error</RegularText>
+    </SafeAreaView>
+  )
 
   return (
     <SafeAreaView style={styles.container}>
-      {data?.feed?.length && <Stack events={data.feed} onSwipe={onSwipe}/>}
+      {!!data?.feed?.length ? <Stack events={data?.feed!} onSwipe={onSwipe}/> : null}
       <RegularText style={styles.deepText}>
         {location ? 'Thats all events in your area' : 'We need your location to show events nearby'}
       </RegularText>

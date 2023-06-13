@@ -25,8 +25,8 @@ export default () => {
   });
 
   const onSubmit = async () => {
-    if (!value.name || !value.age || !value.sex) {
-      Alert.alert('Add name, age and sex')
+    if (!value.name || !value.age || !value.sex || !value.avatar) {
+      Alert.alert('Add name, age, sex and avatar')
       return
     }
     const file = { uri: value.avatar, type: 'image/jpeg', name: 'photo.jpg'} as unknown as File
@@ -43,7 +43,7 @@ export default () => {
       bio: value.bio!,
       sex: value.sex!,
       age: Number(value.age),
-      avatar: data.image
+      avatar: data.image ?? ''
     })
     setEdit(false)
   }
