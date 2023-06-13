@@ -20,6 +20,7 @@
       "**/*"
     ],
     "ios": {
+      "supportsTablet": true,
       "bundleIdentifier": "com.app.woogie",
       "buildNumber": "35",
       "infoPlist": {
