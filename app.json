@@ -30,7 +30,7 @@
         "NSLocationWhenInUseUsageDescription": "We need your location to show events near you.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show events near you."
       },
-      "buildNumber": "33"
+      "buildNumber": "34"
     },
     "plugins": [
       [
