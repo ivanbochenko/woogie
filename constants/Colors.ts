@@ -1,8 +1,7 @@
 import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 
 const platinum = '#ECE9EA'
-const primary = '#E0E7FF'
-// const primary = '#1dd5e6'
+const primary = '#C4E5FD'
 const action = '#46aef7'
 const white = '#FFFCF7'
 const black = '#071013'
