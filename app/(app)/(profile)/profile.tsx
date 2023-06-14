@@ -9,6 +9,7 @@ import { graphql } from '../../../gql'
 import { useAuth } from '../../../lib/State'
 import { useState } from 'react';
 import { EditProfileView, UserData } from '../../../components/EditProfile';
+import { EDIT_PROFILE, PROFILE_QUERY } from '../../../gql/queries';
 
 export default () => {
   const router = useRouter()
@@ -20,7 +21,7 @@ export default () => {
   const [editProfileResult, editProfile] = useMutation(EDIT_PROFILE)
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
-    query,
+    query: PROFILE_QUERY,
     variables: { id: id! },
   });
 
@@ -144,24 +145,3 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
 });
-
-const EDIT_PROFILE = graphql(`
-  mutation EDIT_PROFILE($id: String!, $name: String!, $bio: String, $age: Int!, $sex: String!, $avatar: String) {
-    editUser(id: $id, name: $name, bio: $bio, age: $age, sex: $sex, avatar: $avatar) {
-      id
-    }
-  }
-`)
-
-const query = graphql(`
-  query PROFILE_QUERY($id: String!) {
-    user(id: $id) {
-      id
-      name
-      avatar
-      age
-      bio
-      sex
-    }
-  }
-`)

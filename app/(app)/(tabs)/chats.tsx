@@ -19,7 +19,7 @@ import { s, m, l, xl } from '../../../constants/Spaces';
 import { useAuth } from '../../../lib/State'
 import { Pressable } from '../../../components/Themed';
 import { BoldText, RegularText } from '../../../components/StyledText';
-import { graphql } from '../../../gql';
+import { DELETE_EVENT, DELETE_MATCH, MY_EVENTS, MY_MATCHES } from '../../../gql/queries';
 
 export default function Chats() {
   const [show, setShow] = useState(true)
@@ -72,13 +72,16 @@ export default function Chats() {
           exiting={SlideOutLeft}
           layout={Layout.duration(200)}
         >
-          {data?.matches!.length ? data.matches.map( (match, index) => (
-            <Swipe
-              key={index}
-              event={match?.event!}
-              leave={async () => await deleteMatch({ id: match!.id })}
-            />
-            )) : <View style={{alignItems: 'center'}}><BoldText>No matches</BoldText></View>}
+          {data?.matches!.length ?
+            data.matches.map((match, index) => 
+              <Swipe
+                key={index}
+                event={match?.event!}
+                leave={async () => await deleteMatch({ id: match!.id })}
+              />
+            )
+            : <View style={{alignItems: 'center'}}><BoldText>No matches</BoldText></View>
+          }
         </ReAnimated.View>
       </ScrollView>
     )
@@ -112,13 +115,13 @@ export default function Chats() {
           layout={Layout.duration(200)}
         >
           {data?.events!.length
-            ? data.events.map( (event, index) =>
-              <Swipe
-                key={index}
-                event={event!}
-                leave={async () => await deleteEvent({ id: event?.id! })}
-              />
-            )
+            ? data.events.map((event, index) =>
+                <Swipe
+                  key={index}
+                  event={event!}
+                  leave={async () => await deleteEvent({ id: event?.id! })}
+                />
+              )
             : <View style={{alignItems: 'center'}}><BoldText>No events</BoldText></View>
           }
         </ReAnimated.View>
@@ -169,7 +172,7 @@ export default function Chats() {
   )
 }
 
-const Swipe = (props: {
+const Swipe = ({ event, leave }: {
   event: {
     id: string,
     title: string,
@@ -178,7 +181,6 @@ const Swipe = (props: {
   },
   leave(): void
 }) => {
-  const { event, leave } = props
   const router = useRouter()
   const { colors } = useTheme()
   const { id, title, time, photo } = event
@@ -253,44 +255,3 @@ const styles = StyleSheet.create({
     marginVertical: m,
   }
 });
-
-const MY_MATCHES = graphql(`
-  query MY_MATCHES($user_id: String!) {
-    matches(user_id: $user_id) {
-      id
-      event {
-        id
-        title
-        time
-        photo
-      }
-    }
-  }
-`)
-
-const MY_EVENTS = graphql(`
-  query MY_EVENTS($author_id: String!) {
-    events(author_id: $author_id) {
-      id
-      title
-      time
-      photo
-    }
-  }
-`)
-
-const DELETE_MATCH = graphql(`
-  mutation DELETE_MATCH($id: String!) {
-    deleteMatch(id: $id) {
-      id
-    }
-  }
-`)
-
-const DELETE_EVENT = graphql(`
-  mutation DELETE_EVENT($id: String!) {
-    deleteEvent(id: $id) {
-      id
-    }
-  }
-`)

@@ -14,8 +14,8 @@ import { useAuth } from '../../../lib/State';
 import { useRouter } from 'expo-router';
 import User from "../../../components/User";
 import NewEvent from '../new-event';
-import { graphql } from '../../../gql';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ACCEPT_MATCH, LAST_EVENT } from '../../../gql/queries';
 
 // This screen displays matches and link to event
 // Chats screen displays links to chats of events matched to
@@ -155,30 +155,3 @@ const styles = StyleSheet.create({
     minHeight: xl*2,
   },
 });
-
-const LAST_EVENT = graphql(`
-  query LAST_EVENT($author_id: String!) {
-    lastEvent(author_id: $author_id) {
-      id
-      title
-      photo
-      matches {
-        id
-        accepted
-        user {
-          id
-          avatar
-          name
-        }
-      }
-    }
-  }
-`)
-
-const ACCEPT_MATCH = graphql(`
-  mutation ACCEPT_MATCH($id: String!) {
-    acceptMatch(id: $id) {
-      id
-    }
-  }
-`)

@@ -11,31 +11,7 @@ import { RegularText, BoldText } from '../../components/StyledText'
 import { Icon } from '../../components/Themed'
 import { s, m, l, xl } from '../../constants/Spaces';
 import User from "../../components/User";
-import { graphql } from '../../gql';
-
-const USER_QUERY = graphql(`
-  query USER_QUERY($id: String!) {
-    user(id: $id) {
-      id
-      name
-      avatar
-      age
-      stars
-      bio
-      recievedReviews {
-        id
-        time
-        text
-        stars
-        author {
-          id
-          name
-          avatar
-        }
-      }
-    }
-  }
-`)
+import { USER_QUERY } from '../../gql/queries';
 
 export default () => {
   const { id, review } = useSearchParams() as { id: string, review: string }

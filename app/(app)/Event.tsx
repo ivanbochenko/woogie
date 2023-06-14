@@ -8,15 +8,15 @@ import { s, m, l, xl } from '../../constants/Spaces';
 import { height, width } from '../../constants/Layout';
 import { RegularText, BoldText } from '../../components/StyledText'
 import User from '../../components/User'
-import { graphql } from '../../gql';
 import Map from '../../components/Map';
+import { EVENT_QUERY } from '../../gql/queries';
 
 export default () => {
   const { colors } = useTheme()
   const { event_id } = useSearchParams() as {event_id: string}
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
-    query: eventQuery,
+    query: EVENT_QUERY,
     variables: { id: event_id }
   })
 
@@ -99,33 +99,3 @@ const styles = StyleSheet.create({
     padding: m,
   },
 });
-
-const eventQuery = graphql(`
-  query event_query($id: String!) {
-    event(id: $id) {
-      id
-      author {
-        id
-        name
-        avatar
-      }
-      author_id
-      title
-      text
-      time
-      slots
-      photo
-      latitude
-      longitude
-      matches {
-        id
-        accepted
-        user {
-          id
-          avatar
-          name
-        }
-      }
-    }
-  }
-`)

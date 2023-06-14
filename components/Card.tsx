@@ -18,11 +18,10 @@ import User from '../components/User'
 import Map from './Map';
 import { useRouter } from 'expo-router';
 
-export const Stack = (props: {
+export const Stack = ({events, onSwipe}: {
   events: any[],
   onSwipe(event_id: string, dismissed: boolean): void,
 }) => {
-  const {events, onSwipe} = props
   const [currentIndex, setCurrentIndex] = useState(0)
   const event_id = events[currentIndex]?.id
   const position = useSharedValue(0)
@@ -200,7 +199,7 @@ type User = {
   name: string
 }
 
-type Event = {
+export type Event = {
   id: string,
   title: string,
   text: string,

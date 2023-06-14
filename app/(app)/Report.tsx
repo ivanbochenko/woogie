@@ -11,7 +11,7 @@ import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { s, m, l, xl } from '../../constants/Spaces';
 import { Button } from '../../components/Button';
 import { useAuth } from '../../lib/State';
-import { graphql } from '../../gql';
+import { BLOCK } from '../../gql/queries';
 
 const reasons = [
   'There`s nudity or something sexually explicit',
@@ -120,9 +120,3 @@ const styles = StyleSheet.create({
     marginTop: m
   },
 });
-
-const BLOCK = graphql(`
-  mutation BLOCK($id: String!, $user_id: String!) {
-    block(id: $id, user_id: $user_id)
-  }
-`)

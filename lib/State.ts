@@ -8,6 +8,7 @@ import { apiClient } from '../lib/Client'
 import { registerNotifications } from './Notification';
 import { isPro } from './Purchases';
 import { HOURS_TO_NEW_SWIPES } from '../constants/Config'
+// import { Event } from '../components/Card';
 
 const bridge = () => new Date(new Date().getTime() - 3600000 * HOURS_TO_NEW_SWIPES)
 
@@ -32,12 +33,21 @@ interface AuthState {
   signIn(data: Data): void,
   signOut(): void,
   hydrate(): Promise<void>,
+  // getFeed(): Promise<void>,
+  // feed: {
+  //   fetching: boolean,
+  //   data: Event[] | null | undefined
+  // },
 }
 
 const _useAuth = create<AuthState>((set, get) => ({
   token: undefined,
   id: undefined,
   pro: false,
+  // feed: {
+  //   fetching: false,
+  //   data: undefined
+  // },
   swipes: 0,
   location: undefined,
   maxDistance: 100,
@@ -98,6 +108,21 @@ const _useAuth = create<AuthState>((set, get) => ({
       get().signOut()
     }
   },
+  // getFeed: async () => {
+  //   set({feed: { fetching: true, data: undefined}})
+  //   const api = get().api()
+  //   const location = get().location
+  //   const { status, data } = await api.post('graphql', {
+  //     query,
+  //     variables: {
+  //       user_id: get().id,
+  //       maxDistance: get().maxDistance,
+  //       latitude: location?.latitude,
+  //       longitude: location?.longitude
+  //     }
+  //   })
+  //   set({feed: { fetching: false, data: status === 200 ? data.data.feed : null}})
+  // }
 }));
 
 export const useAuth = createSelectors(_useAuth);
@@ -106,3 +131,32 @@ export const signOut = () => _useAuth.getState().signOut();
 export const signIn = (data: Data) => _useAuth.getState().signIn(data);
 export const hydrateAuth = () => _useAuth.getState().hydrate();
 export const api = () => _useAuth.getState().api();
+
+// const query = `
+// query FEED($user_id: String!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
+//   feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
+//     id
+//     author_id
+//     title
+//     text
+//     time
+//     photo
+//     slots
+//     latitude
+//     longitude
+//     distance
+//     author {
+//       id
+//       name
+//       avatar
+//     }
+//     matches {
+//       user {
+//         id
+//         name
+//         avatar
+//       }
+//     }
+//   }
+// }
+// `

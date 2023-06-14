@@ -12,7 +12,7 @@ import { BoldText, RegularText } from '../../components/StyledText'
 import { Icon } from '../../components/Themed'
 import { s, m, l, xl } from '../../constants/Spaces';
 import User from "../../components/User";
-import { graphql } from '../../gql';
+import { REVIEWS_QUERY } from '../../gql/queries';
 
 export default () => {
   const { colors } = useTheme()
@@ -99,19 +99,3 @@ const styles = StyleSheet.create({
     marginRight: l*3
   },
 });
-
-const REVIEWS_QUERY = graphql(`
-  query REVIEWS_QUERY($user_id: String!) {
-    reviews(user_id: $user_id) {
-      id
-      stars
-      text
-      time
-      author {
-        id
-        name
-        avatar
-      }
-    }
-  }
-`)

@@ -15,7 +15,7 @@ import { height, width } from '../../constants/Layout';
 import { RegularText } from '../../components/StyledText'
 import { View, Icon } from '../../components/Themed'
 import { useAuth } from '../../lib/State'
-import { graphql } from '../../gql';
+import { POST_MESSAGE } from '../../gql/queries';
 
 export default () => {
   const { title, event_id } = useSearchParams() as { title: string, event_id: string }
@@ -227,14 +227,6 @@ const styles = StyleSheet.create({
     marginRight: m,
   },
 });
-
-const POST_MESSAGE = graphql(`
-  mutation POST_MESSAGE($text: String!, $event_id: String!, $author_id: String!) {
-    postMessage(text: $text, event_id: $event_id, author_id: $author_id) {
-      id
-    }
-  }
-`)
 
 const MessagesSubscription = `
   subscription MESSAGES_SUB($event_id: String!) {

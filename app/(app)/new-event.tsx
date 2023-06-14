@@ -12,17 +12,10 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { Icon } from '../../components/Themed';
 import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { useAuth } from '../../lib/State';
-import { graphql } from '../../gql';
 import { launchImagePicker } from '../../lib/Media';
 import { getDistance } from '../../lib/Distance';
+import { CREATE_EVENT } from '../../gql/queries';
 
-const CREATE_EVENT = graphql(`
-  mutation CREATE_EVENT($author_id: String!, $title: String!, $text: String!, $photo: String!, $slots: Int!, $time: DateTime!, $latitude: Float!, $longitude: Float!) {
-    postEvent(author_id: $author_id, title: $title, text: $text, photo: $photo, slots: $slots, time: $time, latitude: $latitude, longitude: $longitude) {
-      id
-    }
-  }
-`)
 
 const MAX_SLOTS = 20
 

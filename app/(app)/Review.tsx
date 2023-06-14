@@ -9,7 +9,7 @@ import { s, m, l, xl } from '../../constants/Spaces';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Themed'
 import { useAuth } from '../../lib/State';
-import { graphql } from '../../gql';
+import { POST_REVIEW } from '../../gql/queries';
 
 export default () => {
   const { colors } = useTheme();
@@ -84,11 +84,3 @@ const styles = StyleSheet.create({
     width: xl*5,
   },
 });
-
-const POST_REVIEW = graphql(`
-  mutation POST_REVIEW($author_id: String!, $user_id: String!, $stars: Int!, $text: String!) {
-    postReview(author_id: $author_id, stars: $stars, text: $text, user_id: $user_id) {
-      id
-    }
-  }
-`)
