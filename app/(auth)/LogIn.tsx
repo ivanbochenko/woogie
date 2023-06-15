@@ -49,19 +49,18 @@ const LogInScreen = () => {
   }
 
   const onRestore = () => {
-    if (validator.isEmail(email)) {
-      setDisabled(true)
-      api().post('login/restore', { email })
-        .then((res) => {
-          Alert.alert('Check your email')
-        })
-        .catch((err) => {
-          setError('Wrong data')
-        })
-      setDisabled(false)
-    } else {
-      setError('Enter valid email')
+    if (!validator.isEmail(email)) {
+      return setError('Enter valid email')
     }
+    setDisabled(true)
+    api().post('login/restore', { email })
+      .then((res) => {
+        Alert.alert('Check your email')
+      })
+      .catch((err) => {
+        setError('Wrong data')
+      })
+    setDisabled(false)
   }
 
   return (
