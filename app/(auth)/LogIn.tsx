@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import { api, signIn } from "../../lib/State";
 import validator from "validator";
+import { registerNotifications } from "../../lib/Notification";
 
 const LOG_IN_SCREEN = {
   title: "Let's\nGet Started",
@@ -38,8 +39,9 @@ const LogInScreen = () => {
       return setError('Enter valid email and password')
     }
     setError(null)
+    const pushToken = await registerNotifications()
     api()
-      .post('login/password', { email, password })
+      .post('login/password', { email, password, pushToken })
       .then((res) => signIn(res.data))
       .catch((err) => {
         setError('Wrong data, try again or restore')
