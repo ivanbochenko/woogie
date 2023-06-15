@@ -26,8 +26,8 @@ export function Provider(props: {children: JSX.Element}) {
   const client = gqlClient(token!)
   useAuth.use.getLocation()()
     // .then(useAuth.use.getFeed())
-  useAuth.use.hydrateSwipes()()
   useAuth.use.getProAccess()()
+  useAuth.use.hydrateSwipes()()
   useProtectedRoute(token)
 
   return (
