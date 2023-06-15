@@ -34,20 +34,16 @@ const LogInScreen = () => {
   const [disabled, setDisabled] = useState(false)
 
   const onPress = async () => {
-    if (validator.isEmail(email) && password) {
-      setError(null)
-      api().post('login/password', {
-        email,
-        password,
-      }).then((res) => {
-        return signIn(res.data)
-      }).catch((err) => {
-        console.error(err)
+    if (!validator.isEmail(email) || !!password) {
+      return setError('Enter valid email and password')
+    }
+    setError(null)
+    api()
+      .post('login/password', { email, password })
+      .then((res) => signIn(res.data))
+      .catch((err) => {
         setError('Wrong data, try again or restore')
       })
-    } else {
-      setError('Enter valid email and password')
-    }
   }
 
   const onRestore = () => {

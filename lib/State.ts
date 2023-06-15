@@ -5,7 +5,6 @@ import type { LocationObjectCoords } from 'expo-location'
 import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } from './Storage';
 import { apiClient } from '../lib/Client'
-import { registerNotifications } from './Notification';
 import { isPro } from './Purchases';
 import { HOURS_TO_NEW_SWIPES } from '../constants/Config'
 // import { Event } from '../components/Card';
@@ -96,8 +95,7 @@ const _useAuth = create<AuthState>((set, get) => ({
       let hasToSignOut = true
       const token = await getToken();
       if (!!token) {
-        const pushToken = await registerNotifications()
-        const { status, data } = await apiClient.post(`login`, {token, pushToken})
+        const { status, data } = await apiClient.post(`login`, {token})
         if (status === 200) {
           hasToSignOut = false
           get().signIn(data)

@@ -5,6 +5,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   useWindowDimensions,
+  Alert,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter, Link } from "expo-router";
@@ -43,44 +44,30 @@ export default () => {
 
   useEffect(() => {
     setError(null)
-
     if (!email && !password) return
-
     if (!validator.isEmail(email)) {
-      setError('Enter valid email')
-      return
+      return setError('Enter valid email')
     }
-    
     if (!password) return
-
     if (!isStrong(password)) {
-      setError('Weak password. Min length of 8, one uppercase and one number')
-      return
+      return setError('Password min length of 8, one uppercase and one number')
     }
-
     if (password !== repeatPassword) {
-      setError('Passwords dont match')
-      return  
+      return setError('Passwords dont match')
     }
-
   }, [email, password, repeatPassword])
   
   
   const onPress = async () => {
-    setError(null)
-    if (validator.isEmail(email) && (password === repeatPassword) && isStrong(password)) {
-      const pushToken = await registerNotifications()
-      const { status, data } = await api().post('login/register', {
-        email,
-        pushToken,
-        password,
-      })
-      if (status === 200) {
-        signIn(data)
-      } else {
-        setError(data.message ?? 'Error')
-      }
+    if (!validator.isEmail(email) || !isStrong(password) || password !== repeatPassword) {
+      Alert.alert('Enter valid data')
+      return
     }
+    const pushToken = await registerNotifications()
+    api()
+      .post('login/register', { email, password, pushToken })
+      .then(res => signIn(res.data))
+      .catch(err => setError('Wrong data'))
   }
 
   return (

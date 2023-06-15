@@ -8,7 +8,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "build": "eas build -p=ios --auto-submit --clear-cache --profile production"
+    "build": "eas build -p=ios --auto-submit --clear-cache --profile production",
+    "update:prev": "eas update --branch preview --message Updating"
   },
   "jest": {
     "preset": "jest-expo"
@@ -42,6 +43,7 @@
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
     "expo-system-ui": "~2.2.1",
+    "expo-updates": "~0.16.4",
     "expo-web-browser": "~12.1.1",
     "graphql": "^15.8.0",
     "react": "18.2.0",
@@ -61,19 +63,22 @@
     "urql": "^3.0.3",
     "validator": "^13.9.0",
     "zod": "^3.21.4",
-    "zustand": "^4.3.6",
-    "expo-updates": "~0.16.4"
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+    "@expo/webpack-config": "^18.1.0",
     "@graphql-codegen/cli": "^3.3.1",
     "@graphql-codegen/client-preset": "^2.1.1",
     "@types/react": "~18.0.27",
     "@types/react-native-event-source": "^1.1.0",
     "@types/validator": "^13.7.14",
+    "babel-plugin-module-resolver": "^5.0.0",
     "jest": "^29.2.1",
     "jest-expo": "^48.0.0",
     "react-test-renderer": "18.2.0",
+    "resolve-path": "^1.4.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   },
