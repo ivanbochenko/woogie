@@ -22,10 +22,10 @@ function useProtectedRoute(token: string | null | undefined) {
 }
 
 export function Provider(props: {children: JSX.Element}) {
-  useAuth.use.getLocation()()
-    // .then(useAuth.use.getFeed())
   const token = useAuth.use.token()
   const client = gqlClient(token!)
+  useAuth.use.getLocation()()
+    // .then(useAuth.use.getFeed())
   useAuth.use.hydrateSwipes()()
   useAuth.use.getProAccess()()
   useProtectedRoute(token)
