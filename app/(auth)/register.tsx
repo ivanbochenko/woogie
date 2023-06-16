@@ -11,7 +11,7 @@ import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter, Link } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 import validator from "validator";
-import { Button } from "../../components/Button";
+import { PrimaryButton } from "../../components/Button";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import { signIn } from "../../lib/State";
 import { registerNotifications } from '../../lib/Notification'
@@ -255,8 +255,7 @@ export default () => {
             <Animated.View
               entering={FadeInDown.delay(800).duration(1000).springify()}
             >
-              <Button
-                style={{backgroundColor: theme.colors.primary}}
+              <PrimaryButton
                 title="Register"
                 onPress={onPress}
               />

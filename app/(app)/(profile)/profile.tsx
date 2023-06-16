@@ -5,7 +5,6 @@ import { View, Pressable, Icon } from '../../../components/Themed';
 import { s, m, l, xl } from '../../../constants/Spaces';
 import { RegularText, BoldText } from '../../../components/StyledText';
 import { useMutation, useQuery } from 'urql';
-import { graphql } from '../../../gql'
 import { useAuth } from '../../../lib/State'
 import { useState } from 'react';
 import { EditProfileView, UserData } from '../../../components/EditProfile';

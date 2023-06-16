@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 import Artwork03 from "../../assets/artworks/Artwork03";
-import { Button } from "../../components/Button";
+import { PrimaryButton } from "../../components/Button";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import Icons from "@expo/vector-icons/MaterialIcons";
@@ -217,8 +217,7 @@ const LogInScreen = () => {
             <Animated.View
               entering={FadeInDown.delay(600).duration(1000).springify()}
             >
-              <Button
-                style={{backgroundColor: theme.colors.primary}}
+              <PrimaryButton
                 title="Log In"
                 onPress={onPress}
               />

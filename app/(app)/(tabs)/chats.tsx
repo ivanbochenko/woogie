@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react'
-import { View, SafeAreaView, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Animated, Image, RefreshControl } from 'react-native'
+import { Pressable, View, SafeAreaView, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Animated, Image, RefreshControl } from 'react-native'
 import { useQuery, useMutation } from 'urql';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
@@ -17,7 +17,6 @@ import ReAnimated, {
 import { height, width } from '../../../constants/Layout';
 import { s, m, l, xl } from '../../../constants/Spaces';
 import { useAuth } from '../../../lib/State'
-import { Pressable } from '../../../components/Themed';
 import { BoldText, RegularText } from '../../../components/StyledText';
 import { DELETE_EVENT, DELETE_MATCH, MY_EVENTS, MY_MATCHES } from '../../../gql/queries';
 
@@ -201,9 +200,7 @@ const Swipe = ({ event, leave }: {
       <View style={[styles.row, {backgroundColor: colors.card, alignItems: 'center'}]}>
         <RegularText style={{flex: 1, marginLeft: m}}>Are you sure?</RegularText>
         <Animated.View style={{transform: [{ translateX }]}}>
-          <Pressable onPress={onDelete}>
-            <FontAwesome name="times-circle" size={60} color={colors.background} />
-          </Pressable>
+          <FontAwesome onPress={onDelete} name="times-circle" size={60} color={colors.background}/>
         </Animated.View>
       </View>
     )

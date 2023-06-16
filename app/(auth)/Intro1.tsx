@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Artwork01 from "../../assets/artworks/Artwork01";
 import { useTheme } from "@react-navigation/native";
 import { ScreenIndicators } from "../../components/ScreenIndicators";
-import { Button } from "../../components/Button";
+import { PrimaryButton } from "../../components/Button";
 import { useRouter } from "expo-router";
 import { s, m, l, xl } from "../../constants/Spaces";
 
@@ -59,8 +59,7 @@ const IntroScreen01 = () => {
           entering={FadeInDown.delay(400).duration(1000).springify()}
           style={{ alignItems: "center" }}
         >
-          <Button
-            style={{backgroundColor: theme.colors.primary}}
+          <PrimaryButton
             title="Next"
             onPress={() => router.push({pathname: 'Intro2'})}
           />

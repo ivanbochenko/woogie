@@ -5,7 +5,7 @@ import { useTheme } from "@react-navigation/native";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import Artwork02 from "../../assets/artworks/Artwork02";
 import { ScreenIndicators } from "../../components/ScreenIndicators";
-import { Button } from "../../components/Button";
+import { PrimaryButton } from "../../components/Button";
 import { useRouter } from "expo-router";
 import { s, m, l, xl } from "../../constants/Spaces";
 
@@ -74,8 +74,7 @@ const IntroScreen02 = () => {
           entering={FadeInDown.delay(400).duration(1000).springify()}
           style={{ alignItems: "center" }}
         >
-          <Button
-            style={{backgroundColor: theme.colors.primary}}
+          <PrimaryButton
             title="Next"
             onPress={() => router.push({pathname: 'LogIn'})}
           />

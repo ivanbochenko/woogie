@@ -10,7 +10,8 @@ import {
   Pressable as DefaultPressable,
   TextInput,
   PressableProps as DefaultPressableProps,
-  ViewStyle
+  ViewStyle,
+  StyleProp
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -57,10 +58,10 @@ export function View(props: ViewProps) {
 
 export function Pressable(props: PressableProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const tintColor = useThemeColor({ light: lightColor, dark: darkColor }, 'tint');
+  const cardColor = useThemeColor({ light: lightColor, dark: darkColor }, 'card');
   const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'border');
 
-  return <DefaultPressable style={({pressed}) => [({ backgroundColor: pressed ? borderColor : tintColor }), style]} {...otherProps} />;
+  return <DefaultPressable style={({pressed}) => [style as StyleProp<ViewStyle>, {backgroundColor: pressed ? borderColor : cardColor}]} {...otherProps}/>
 }
 
 export function Input(props: InputProps) {

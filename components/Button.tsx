@@ -3,11 +3,13 @@ import {
   ActivityIndicator,
   PressableProps,
   View,
+  Pressable as DefaultPressable
 } from "react-native";
 import { Pressable } from './Themed';
 import { BoldText } from './StyledText';
 import { s, m, l, xl } from '../constants/Spaces'
 import { Sparkles } from '../assets/artworks/Sparkles';
+import { useTheme } from '@react-navigation/native';
 
 export const Button = (
   props: PressableProps & {
@@ -15,7 +17,6 @@ export const Button = (
     onPress(): Promise<void> | void,
   }
 ) => {
-
   const { title, onPress, ...other } = props
   const [loading, setLoading] = useState(false)
 
@@ -43,6 +44,44 @@ export const Button = (
         : <BoldText>{title}</BoldText>
       }
     </Pressable>
+  );
+}
+
+export const PrimaryButton = (
+  props: PressableProps & {
+    title: string,
+    onPress(): Promise<void> | void,
+  }
+) => {
+  const { colors } = useTheme()
+  const { title, onPress, ...other } = props
+  const [loading, setLoading] = useState(false)
+
+  return (
+    <DefaultPressable
+      disabled={loading}
+      onPress={async () => {
+        setLoading(true)
+        await onPress()
+        setLoading(false)
+      }}
+      style={({pressed}) => ({
+        paddingVertical: m,
+        minHeight: xl+4,
+        borderRadius: xl,
+        width: 140,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: m,
+        backgroundColor: pressed ? colors.border : colors.primary
+      })}
+      {...other}
+    >
+      {loading
+        ? <ActivityIndicator size='small' color={'gray'} />
+        : <BoldText>{title}</BoldText>
+      }
+    </DefaultPressable>
   );
 }
 
