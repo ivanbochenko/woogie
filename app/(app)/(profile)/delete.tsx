@@ -7,6 +7,7 @@ import { RegularText, BoldText } from '../../../components/StyledText';
 import { api, signOut } from '../../../lib/State'
 import { useTheme } from '@react-navigation/native';
 import Icons from "@expo/vector-icons/MaterialIcons";
+import { AxiosError } from 'axios';
 
 export default () => {
   const router = useRouter()
@@ -35,11 +36,12 @@ export default () => {
         {
           text: "Yes",
           onPress: async () => {
-            const { status, data } = await api().post('password/user/delete', { password })
-            if (status === 200) {
+            try {
+              const res = await api().post('password/user/delete', { password })
               signOut()
-            } else {
-              setError(data.message ?? 'Wrong data, try again')
+            } catch (error) {
+              const err = error as AxiosError
+              setError(err?.response?.statusText ?? 'Wrong data')
             }
           }
         }

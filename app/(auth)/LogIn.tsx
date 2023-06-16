@@ -18,6 +18,7 @@ import Icons from "@expo/vector-icons/MaterialIcons";
 import { api, signIn } from "../../lib/State";
 import validator from "validator";
 import { registerNotifications } from "../../lib/Notification";
+import { AxiosError } from "axios";
 
 const LOG_IN_SCREEN = {
   title: "Let's\nGet Started",
@@ -40,26 +41,27 @@ const LogInScreen = () => {
     }
     setError(null)
     const pushToken = await registerNotifications()
-    api()
-      .post('login/password', { email, password, pushToken })
-      .then((res) => signIn(res.data))
-      .catch((err) => {
-        setError('Wrong data, try again or restore')
-      })
+    try {
+      const res = await api().post('login/password', { email, password, pushToken })
+      signIn(res.data)
+    } catch (error) {
+      const err = error as AxiosError
+      setError(err?.response?.statusText ?? 'Wrong data, try again or restore')
+    }
   }
 
-  const onRestore = () => {
+  const onRestore = async () => {
     if (!validator.isEmail(email)) {
       return setError('Enter valid email')
     }
     setDisabled(true)
-    api().post('login/restore', { email })
-      .then((res) => {
-        Alert.alert('Check your email')
-      })
-      .catch((err) => {
-        setError('Wrong data')
-      })
+    try {
+      const res = await api().post('login/restore', { email })
+      Alert.alert('Check your email')
+    } catch (error) {
+      const err = error as AxiosError
+      setError(err?.response?.statusText ?? 'Wrong data')
+    }
     setDisabled(false)
   }
 

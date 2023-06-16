@@ -6,10 +6,10 @@ const platinum = '#E2E2E2'
 const primary = '#C4E5FD'
 // Argentinian blue
 const action = '#46aef7'
-// const space = '#222844'
 const prussian = '#02233B'
 const eerie = '#1F1F1F'
 const black = '#010B13'
+// const space = '#222844'
 
 export default {
   light: {

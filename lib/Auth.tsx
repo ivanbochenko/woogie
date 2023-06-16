@@ -25,7 +25,14 @@ export function Provider(props: {children: JSX.Element}) {
   const token = useAuth.use.token()
   const client = gqlClient(token!)
   useAuth.use.getLocation()()
-    // .then(useAuth.use.getFeed())
+  const maxDistance = useAuth.use.maxDistance()
+  const location = useAuth.use.location()
+  useEffect(() => {
+    if (!!location && !!token) {
+      useAuth.use.getFeed()()
+    }
+  }, [maxDistance, location, token])
+  
   useAuth.use.getProAccess()()
   useAuth.use.hydrateSwipes()()
   useProtectedRoute(token)

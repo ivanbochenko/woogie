@@ -7,6 +7,7 @@ import { api, signOut } from '../../lib/State'
 import { useTheme } from '@react-navigation/native';
 import validator from 'validator';
 import { Icon } from '../../components/Themed';
+import { AxiosError } from 'axios';
 
 export default () => {
   const theme = useTheme()
@@ -33,11 +34,12 @@ export default () => {
       setError('Passwords dont match')
       return
     }
-    const { status, data } = await api().post('password/reset', { password, newPassword })
-    if (status === 200) {
+    try {
+      const res = await api().post('password/reset', { password, newPassword })
       signOut()
-    } else {
-      setError(data.message ?? 'Wrong data, try again')
+    } catch (error) {
+      const err = error as AxiosError
+      setError(err?.response?.statusText ?? 'Wrong data')
     }
   }
 

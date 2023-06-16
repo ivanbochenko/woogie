@@ -1,5 +1,34 @@
 import { graphql } from "./gql"
 
+export const query = `
+  query FEED($user_id: String!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
+    feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
+      id
+      author_id
+      title
+      text
+      time
+      photo
+      slots
+      latitude
+      longitude
+      distance
+      author {
+        id
+        name
+        avatar
+      }
+      matches {
+        user {
+          id
+          name
+          avatar
+        }
+      }
+    }
+  }
+`
+
 export const EVENT_QUERY = graphql(`
   query event_query($id: String!) {
     event(id: $id) {

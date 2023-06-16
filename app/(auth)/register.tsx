@@ -16,6 +16,7 @@ import Icons from "@expo/vector-icons/MaterialIcons";
 import { api, signIn } from "../../lib/State";
 import { registerNotifications } from '../../lib/Notification'
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AxiosError } from "axios";
 
 const REGISTER_SCREEN = {
   title: "Let's\nGet Started",
@@ -64,10 +65,13 @@ export default () => {
       return
     }
     const pushToken = await registerNotifications()
-    api()
-      .post('login/register', { email, password, pushToken })
-      .then(res => signIn(res.data))
-      .catch(err => setError('Wrong data'))
+    try {
+      const res = await api().post('login/register', { email, password, pushToken })
+      signIn(res.data)
+    } catch (error) {
+      const err = error as AxiosError
+      setError(err?.response?.statusText ?? 'Wrong data')
+    }
   }
 
   return (
