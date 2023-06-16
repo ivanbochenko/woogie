@@ -7,18 +7,12 @@ import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } f
 import { apiClient } from '../lib/Client'
 import { isPro } from './Purchases';
 import { HOURS_TO_NEW_SWIPES } from '../constants/Config'
-import { Event } from '../components/Card';
-import { query } from '../gql/queries';
 
 const bridge = () => new Date(new Date().getTime() - 3600000 * HOURS_TO_NEW_SWIPES)
 
 type Data = {
   id: string,
   token: string
-}
-type FeedData = {
-  fetching: boolean,
-  data: Event[] | null | undefined
 }
 
 interface AuthState {
@@ -37,8 +31,6 @@ interface AuthState {
   signIn(data: Data): void,
   signOut(): void,
   hydrate(): Promise<void>,
-  getFeed(): Promise<void>,
-  feed: FeedData,
 }
 
 const _useAuth = create<AuthState>((set, get) => ({
@@ -108,21 +100,6 @@ const _useAuth = create<AuthState>((set, get) => ({
       get().signOut()
     }
   },
-  getFeed: async () => {
-    set({feed: { fetching: true, data: null}})
-    const api = get().api()
-    const location = get().location
-    const { status, data } = await api.post('graphql', {
-      query,
-      variables: {
-        user_id: get().id!,
-        maxDistance: get().maxDistance,
-        latitude: location?.latitude!,
-        longitude: location?.longitude!
-      }
-    })
-    set({feed: { fetching: false, data: status === 200 ? data.data.feed : null}})
-  }
 }));
 
 export const useAuth = createSelectors(_useAuth);
