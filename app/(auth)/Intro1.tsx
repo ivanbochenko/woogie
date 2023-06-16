@@ -60,6 +60,7 @@ const IntroScreen01 = () => {
           style={{ alignItems: "center" }}
         >
           <Button
+            style={{backgroundColor: theme.colors.primary}}
             title="Next"
             onPress={() => router.push({pathname: 'Intro2'})}
           />

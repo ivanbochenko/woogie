@@ -15,11 +15,12 @@ import { Button } from "../../components/Button";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import Icons from "@expo/vector-icons/MaterialIcons";
-import { api, signIn } from "../../lib/State";
+import { signIn } from "../../lib/State";
 import validator from "validator";
 import { registerNotifications } from "../../lib/Notification";
 import { s, m, l, xl } from "../../constants/Spaces";
 import { AxiosError } from "axios";
+import { apiClient } from "../../lib/Client";
 
 const LOG_IN_SCREEN = {
   title: "Let's\nGet Started",
@@ -43,7 +44,7 @@ const LogInScreen = () => {
     setError(null)
     const pushToken = await registerNotifications()
     try {
-      const res = await api().post('login/password', { email, password, pushToken })
+      const res = await apiClient.post('login/password', { email, password, pushToken })
       signIn(res.data)
     } catch (error) {
       const err = error as AxiosError
@@ -57,7 +58,7 @@ const LogInScreen = () => {
     }
     setDisabled(true)
     try {
-      const res = await api().post('login/restore', { email })
+      const res = await apiClient.post('login/restore', { email })
       Alert.alert('Check your email')
     } catch (error) {
       const err = error as AxiosError
@@ -161,7 +162,7 @@ const LogInScreen = () => {
                   color: theme.colors.text,
                   paddingLeft: xl,
                   paddingRight: m,
-                  height: xl,
+                  height: xl+m,
                   borderRadius: m,
                   backgroundColor: theme.colors.background,
                   width: "100%",
@@ -195,7 +196,7 @@ const LogInScreen = () => {
                   color: theme.colors.text,
                   paddingLeft: xl,
                   paddingRight: m,
-                  height: xl,
+                  height: xl+m,
                   borderRadius: m,
                   backgroundColor: theme.colors.background,
                   width: "100%",
@@ -217,6 +218,7 @@ const LogInScreen = () => {
               entering={FadeInDown.delay(600).duration(1000).springify()}
             >
               <Button
+                style={{backgroundColor: theme.colors.primary}}
                 title="Log In"
                 onPress={onPress}
               />

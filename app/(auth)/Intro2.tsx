@@ -75,6 +75,7 @@ const IntroScreen02 = () => {
           style={{ alignItems: "center" }}
         >
           <Button
+            style={{backgroundColor: theme.colors.primary}}
             title="Next"
             onPress={() => router.push({pathname: 'LogIn'})}
           />

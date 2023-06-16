@@ -14,7 +14,7 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#222844"
+      "backgroundColor": "#02233B"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -22,7 +22,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.app.woogie",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to set profile and event photo.",
         "NSPhotoLibraryUsageDescription": "This app uses the camera to set profile and event photo.",
