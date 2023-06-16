@@ -16,6 +16,10 @@ type Data = {
   id: string,
   token: string
 }
+type FeedData = {
+  fetching: boolean,
+  data: Event[] | null | undefined
+}
 
 interface AuthState {
   token: string | null | undefined,
@@ -34,10 +38,7 @@ interface AuthState {
   signOut(): void,
   hydrate(): Promise<void>,
   getFeed(): Promise<void>,
-  feed: {
-    fetching: boolean,
-    data: Event[] | null | undefined
-  },
+  feed: FeedData,
 }
 
 const _useAuth = create<AuthState>((set, get) => ({

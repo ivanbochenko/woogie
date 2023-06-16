@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import {
-  Text,
-  TouchableOpacity,
-  ViewStyle,
-  StyleProp,
-  TextStyle,
   ActivityIndicator,
   PressableProps,
   View,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
 import { Pressable } from './Themed';
 import { BoldText } from './StyledText';
 import { s, m, l, xl } from '../constants/Spaces'
@@ -37,7 +31,7 @@ export const Button = (
         paddingVertical: m,
         minHeight: xl+4,
         borderRadius: xl,
-        width: 150,
+        width: 140,
         alignItems: "center",
         justifyContent: "center",
         marginTop: m,
@@ -74,7 +68,7 @@ export const SparkleButton = (
         paddingVertical: m,
         minHeight: xl+4,
         borderRadius: xl,
-        width: 150,
+        width: 140,
         alignItems: "center",
         justifyContent: "center",
         marginTop: m,
@@ -125,52 +119,3 @@ export const Square = (props: {
   )
 }
 
-export const PrimaryButton = ({
-  onPress,
-  label,
-  style,
-  labelStyle,
-}: {
-  onPress(): Promise<void> | void;
-  label: string;
-  style?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
-}) => {
-  const theme = useTheme();
-  const [loading, setLoading] = useState(false)
-  return (
-    <TouchableOpacity
-      disabled={loading}
-      style={[
-        {
-          backgroundColor: theme.colors.primary,
-          paddingHorizontal: 32,
-          height: 52,
-          borderRadius: 32,
-          alignItems: "center",
-          justifyContent: "center",
-        },
-        style,
-      ]}
-      onPress={async () => {
-        setLoading(true)
-        await onPress()
-        setLoading(false)
-      }}
-    >
-      <Text
-        style={[
-          {
-            fontSize: 16,
-            fontFamily: 'Lato_400Regular',
-            fontWeight: "600",
-            color: theme.colors.background
-          },
-          labelStyle,
-        ]}
-      >
-        {label}
-      </Text>
-    </TouchableOpacity>
-  );
-};

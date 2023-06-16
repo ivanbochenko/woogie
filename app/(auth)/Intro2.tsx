@@ -5,8 +5,9 @@ import { useTheme } from "@react-navigation/native";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import Artwork02 from "../../assets/artworks/Artwork02";
 import { ScreenIndicators } from "../../components/ScreenIndicators";
-import { PrimaryButton } from "../../components/Button";
+import { Button } from "../../components/Button";
 import { useRouter } from "expo-router";
+import { s, m, l, xl } from "../../constants/Spaces";
 
 const INTRO_SCREEN_02 = {
   title: "Get new social inspirations",
@@ -30,7 +31,7 @@ const IntroScreen02 = () => {
           style={{height: 50, width: 75, alignItems: 'center', justifyContent: 'center'}}
           onPress={() => router.push({pathname: 'Intro1'})}
         >
-          <Icons name="arrow-back-ios" size={24} color={theme.colors.text} />
+          <Icons name="arrow-back-ios" size={25} color={theme.colors.text} />
         </TouchableOpacity>
       </Animated.View>
       <Animated.View
@@ -39,12 +40,12 @@ const IntroScreen02 = () => {
       >
         <Artwork02 width={300} height={300} />
       </Animated.View>
-      <View style={{ padding: 24 }}>
+      <View style={{ padding: 25 }}>
         <Animated.Text
           entering={FadeInDown.duration(1000).springify()}
           style={{
             fontFamily: 'Lato_400Regular',
-            fontSize: 40,
+            fontSize: xl,
             fontWeight: "800",
             color: theme.colors.text
           }}
@@ -56,8 +57,8 @@ const IntroScreen02 = () => {
           style={{
             fontFamily: 'Lato_400Regular',
             opacity: 0.5,
-            marginTop: 16,
-            fontSize: 16,
+            marginTop: m+s,
+            fontSize: m+s,
             color: theme.colors.text,
           }}
         >
@@ -73,8 +74,8 @@ const IntroScreen02 = () => {
           entering={FadeInDown.delay(400).duration(1000).springify()}
           style={{ alignItems: "center" }}
         >
-          <PrimaryButton
-            label="Next"
+          <Button
+            title="Next"
             onPress={() => router.push({pathname: 'LogIn'})}
           />
         </Animated.View>

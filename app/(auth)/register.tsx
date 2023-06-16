@@ -11,12 +11,13 @@ import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter, Link } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 import validator from "validator";
-import { PrimaryButton } from "../../components/Button";
+import { Button } from "../../components/Button";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import { api, signIn } from "../../lib/State";
 import { registerNotifications } from '../../lib/Notification'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AxiosError } from "axios";
+import { s, m, l, xl } from "../../constants/Spaces";
 
 const REGISTER_SCREEN = {
   title: "Let's\nGet Started",
@@ -61,8 +62,7 @@ export default () => {
   
   const onPress = async () => {
     if (!validator.isEmail(email) || !isStrong(password) || password !== repeatPassword) {
-      Alert.alert('Enter valid data')
-      return
+      return Alert.alert('Enter valid data')
     }
     const pushToken = await registerNotifications()
     try {
@@ -97,14 +97,14 @@ export default () => {
             <Icons name="arrow-back-ios" size={24} color={theme.colors.text} />
           </TouchableOpacity>
         </Animated.View>  
-        <View style={{ alignItems: "center", gap: 16, padding: 24 }}>
+        <View style={{ alignItems: "center", gap: m+s, padding: l+s }}>
             
           <View>
             <Animated.Text
               entering={FadeInDown.duration(1000).springify()}
               style={{
                 fontFamily: 'Lato_400Regular',
-                fontSize: 40,
+                fontSize: xl,
                 fontWeight: "800",
                 color: theme.colors.text,
               }}
@@ -116,8 +116,8 @@ export default () => {
               style={{
                 fontFamily: 'Lato_400Regular',
                 opacity: 0.5,
-                marginTop: 16,
-                fontSize: 16,
+                marginTop: m+s,
+                fontSize: m+s,
                 color: theme.colors.text,
               }}
             >
@@ -129,14 +129,14 @@ export default () => {
                 entering={FadeInDown.duration(1000).springify()}
                 style={{
                   opacity: 0.5,
-                  fontSize: 16,
+                  fontSize: m+6,
                   color: 'red',
                   fontFamily: 'Lato_400Regular',
                 }}
               >
                 {error}
               </Animated.Text>
-              : <View style={{height: 20}}/>
+              : <View style={{height: l}}/>
             }
             <Animated.View
               entering={FadeInDown.delay(200).duration(1000).springify()}
@@ -148,14 +148,14 @@ export default () => {
                 value={email}
                 onChangeText={(t) => setEmail(t.toLowerCase())}
                 style={{
-                  fontSize: 16,
+                  fontSize: m+s,
                   fontWeight: "500",
                   fontFamily: 'Lato_400Regular',
                   color: theme.colors.text,
-                  paddingLeft: 48,
-                  paddingRight: 12,
-                  height: 48,
-                  borderRadius: 12,
+                  paddingLeft: xl,
+                  paddingRight: m,
+                  height: xl,
+                  borderRadius: m,
                   backgroundColor: theme.colors.background,
                   width: "100%",
                 }}
@@ -166,8 +166,8 @@ export default () => {
                 color={theme.colors.text}
                 style={{
                   position: "absolute",
-                  left: 12,
-                  top: 12,
+                  left: m,
+                  top: m,
                   opacity: 0.5,
                 }}
               />
@@ -182,14 +182,14 @@ export default () => {
                 value={password}
                 onChangeText={(t) => setPassword(t)}
                 style={{
-                  fontSize: 16,
+                  fontSize: m+s,
                   fontWeight: "500",
                   fontFamily: 'Lato_400Regular',
                   color: theme.colors.text,
-                  paddingLeft: 48,
-                  paddingRight: 12,
-                  height: 48,
-                  borderRadius: 12,
+                  paddingLeft: xl,
+                  paddingRight: m,
+                  height: xl,
+                  borderRadius: m,
                   backgroundColor: theme.colors.background,
                   width: "100%",
                 }}
@@ -200,8 +200,8 @@ export default () => {
                 color={theme.colors.text}
                 style={{
                   position: "absolute",
-                  left: 12,
-                  top: 12,
+                  left: m,
+                  top: m,
                   opacity: 0.5,
                 }}
               />
@@ -216,14 +216,14 @@ export default () => {
                 value={repeatPassword}
                 onChangeText={(t) => setRepeatPassword(t)}
                 style={{
-                  fontSize: 16,
+                  fontSize: m+s,
                   fontWeight: "500",
                   fontFamily: 'Lato_400Regular',
                   color: theme.colors.text,
-                  paddingLeft: 48,
-                  paddingRight: 12,
-                  height: 48,
-                  borderRadius: 12,
+                  paddingLeft: xl,
+                  paddingRight: m,
+                  height: xl,
+                  borderRadius: m,
                   backgroundColor: theme.colors.background,
                   width: "100%",
                 }}
@@ -234,8 +234,8 @@ export default () => {
                 color={theme.colors.text}
                 style={{
                   position: "absolute",
-                  left: 12,
-                  top: 12,
+                  left: m,
+                  top: m,
                   opacity: 0.5,
                 }}
               />
@@ -245,7 +245,7 @@ export default () => {
               style={{
                 fontFamily: 'Lato_400Regular',
                 opacity: 0.5,
-                fontSize: 16,
+                fontSize: m+s,
                 color: 'gray',
               }}
             >
@@ -254,10 +254,7 @@ export default () => {
             <Animated.View
               entering={FadeInDown.delay(800).duration(1000).springify()}
             >
-              <PrimaryButton
-                label="Register"
-                onPress={onPress}
-              />
+              <Button title="Register" onPress={onPress}/>
             </Animated.View>
           </View>
       </SafeAreaView>

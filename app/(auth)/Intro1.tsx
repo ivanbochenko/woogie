@@ -5,8 +5,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Artwork01 from "../../assets/artworks/Artwork01";
 import { useTheme } from "@react-navigation/native";
 import { ScreenIndicators } from "../../components/ScreenIndicators";
-import { PrimaryButton } from "../../components/Button";
+import { Button } from "../../components/Button";
 import { useRouter } from "expo-router";
+import { s, m, l, xl } from "../../constants/Spaces";
 
 const INTRO_SCREEN_01 = {
   title: "Connect with people around easily",
@@ -25,11 +26,11 @@ const IntroScreen01 = () => {
       >
         <Artwork01 width={300} height={300} />
       </Animated.View>
-      <View style={{ padding: 24 }}>
+      <View style={{ padding: 25 }}>
         <Animated.Text
           entering={FadeInDown.duration(1000).springify()}
           style={{
-            fontSize: 40,
+            fontSize: xl,
             fontWeight: "800",
             fontFamily: 'Lato_400Regular',
             color: theme.colors.text
@@ -41,8 +42,8 @@ const IntroScreen01 = () => {
           entering={FadeInDown.delay(100).duration(1000).springify()}
           style={{
             opacity: 0.5,
-            marginTop: 16,
-            fontSize: 16,
+            marginTop: m+s,
+            fontSize: m+s,
             color: theme.colors.text,
             fontFamily: 'Lato_400Regular',
           }}
@@ -58,8 +59,8 @@ const IntroScreen01 = () => {
           entering={FadeInDown.delay(400).duration(1000).springify()}
           style={{ alignItems: "center" }}
         >
-          <PrimaryButton
-            label="Next"
+          <Button
+            title="Next"
             onPress={() => router.push({pathname: 'Intro2'})}
           />
         </Animated.View>

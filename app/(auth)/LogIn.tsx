@@ -11,13 +11,14 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 import Artwork03 from "../../assets/artworks/Artwork03";
-import { PrimaryButton } from "../../components/Button";
+import { Button } from "../../components/Button";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import { api, signIn } from "../../lib/State";
 import validator from "validator";
 import { registerNotifications } from "../../lib/Notification";
+import { s, m, l, xl } from "../../constants/Spaces";
 import { AxiosError } from "axios";
 
 const LOG_IN_SCREEN = {
@@ -36,7 +37,7 @@ const LogInScreen = () => {
   const [disabled, setDisabled] = useState(false)
 
   const onPress = async () => {
-    if (!validator.isEmail(email) || !!password) {
+    if (!validator.isEmail(email) || !password) {
       return setError('Enter valid email and password')
     }
     setError(null)
@@ -86,7 +87,7 @@ const LogInScreen = () => {
             style={{height: 50, width: 75, alignItems: 'center', justifyContent: 'center'}}
             onPress={() => router.push({pathname: 'Intro2'})}
           >
-            <Icons name="arrow-back-ios" size={24} color={theme.colors.text} />
+            <Icons name="arrow-back-ios" size={25} color={theme.colors.text} />
           </TouchableOpacity>
         </Animated.View>
 
@@ -98,15 +99,15 @@ const LogInScreen = () => {
             justifyContent: "center",
           }}
         >
-          <Artwork03 width={240} height={240} />
+          <Artwork03 width={250} height={250} />
         </Animated.View>
 
-        <View style={{ padding: 24 }}>
+        <View style={{ padding: 25 }}>
           <Animated.Text
             entering={FadeInDown.duration(1000).springify()}
             style={{
               fontFamily: 'Lato_400Regular',
-              fontSize: 40,
+              fontSize: xl,
               fontWeight: "800",
               color: theme.colors.text,
             }}
@@ -118,8 +119,8 @@ const LogInScreen = () => {
             style={{
               fontFamily: 'Lato_400Regular',
               opacity: 0.5,
-              marginTop: 16,
-              fontSize: 16,
+              marginTop: m+s,
+              fontSize: m+s,
               color: theme.colors.text,
             }}
           >
@@ -132,9 +133,9 @@ const LogInScreen = () => {
               style={{
                 fontFamily: 'Lato_400Regular',
                 opacity: 0.5,
-                marginTop: 16,
-                marginBottom: 16,
-                fontSize: 16,
+                marginTop: m+s,
+                marginBottom: m+s,
+                fontSize: m+s,
                 color: 'red',
               }}
             >
@@ -143,7 +144,7 @@ const LogInScreen = () => {
             : <View style={{height: 52}}/>
           }
 
-          <View style={{ alignItems: "center", gap: 16 }}>
+          <View style={{ alignItems: "center", gap: m+s }}>
             <Animated.View
               entering={FadeInDown.delay(200).duration(1000).springify()}
               style={{ position: "relative", width: "100%" }}
@@ -155,25 +156,25 @@ const LogInScreen = () => {
                 onChangeText={(t) => setEmail(t.toLowerCase())}
                 style={{
                   fontFamily: 'Lato_400Regular',
-                  fontSize: 16,
+                  fontSize: m+s,
                   fontWeight: "500",
                   color: theme.colors.text,
-                  paddingLeft: 48,
-                  paddingRight: 12,
-                  height: 48,
-                  borderRadius: 12,
+                  paddingLeft: xl,
+                  paddingRight: m,
+                  height: xl,
+                  borderRadius: m,
                   backgroundColor: theme.colors.background,
                   width: "100%",
                 }}
               />
               <Icons
                 name="email"
-                size={24}
+                size={25}
                 color={theme.colors.text}
                 style={{
                   position: "absolute",
-                  left: 12,
-                  top: 12,
+                  left: m,
+                  top: m,
                   opacity: 0.5,
                 }}
               />
@@ -188,26 +189,26 @@ const LogInScreen = () => {
                 value={password}
                 onChangeText={(t) => setPassword(t)}
                 style={{
-                  fontSize: 16,
+                  fontSize: m+s,
                   fontFamily: 'Lato_400Regular',
                   fontWeight: "500",
                   color: theme.colors.text,
-                  paddingLeft: 48,
-                  paddingRight: 12,
-                  height: 48,
-                  borderRadius: 12,
+                  paddingLeft: xl,
+                  paddingRight: m,
+                  height: xl,
+                  borderRadius: m,
                   backgroundColor: theme.colors.background,
                   width: "100%",
                 }}
               />
               <Icons
                 name="lock"
-                size={24}
+                size={25}
                 color={theme.colors.text}
                 style={{
                   position: "absolute",
-                  left: 12,
-                  top: 12,
+                  left: m,
+                  top: m,
                   opacity: 0.5,
                 }}
               />
@@ -215,8 +216,8 @@ const LogInScreen = () => {
             <Animated.View
               entering={FadeInDown.delay(600).duration(1000).springify()}
             >
-              <PrimaryButton
-                label="Log In"
+              <Button
+                title="Log In"
                 onPress={onPress}
               />
             </Animated.View>
@@ -229,21 +230,21 @@ const LogInScreen = () => {
                 style={{
                   fontFamily: 'Lato_400Regular',
                   opacity: 0.5,
-                  fontSize: 16,
+                  fontSize: m+s,
                   color: 'gray',
                   textDecorationLine: 'underline',
                 }}
               >
                 Register
               </Text>
-              <View style={{width: 6}}/>
+              <View style={{width: s}}/>
               <Text
                 disabled={disabled}
                 onPress={onRestore}
                 style={{
                   fontFamily: 'Lato_400Regular',
                   opacity: 0.5,
-                  fontSize: 16,
+                  fontSize: m+s,
                   color: 'gray',
                   textDecorationLine: 'underline',
                 }}
