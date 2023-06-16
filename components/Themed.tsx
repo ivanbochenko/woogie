@@ -57,10 +57,10 @@ export function View(props: ViewProps) {
 
 export function Pressable(props: PressableProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const cardColor = useThemeColor({ light: lightColor, dark: darkColor }, 'card');
+  const tintColor = useThemeColor({ light: lightColor, dark: darkColor }, 'tint');
   const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'border');
 
-  return <DefaultPressable style={({pressed}) => [({ backgroundColor: pressed ? borderColor : cardColor }), style]} {...otherProps} />;
+  return <DefaultPressable style={({pressed}) => [({ backgroundColor: pressed ? borderColor : tintColor }), style]} {...otherProps} />;
 }
 
 export function Input(props: InputProps) {

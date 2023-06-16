@@ -27,12 +27,10 @@ export default () => {
   const onReset = async () => {
     setError(null)
     if (!isStrong(newPassword)) {
-      setError('Weak password. Min length of 8, one uppercase and one number')
-      return
+      return setError('Weak password. Min length of 8, one uppercase and one number')
     }
     if (newPassword !== repeatNewPassword) {
-      setError('Passwords dont match')
-      return
+      return setError('Passwords dont match')
     }
     try {
       const res = await api().post('password/reset', { password, newPassword })

@@ -16,7 +16,7 @@ export const Button = (
   }
 ) => {
 
-  const { title, onPress, style, ...other } = props
+  const { title, onPress, ...other } = props
   const [loading, setLoading] = useState(false)
 
   return (

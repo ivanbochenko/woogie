@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   deepText: {
+    width: 300,
     zIndex: -10,
     position: 'absolute',
   }
