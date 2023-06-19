@@ -1,0 +1,1 @@
+export const dateShiftHours = (d: Date, h: number) => new Date(d.getTime() + 3600000 * h)

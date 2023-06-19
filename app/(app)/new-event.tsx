@@ -15,6 +15,7 @@ import { useAuth } from '../../lib/State';
 import { launchImagePicker } from '../../lib/Media';
 import { getDistance } from '../../lib/Distance';
 import { CREATE_EVENT } from '../../gql/queries';
+import { dateShiftHours } from '../../lib/Time';
 
 
 const MAX_SLOTS = 20
@@ -223,7 +224,9 @@ export default (props: {
                   mode='time'
                   display='spinner'
                   value={state.time}
-                  onChange={(event, time) => setState(state => ({...state, time: time ?? new Date()}))}
+                  onChange={(event, time = new Date()) => setState(state => {
+                    return ({...state, time: time >= new Date() ? time : dateShiftHours(time, 24)})
+                  })}
                 />
                 <Button title='Ok' onPress={() => bottomSheetRef.current?.close()}/>
               </View>,

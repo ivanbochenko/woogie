@@ -6,9 +6,7 @@ import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } from './Storage';
 import { apiClient } from '../lib/Client'
 import { isPro } from './Purchases';
-import { HOURS_TO_NEW_SWIPES } from '../constants/Config'
-
-const bridge = () => new Date(new Date().getTime() - 3600000 * HOURS_TO_NEW_SWIPES)
+import { dateShiftHours } from './Time';
 
 type Data = {
   id: string,
@@ -59,7 +57,7 @@ const _useAuth = create<AuthState>((set, get) => ({
   hydrateSwipes: async () => {
     const swipes = await getSwipes()
     if (swipes.length) {
-      const freshSwipes = swipes.filter(swipe => new Date(swipe).getTime() > bridge().getTime())
+      const freshSwipes = swipes.filter(swipe => new Date(swipe).getTime() > dateShiftHours(new Date(), -8).getTime())
       set({swipes: freshSwipes.length})
       await setSwipes(freshSwipes)
     }

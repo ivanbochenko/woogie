@@ -6,8 +6,9 @@ import { Fade } from "../../../components/Fade";
 import { Stack } from '../../../components/Card';
 import { RegularText } from '../../../components/StyledText';
 import { useAuth } from '../../../lib/State'
-import { NUMBER_OF_FREE_SWIPES } from '../../../constants/Config'
 import { CREATE_MATCH, FEED_QUERY } from '../../../gql/queries';
+
+const freeSwipes = 5
 
 export default () => {
   const router = useRouter()
@@ -35,7 +36,7 @@ export default () => {
       await match({user_id, event_id, dismissed})
       return
     }
-    if (swipes >= NUMBER_OF_FREE_SWIPES) {
+    if (swipes >= freeSwipes) {
       return router.push({pathname: 'Upgrade'})
     }
     if (!dismissed) {
