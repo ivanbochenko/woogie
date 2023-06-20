@@ -15,6 +15,7 @@ import { useAuth } from '../../lib/State';
 import { launchImagePicker } from '../../lib/Media';
 import { getDistance } from '../../lib/Distance';
 import { CREATE_EVENT } from '../../gql/queries';
+import { AxiosError } from 'axios';
 
 const MAX_SLOTS = 20
 
@@ -77,13 +78,14 @@ export default (props: {
     const file = { uri: state.photo, type: 'image/jpeg', name: 'photo.jpg' } as unknown as File
     const FD = new FormData()
     FD.append('file', file)
-    const { status, data } = await api.post('images', FD, {headers: {"Content-Type": 'multipart/form-data'}})
-    if (status !== 201) {
-      Alert.alert(data.message)
-      return
+    try {
+      const res = await api.post('images', FD, {headers: {"Content-Type": 'multipart/form-data'}})
+      await postEvent({...state, photo: res.data.image})
+      refresh()
+    } catch (error) {
+      const err = error as AxiosError
+      return Alert.alert(err?.response?.statusText ?? 'Explicit data')
     }
-    await postEvent({...state, photo: data.image})
-    refresh()
   }
 
   return (

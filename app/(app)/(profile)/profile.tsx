@@ -9,6 +9,7 @@ import { useAuth } from '../../../lib/State'
 import { useState } from 'react';
 import { EditProfileView, UserData } from '../../../components/EditProfile';
 import { EDIT_PROFILE, PROFILE_QUERY } from '../../../gql/queries';
+import { AxiosError } from 'axios';
 
 export default () => {
   const router = useRouter()
@@ -32,20 +33,21 @@ export default () => {
     const file = { uri: value.avatar, type: 'image/jpeg', name: 'photo.jpg'} as unknown as File
     const FD = new FormData()
     FD.append('file', file)
-    const {status, data} = await api.post('images', FD, {headers: {'Content-Type': 'multipart/form-data'} })
-    if (status !== 201) {
-      Alert.alert(data.message)
-      return
+    try {
+      const res = await api.post('images', FD, {headers: {"Content-Type": 'multipart/form-data'}})
+      await editProfile({
+        id: id!,
+        name: value.name!,
+        bio: value.bio!,
+        sex: value.sex!,
+        age: Number(value.age),
+        avatar: res.data.image ?? ''
+      })
+      setEdit(false)
+    } catch (error) {
+      const err = error as AxiosError
+      return Alert.alert(err?.response?.statusText ?? 'Explicit data')
     }
-    await editProfile({
-      id: id!,
-      name: value.name!,
-      bio: value.bio!,
-      sex: value.sex!,
-      age: Number(value.age),
-      avatar: data.image ?? ''
-    })
-    setEdit(false)
   }
 
   if (fetching || error) return (
