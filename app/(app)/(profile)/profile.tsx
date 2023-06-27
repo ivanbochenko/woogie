@@ -27,8 +27,7 @@ export default () => {
 
   const onSubmit = async () => {
     if (!value.name || !value.age || !value.sex || !value.avatar) {
-      Alert.alert('Add name, age, sex and avatar')
-      return
+      return Alert.alert('Add name, age, sex and avatar')
     }
     const file = { uri: value.avatar, type: 'image/jpeg', name: 'photo.jpg'} as unknown as File
     const FD = new FormData()
@@ -46,7 +45,7 @@ export default () => {
       setEdit(false)
     } catch (error) {
       const err = error as AxiosError
-      return Alert.alert(err?.response?.statusText ?? 'Explicit data')
+      return Alert.alert(err?.response?.statusText ?? 'Explicit image')
     }
   }
 

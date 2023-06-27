@@ -72,8 +72,7 @@ export default (props: {
 
   const onSubmit = async () => {
     if (!state.photo || !state.title || !state.text) {
-      Alert.alert('Pick photo, title and text')
-      return
+      return Alert.alert('Pick photo, title and text')
     }
     const file = { uri: state.photo, type: 'image/jpeg', name: 'photo.jpg' } as unknown as File
     const FD = new FormData()
@@ -84,7 +83,7 @@ export default (props: {
       refresh()
     } catch (error) {
       const err = error as AxiosError
-      return Alert.alert(err?.response?.statusText ?? 'Explicit data')
+      return Alert.alert(err?.response?.statusText ?? 'Explicit image')
     }
   }
 
