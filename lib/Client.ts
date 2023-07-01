@@ -1,4 +1,4 @@
-import { createClient, defaultExchanges, subscriptionExchange } from 'urql'
+import { createClient, cacheExchange, fetchExchange, subscriptionExchange } from 'urql'
 import axios from 'axios'
 import RNEventSource from 'react-native-event-source'
 import { API_URL } from '../constants/Config'
@@ -20,15 +20,16 @@ export const gqlClient = (token: string) => createClient({
     };
   },
   exchanges: [
-    ...defaultExchanges,
+    cacheExchange,
+    fetchExchange,
     subscriptionExchange({
-      forwardSubscription(operation) {
+      forwardSubscription(request) {
         const url = new URL(API_URL + '/graphql')
-        url.searchParams.append('query', operation.query)
-        if (operation.variables) {
+        url.searchParams.append('query', request.query || '')
+        if (request.variables) {
           url.searchParams.append(
             'variables',
-            JSON.stringify(operation.variables),
+            JSON.stringify(request.variables),
           )
         }
         return {
