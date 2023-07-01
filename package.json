@@ -18,6 +18,7 @@
     "@expo-google-fonts/lato": "^0.2.3",
     "@expo/vector-icons": "^13.0.0",
     "@gorhom/bottom-sheet": "^4.4.7",
+    "@graphql-yoga/urql-exchange": "^2.0.3",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-community/datetimepicker": "6.7.3",
     "@react-native-community/slider": "4.4.2",
