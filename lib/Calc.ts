@@ -11,3 +11,7 @@ export function getDistance(lat1: number, lon1: number, lat2: number, lon2: numb
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
   return Math.round(R * c) // Distance in km
 }
+
+export function dateShiftHours(d: Date, h: number) {
+  return new Date(d.getTime() + 1000 * 60 * 60 * h);
+}

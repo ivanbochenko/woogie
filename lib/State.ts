@@ -6,7 +6,7 @@ import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } from './Storage';
 import { apiClient } from '../lib/Client'
 import { isPro } from './Purchases';
-import { dateShiftHours } from './Time';
+import { dateShiftHours } from './Calc';
 
 type Data = {
   id: string,

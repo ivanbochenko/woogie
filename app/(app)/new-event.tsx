@@ -13,7 +13,7 @@ import { Icon } from '../../components/Themed';
 import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { useAuth } from '../../lib/State';
 import { launchImagePicker } from '../../lib/Media';
-import { getDistance } from '../../lib/Distance';
+import { getDistance } from '../../lib/Calc';
 import { CREATE_EVENT } from '../../gql/queries';
 import { AxiosError } from 'axios';
 
