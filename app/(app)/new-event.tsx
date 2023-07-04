@@ -13,7 +13,7 @@ import { Icon } from '../../components/Themed';
 import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { useAuth } from '../../lib/State';
 import { launchImagePicker } from '../../lib/Media';
-import { getDistance } from '../../lib/Calc';
+import { dateShiftHours, getDistance } from '../../lib/Calc';
 import { CREATE_EVENT } from '../../gql/queries';
 import { AxiosError } from 'axios';
 
@@ -73,6 +73,9 @@ export default (props: {
   const onSubmit = async () => {
     if (!state.photo || !state.title || !state.text) {
       return Alert.alert('Pick photo, title and text')
+    }
+    if (state.time <= dateShiftHours(new Date(), -0.5)) {
+      setState(state => ({...state, time: dateShiftHours(state.time, 24)}))
     }
     const file = { uri: state.photo, type: 'image/jpeg', name: 'photo.jpg' } as unknown as File
     const FD = new FormData()
