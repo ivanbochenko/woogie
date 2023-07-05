@@ -1,4 +1,4 @@
-import { graphql } from "./gql"
+import { graphql } from "../gql/gql"
 
 export const query = `
   query FEED($user_id: String!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
@@ -29,7 +29,7 @@ export const query = `
   }
 `
 
-export const EVENT_QUERY = graphql(`
+export const EVENT_QUERY = `
   query event_query($id: String!) {
     event(id: $id) {
       id
@@ -57,9 +57,9 @@ export const EVENT_QUERY = graphql(`
       }
     }
   }
-`)
+`
 
-export const REVIEWS_QUERY = graphql(`
+export const REVIEWS_QUERY = `
   query REVIEWS_QUERY($user_id: String!) {
     reviews(user_id: $user_id) {
       id
@@ -73,9 +73,9 @@ export const REVIEWS_QUERY = graphql(`
       }
     }
   }
-`)
+`
 
-export const USER_QUERY = graphql(`
+export const USER_QUERY = `
   query USER_QUERY($id: String!) {
     user(id: $id) {
       id
@@ -97,9 +97,9 @@ export const USER_QUERY = graphql(`
       }
     }
   }
-`)
+`
 
-export const PROFILE_QUERY = graphql(`
+export const PROFILE_QUERY = `
   query PROFILE_QUERY($id: String!) {
     user(id: $id) {
       id
@@ -110,9 +110,9 @@ export const PROFILE_QUERY = graphql(`
       sex
     }
   }
-`)
+`
 
-export const MY_MATCHES = graphql(`
+export const MY_MATCHES = `
   query MY_MATCHES($user_id: String!) {
     matches(user_id: $user_id) {
       id
@@ -124,9 +124,9 @@ export const MY_MATCHES = graphql(`
       }
     }
   }
-`)
+`
 
-export const MY_EVENTS = graphql(`
+export const MY_EVENTS = `
   query MY_EVENTS($author_id: String!) {
     events(author_id: $author_id) {
       id
@@ -135,9 +135,9 @@ export const MY_EVENTS = graphql(`
       photo
     }
   }
-`)
+`
 
-export const FEED_QUERY = graphql(`
+export const FEED_QUERY = `
   query FEED($user_id: String!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
     feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
       id
@@ -164,9 +164,9 @@ export const FEED_QUERY = graphql(`
       }
     }
   }
-`)
+`
 
-export const LAST_EVENT = graphql(`
+export const LAST_EVENT = `
   query LAST_EVENT($author_id: String!) {
     lastEvent(author_id: $author_id) {
       id
@@ -183,74 +183,74 @@ export const LAST_EVENT = graphql(`
       }
     }
   }
-`)
+`
 
-export const POST_MESSAGE = graphql(`
+export const POST_MESSAGE = `
   mutation POST_MESSAGE($text: String!, $event_id: String!, $author_id: String!) {
     postMessage(text: $text, event_id: $event_id, author_id: $author_id) {
       id
     }
   }
-`)
+`
 
-export const EDIT_PROFILE = graphql(`
+export const EDIT_PROFILE = `
   mutation EDIT_PROFILE($id: String!, $name: String!, $bio: String, $age: Int!, $sex: String!, $avatar: String) {
     editUser(id: $id, name: $name, bio: $bio, age: $age, sex: $sex, avatar: $avatar) {
       id
     }
   }
-`)
+`
 
-export const ACCEPT_MATCH = graphql(`
+export const ACCEPT_MATCH = `
   mutation ACCEPT_MATCH($id: String!) {
     acceptMatch(id: $id) {
       id
     }
   }
-`)
+`
 
-export const DELETE_MATCH = graphql(`
+export const DELETE_MATCH = `
   mutation DELETE_MATCH($id: String!) {
     deleteMatch(id: $id) {
       id
     }
   }
-`)
+`
 
-export const DELETE_EVENT = graphql(`
+export const DELETE_EVENT = `
   mutation DELETE_EVENT($id: String!) {
     deleteEvent(id: $id) {
       id
     }
   }
-`)
+`
 
-export const CREATE_MATCH = graphql(`
+export const CREATE_MATCH = `
   mutation CREATE_MATCH($dismissed: Boolean!, $event_id: String!, $user_id: String!) {
     createMatch(dismissed: $dismissed, event_id: $event_id, user_id: $user_id) {
       id
     }
   }
-`)
+`
 
-export const CREATE_EVENT = graphql(`
+export const CREATE_EVENT = `
   mutation CREATE_EVENT($author_id: String!, $title: String!, $text: String!, $photo: String!, $slots: Int!, $time: DateTime!, $latitude: Float!, $longitude: Float!) {
     postEvent(author_id: $author_id, title: $title, text: $text, photo: $photo, slots: $slots, time: $time, latitude: $latitude, longitude: $longitude) {
       id
     }
   }
-`)
+`
 
-export const BLOCK = graphql(`
+export const BLOCK = `
   mutation BLOCK($id: String!, $user_id: String!) {
     block(id: $id, user_id: $user_id)
   }
-`)
+`
 
-export const POST_REVIEW = graphql(`
+export const POST_REVIEW = `
   mutation POST_REVIEW($author_id: String!, $user_id: String!, $stars: Int!, $text: String!) {
     postReview(author_id: $author_id, stars: $stars, text: $text, user_id: $user_id) {
       id
     }
   }
-`)
+`

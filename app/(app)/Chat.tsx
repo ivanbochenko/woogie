@@ -15,7 +15,7 @@ import { height, width } from '../../constants/Layout';
 import { RegularText } from '../../components/StyledText'
 import { View, Icon } from '../../components/Themed'
 import { useAuth } from '../../lib/State'
-import { POST_MESSAGE } from '../../gql/queries';
+import { POST_MESSAGE } from '../../lib/queries';
 
 export default () => {
   const { title, event_id } = useSearchParams() as { title: string, event_id: string }

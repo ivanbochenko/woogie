@@ -15,7 +15,7 @@ import { useRouter } from 'expo-router';
 import User from "../../../components/User";
 import NewEvent from '../new-event';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ACCEPT_MATCH, LAST_EVENT } from '../../../gql/queries';
+import { ACCEPT_MATCH, LAST_EVENT } from '../../../lib/queries';
 
 // This screen displays matches and link to event
 // Chats screen displays links to chats of events matched to

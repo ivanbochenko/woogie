@@ -14,7 +14,7 @@ import { BoldText, RegularText, TextInput } from '../../components/StyledText'
 import { useAuth } from '../../lib/State';
 import { launchImagePicker } from '../../lib/Media';
 import { dateShiftHours, getDistance } from '../../lib/Calc';
-import { CREATE_EVENT } from '../../gql/queries';
+import { CREATE_EVENT } from '../../lib/queries';
 import { AxiosError } from 'axios';
 
 const MAX_SLOTS = 20

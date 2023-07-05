@@ -9,7 +9,7 @@ import { height, width } from '../../constants/Layout';
 import { RegularText, BoldText } from '../../components/StyledText'
 import User from '../../components/User'
 import Map from '../../components/Map';
-import { EVENT_QUERY } from '../../gql/queries';
+import { EVENT_QUERY } from '../../lib/queries';
 
 export default () => {
   const { colors } = useTheme()

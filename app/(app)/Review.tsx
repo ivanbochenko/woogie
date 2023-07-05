@@ -9,7 +9,7 @@ import { s, m, l, xl } from '../../constants/Spaces';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Themed'
 import { useAuth } from '../../lib/State';
-import { POST_REVIEW } from '../../gql/queries';
+import { POST_REVIEW } from '../../lib/queries';
 
 export default () => {
   const { colors } = useTheme();

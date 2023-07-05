@@ -6,7 +6,7 @@ import { Fade } from "../../../components/Fade";
 import { Stack } from '../../../components/Card';
 import { RegularText } from '../../../components/StyledText';
 import { useAuth } from '../../../lib/State'
-import { CREATE_MATCH, FEED_QUERY } from '../../../gql/queries';
+import { CREATE_MATCH, FEED_QUERY } from '../../../lib/queries';
 
 const freeSwipes = 5
 

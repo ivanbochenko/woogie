@@ -1,7 +1,7 @@
-import { createClient, cacheExchange, fetchExchange } from 'urql'
+import { createClient, cacheExchange, fetchExchange, subscriptionExchange } from 'urql'
 import axios from 'axios'
+import { createClient as createSSEClient } from 'graphql-sse';
 import { API_URL } from '../constants/Config'
-import { yogaExchange } from '@graphql-yoga/urql-exchange'
 
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -12,6 +12,10 @@ export const apiClient = axios.create({
   },
 })
 
+const sseClient = createSSEClient({
+  url: API_URL + '/graphql/stream',
+});
+
 export const gqlClient = (token: string) => createClient({
   url: API_URL + '/graphql',
   fetchOptions: () => ({
@@ -20,6 +24,17 @@ export const gqlClient = (token: string) => createClient({
   exchanges: [
     cacheExchange,
     fetchExchange,
-    yogaExchange(),
+    subscriptionExchange({
+      forwardSubscription(operation) {
+        return {
+          subscribe: (sink) => {
+            const dispose = sseClient.subscribe({ ...operation, query: operation.query ?? ''}, sink);
+            return {
+              unsubscribe: dispose,
+            };
+          },
+        };
+      },
+    }),
   ],
 })

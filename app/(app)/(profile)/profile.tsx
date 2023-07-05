@@ -8,7 +8,7 @@ import { useMutation, useQuery } from 'urql';
 import { useAuth } from '../../../lib/State'
 import { useState } from 'react';
 import { EditProfileView, UserData } from '../../../components/EditProfile';
-import { EDIT_PROFILE, PROFILE_QUERY } from '../../../gql/queries';
+import { EDIT_PROFILE, PROFILE_QUERY } from '../../../lib/queries';
 import { AxiosError } from 'axios';
 
 export default () => {

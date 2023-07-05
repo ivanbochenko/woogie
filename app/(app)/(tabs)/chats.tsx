@@ -18,7 +18,7 @@ import { height, width } from '../../../constants/Layout';
 import { s, m, l, xl } from '../../../constants/Spaces';
 import { useAuth } from '../../../lib/State'
 import { BoldText, RegularText } from '../../../components/StyledText';
-import { DELETE_EVENT, DELETE_MATCH, MY_EVENTS, MY_MATCHES } from '../../../gql/queries';
+import { DELETE_EVENT, DELETE_MATCH, MY_EVENTS, MY_MATCHES } from '../../../lib/queries';
 
 export default function Chats() {
   const [show, setShow] = useState(true)
