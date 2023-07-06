@@ -18,15 +18,17 @@ export const unstable_settings = {
   initialRouteName: '(auth)'
 };
 
+SplashScreen.preventAutoHideAsync()
+
+hydrateAuth()
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
   }),
-});
-
-hydrateAuth()
+})
 
 export default function RootLayout() {
   const colorScheme = useColorScheme()
@@ -36,21 +38,16 @@ export default function RootLayout() {
     Lato_700Bold,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
-  }, [error]);
+    if (loaded) SplashScreen.hideAsync()
+  }, [error, loaded]);
 
   return (
-    <>
-      {loaded ? 
-        <Provider>
-          <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
-            <Slot/>
-          </ThemeProvider>
-        </Provider>
-        : <SplashScreen />
-      }
-    </>
+    <Provider>
+      <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
+        <Slot/>
+      </ThemeProvider>
+    </Provider>
   )
 }

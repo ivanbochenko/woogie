@@ -18,7 +18,6 @@ export default () => {
   const user_id = useAuth.use.id()!
   const maxDistance = useAuth.use.maxDistance()
   const location = useAuth.use.location()
-  const [_, match] = useMutation(CREATE_MATCH)
 
   const [{ data, fetching, error }] = useQuery({
     query: FEED_QUERY,
@@ -30,6 +29,8 @@ export default () => {
     },
     pause: !location || !maxDistance || !user_id
   })
+  
+  const [_, match] = useMutation(CREATE_MATCH)
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
     if (proAccess) {
