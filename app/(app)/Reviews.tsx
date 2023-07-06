@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useSearchParams } from 'expo-router';
+import { useGlobalSearchParams } from 'expo-router';
 import Animated, {
   FadeOutRight,
   FadeInLeft,
@@ -16,7 +16,7 @@ import { REVIEWS_QUERY } from '../../lib/queries';
 
 export default () => {
   const { colors } = useTheme()
-  const { user_id } = useSearchParams() as { user_id: string }
+  const { user_id } = useGlobalSearchParams() as { user_id: string }
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: REVIEWS_QUERY,
     variables: { user_id }
@@ -33,7 +33,7 @@ export default () => {
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={[styles.center, {padding: m}]}>
         {data?.reviews!.length
-          ? data.reviews.map( (review, index) => {
+          ? data.reviews.map( (review: any, index: number) => {
             const { author, stars, text, time } = review!
             return (
               <Animated.View

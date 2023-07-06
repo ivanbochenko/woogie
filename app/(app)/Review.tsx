@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Pressable, SafeAreaView, ScrollView, Alert } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useMutation } from 'urql';
-import { useSearchParams } from 'expo-router'
+import { useGlobalSearchParams } from 'expo-router'
 
 import { BoldText, TextInput } from '../../components/StyledText'
 import { s, m, l, xl } from '../../constants/Spaces';
@@ -15,7 +15,7 @@ export default () => {
   const { colors } = useTheme();
   const id = useAuth.use.id()
   const author_id = id!
-  const { user_id } = useSearchParams() as { user_id: string }
+  const { user_id } = useGlobalSearchParams() as { user_id: string }
   const [reviewResult, review] = useMutation(POST_REVIEW)
   const [value, setValue] = useState({
     author_id,

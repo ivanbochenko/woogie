@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, SafeAreaView, Alert, KeyboardAvoidingView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useRouter, useSearchParams } from 'expo-router'
+import { useRouter, useGlobalSearchParams } from 'expo-router'
 import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from "react-native-bouncy-checkbox-group";
@@ -29,7 +29,7 @@ export default () => {
   const router = useRouter()
   const id = useAuth.use.id()
   const api = useAuth.use.api()()
-  const { user_id, event_id } = useSearchParams() as Params
+  const { user_id, event_id } = useGlobalSearchParams() as Params
   const [blockUser, setBlockUser] = useState(false)
   const [blockResult, block] = useMutation(BLOCK)
   const [value, setValue] = useState<ValueData>({

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Image, Pressable, TextInput, SafeAreaView, ScrollView, Keyboard, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useSubscription, useMutation } from 'urql';
-import { useSearchParams, useRouter, Stack } from 'expo-router'
+import { useSubscription, useMutation, gql } from 'urql';
+import { useGlobalSearchParams, useRouter, Stack } from 'expo-router'
 import Animated, {
   Layout,
   FadeOutRight,
@@ -18,7 +18,7 @@ import { useAuth } from '../../lib/State'
 import { POST_MESSAGE } from '../../lib/queries';
 
 export default () => {
-  const { title, event_id } = useSearchParams() as { title: string, event_id: string }
+  const { title, event_id } = useGlobalSearchParams() as { title: string, event_id: string }
   const router = useRouter()
   const { colors } = useTheme()
   const id = useAuth.use.id()
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const MessagesSubscription = `
+const MessagesSubscription = gql`
   subscription MESSAGES_SUB($event_id: String!) {
     messages(event_id: $event_id) {
       id

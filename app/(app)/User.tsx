@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, Image, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useQuery } from 'urql';
-import { useSearchParams, useRouter, Stack } from 'expo-router'
+import { useGlobalSearchParams, useRouter, Stack } from 'expo-router'
 import Animated, {
   FadeOutRight,
   FadeInLeft,
@@ -14,7 +14,7 @@ import User from "../../components/User";
 import { USER_QUERY } from '../../lib/queries';
 
 export default () => {
-  const { id, review } = useSearchParams() as { id: string, review: string }
+  const { id, review } = useGlobalSearchParams() as { id: string, review: string }
   const router = useRouter()
   const { colors } = useTheme()
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
@@ -71,7 +71,7 @@ export default () => {
 
         <RegularText>{bio}</RegularText>
 
-        {recievedReviews!.map((review, index) => {
+        {recievedReviews!.map((review: any, index: number) => {
           const { author, stars, text, time } = review!
           return (
             <Animated.View
