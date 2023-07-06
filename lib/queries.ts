@@ -1,35 +1,6 @@
-import { graphql } from "../gql/gql"
+import { gql } from 'urql'
 
-export const query = `
-  query FEED($user_id: String!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
-    feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
-      id
-      author_id
-      title
-      text
-      time
-      photo
-      slots
-      latitude
-      longitude
-      distance
-      author {
-        id
-        name
-        avatar
-      }
-      matches {
-        user {
-          id
-          name
-          avatar
-        }
-      }
-    }
-  }
-`
-
-export const EVENT_QUERY = `
+export const EVENT_QUERY = gql`
   query event_query($id: String!) {
     event(id: $id) {
       id
@@ -59,7 +30,7 @@ export const EVENT_QUERY = `
   }
 `
 
-export const REVIEWS_QUERY = `
+export const REVIEWS_QUERY = gql`
   query REVIEWS_QUERY($user_id: String!) {
     reviews(user_id: $user_id) {
       id
@@ -75,7 +46,7 @@ export const REVIEWS_QUERY = `
   }
 `
 
-export const USER_QUERY = `
+export const USER_QUERY = gql`
   query USER_QUERY($id: String!) {
     user(id: $id) {
       id
@@ -99,7 +70,7 @@ export const USER_QUERY = `
   }
 `
 
-export const PROFILE_QUERY = `
+export const PROFILE_QUERY = gql`
   query PROFILE_QUERY($id: String!) {
     user(id: $id) {
       id
@@ -112,7 +83,7 @@ export const PROFILE_QUERY = `
   }
 `
 
-export const MY_MATCHES = `
+export const MY_MATCHES = gql`
   query MY_MATCHES($user_id: String!) {
     matches(user_id: $user_id) {
       id
@@ -126,7 +97,7 @@ export const MY_MATCHES = `
   }
 `
 
-export const MY_EVENTS = `
+export const MY_EVENTS = gql`
   query MY_EVENTS($author_id: String!) {
     events(author_id: $author_id) {
       id
@@ -137,7 +108,7 @@ export const MY_EVENTS = `
   }
 `
 
-export const FEED_QUERY = `
+export const FEED_QUERY = gql`
   query FEED($user_id: String!, $maxDistance: Int!, $latitude: Float!, $longitude: Float!) {
     feed(user_id: $user_id, maxDistance: $maxDistance, latitude: $latitude, longitude: $longitude) {
       id
@@ -166,7 +137,7 @@ export const FEED_QUERY = `
   }
 `
 
-export const LAST_EVENT = `
+export const LAST_EVENT = gql`
   query LAST_EVENT($author_id: String!) {
     lastEvent(author_id: $author_id) {
       id

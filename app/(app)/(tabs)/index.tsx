@@ -18,9 +18,9 @@ export default () => {
   const user_id = useAuth.use.id()!
   const maxDistance = useAuth.use.maxDistance()
   const location = useAuth.use.location()
-  const [matchResult, match] = useMutation(CREATE_MATCH)
+  const [_, match] = useMutation(CREATE_MATCH)
 
-  const [{ data, fetching, error }, refreshEvents] = useQuery({
+  const [{ data, fetching, error }] = useQuery({
     query: FEED_QUERY,
     variables: {
       user_id,
@@ -33,8 +33,7 @@ export default () => {
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
     if (proAccess) {
-      await match({user_id, event_id, dismissed})
-      return
+      return await match({user_id, event_id, dismissed})
     }
     if (swipes >= freeSwipes) {
       return router.push({pathname: 'Upgrade'})

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Alert, StyleSheet, ActivityIndicator, SafeAreaView, Image, ScrollView } from 'react-native';
-import Purchases, { PurchasesOffering, PurchasesPackage } from 'react-native-purchases';
+// import Purchases, { PurchasesOffering, PurchasesPackage } from 'react-native-purchases';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,35 +11,35 @@ import { s, m, l, xl } from '../../constants/Spaces'
 export default function Upgrade() {
   const router = useRouter()
   const { colors } = useTheme()
-  const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
+  // const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const offerings = await Purchases.getOfferings();
-      setCurrentOffering(offerings.current);
-    }
-    fetchData().catch(console.error)
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const offerings = await Purchases.getOfferings();
+  //     setCurrentOffering(offerings.current);
+  //   }
+  //   fetchData().catch(console.error)
+  // }, []);
   
-  const onSelection = async (purchasePackage: PurchasesPackage) => {
-    try {
-      const { productIdentifier, customerInfo } = await Purchases.purchasePackage(purchasePackage);
+  // const onSelection = async (purchasePackage: PurchasesPackage) => {
+  //   try {
+  //     const { productIdentifier, customerInfo } = await Purchases.purchasePackage(purchasePackage);
 
-      if (typeof customerInfo.entitlements.active['pro'] !== 'undefined') {
-        router.back();
-      }
-    } catch (e: any) {
-      if (!e.userCancelled) {
-        Alert.alert('Error purchasing package', e.message);
-      }
-    }
-  };
+  //     if (typeof customerInfo.entitlements.active['pro'] !== 'undefined') {
+  //       router.back();
+  //     }
+  //   } catch (e: any) {
+  //     if (!e.userCancelled) {
+  //       Alert.alert('Error purchasing package', e.message);
+  //     }
+  //   }
+  // };
 
-  if (!currentOffering) return (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" color={'gray'} />
-    </View>
-  )
+  // if (!currentOffering) return (
+  //   <View style={styles.container}>
+  //     <ActivityIndicator size="large" color={'gray'} />
+  //   </View>
+  // )
   return (
     <SafeAreaView style={{flex: 1}}>
       <LinearGradient
@@ -56,7 +56,7 @@ export default function Upgrade() {
           <Image resizeMode='contain' style={styles.emoji} source={require('../../assets/memojis/guyGlasses.png')}/>
         </View>
       </LinearGradient>
-      <ScrollView>
+      {/* <ScrollView>
         {currentOffering.availablePackages.map((pkg, index) => {
           const { product: { title, description, priceString } } = pkg;
           return (
@@ -75,7 +75,7 @@ export default function Upgrade() {
             </View>
           )
         })}
-      </ScrollView>
+      </ScrollView> */}
     </SafeAreaView>
   )
 }

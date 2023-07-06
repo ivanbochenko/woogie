@@ -26,7 +26,6 @@ export default function RootLayoutNav() {
       <Stack.Screen name="Password" />
       <Stack.Screen name="Agreement" />
       <Stack.Screen name="Policy" />
-      {/* <Stack.Screen name="Test" /> */}
       <Stack.Screen name="Upgrade" options={{headerShown: false}} />
     </Stack>
   );
