@@ -98,7 +98,7 @@ export default () => {
   )
   
   return (
-    <SafeAreaView style={{flex: 1, padding: m, alignItems: 'center'}}>
+    <SafeAreaView style={{flex: 1, marginHorizontal: m}}>
       <Stack.Screen
         options={{
           title,
@@ -133,7 +133,7 @@ export default () => {
         borderRadius: l,
         minHeight: xl+m,
         padding: m,
-        margin: m,
+        marginVertical: m,
         backgroundColor: colors.card,
         bottom: keyboardHeight,
       }}>

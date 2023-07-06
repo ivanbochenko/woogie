@@ -1,10 +1,11 @@
 import { Client, cacheExchange, fetchExchange, subscriptionExchange } from 'urql'
 import axios from 'axios'
 import { API_URL } from '../constants/Config'
-import { createClient as createSSEClient } from 'graphql-sse';
+import { createClient } from 'graphql-sse';
 
-const sseClient = createSSEClient({
-  url: API_URL + '/graphql/stream',
+// 401 status
+const sseClient = createClient({
+  url: 'http://woogie-server.herokuapp.com' + '/graphql',
 });
 
 export const apiClient = axios.create({
@@ -26,10 +27,9 @@ export const gqlClient = (Authorization: string) => new Client({
       forwardSubscription(operation) {
         return {
           subscribe: (sink) => {
-            const dispose = sseClient.subscribe({ ...operation, query: operation.query ?? ''}, sink);
-            return {
-              unsubscribe: dispose,
-            };
+            const input = { ...operation, query: operation.query ?? ''}
+            const unsubscribe = sseClient.subscribe(input, sink);
+            return { unsubscribe }
           },
         };
       },
