@@ -1,17 +1,17 @@
 import { StyleSheet, ActivityIndicator, SafeAreaView, ScrollView, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { View, Pressable, Icon } from '../../../components/Themed';
-import { s, m, l, xl } from '../../../constants/Spaces';
-import { RegularText, BoldText } from '../../../components/StyledText';
+import { View, Pressable, Icon } from '../../components/Themed';
+import { s, m, l, xl } from '../../constants/Spaces';
+import { RegularText, BoldText } from '../../components/StyledText';
 import { useMutation, useQuery } from 'urql';
-import { useAuth } from '../../../lib/State'
+import { useAuth } from '../../lib/State'
 import { useState } from 'react';
-import { EditProfileView, UserData } from '../../../components/EditProfile';
-import { EDIT_PROFILE, PROFILE_QUERY } from '../../../lib/queries';
+import { EditProfileView, UserData } from '../../components/EditProfile';
+import { EDIT_PROFILE, PROFILE_QUERY } from '../../lib/queries';
 import { AxiosError } from 'axios';
 
-export default () => {
+export default function Profile() {
   const router = useRouter()
   const id = useAuth.use.id()
   const api = useAuth.use.api()()
@@ -65,7 +65,7 @@ export default () => {
       <ScrollView contentContainerStyle={{alignItems: "center", padding: m}}>
 
         <Image style={styles.profileImg} source={
-          data?.user?.avatar ? {uri: data?.user?.avatar} : require('../../../assets/images/avatar.png')
+          data?.user?.avatar ? {uri: data?.user?.avatar} : require('../../assets/images/avatar.png')
         }/>
         <BoldText style={{fontSize: 25, marginTop: m}}>
           {data?.user?.name ?? 'Name'}, {data?.user?.age ?? 'age'}
@@ -75,7 +75,7 @@ export default () => {
           <View style={{ alignItems: "center", marginRight: l}}>
             <Pressable
               style={styles.circle}
-              onPress={() => router.push({pathname: 'delete'})}
+              onPress={() => router.push({pathname: 'Delete'})}
             >
               <Icon size={30} name={"trash"}/>
             </Pressable>

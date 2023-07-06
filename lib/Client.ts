@@ -3,9 +3,9 @@ import axios from 'axios'
 import { API_URL } from '../constants/Config'
 import { createClient as createSSEClient } from 'graphql-sse';
 
-// const sseClient = createSSEClient({
-//   url: API_URL + '/graphql/stream',
-// });
+const sseClient = createSSEClient({
+  url: API_URL + '/graphql/stream',
+});
 
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -22,17 +22,17 @@ export const gqlClient = (Authorization: string) => new Client({
   exchanges: [
     cacheExchange,
     fetchExchange,
-    // subscriptionExchange({
-    //   forwardSubscription(operation) {
-    //     return {
-    //       subscribe: (sink) => {
-    //         const dispose = sseClient.subscribe({ ...operation, query: operation.query ?? ''}, sink);
-    //         return {
-    //           unsubscribe: dispose,
-    //         };
-    //       },
-    //     };
-    //   },
-    // }),
+    subscriptionExchange({
+      forwardSubscription(operation) {
+        return {
+          subscribe: (sink) => {
+            const dispose = sseClient.subscribe({ ...operation, query: operation.query ?? ''}, sink);
+            return {
+              unsubscribe: dispose,
+            };
+          },
+        };
+      },
+    }),
   ],
 })

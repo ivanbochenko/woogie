@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Alert, View, TextInput, KeyboardAvoidingView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Button } from "../../../components/Button";
-import { s, m, l, xl } from '../../../constants/Spaces';
-import { RegularText, BoldText } from '../../../components/StyledText';
-import { api, signOut } from '../../../lib/State'
+import { Button } from "../../components/Button";
+import { s, m, l, xl } from '../../constants/Spaces';
+import { RegularText, BoldText } from '../../components/StyledText';
+import { api, signOut } from '../../lib/State'
 import { useTheme } from '@react-navigation/native';
 import Icons from "@expo/vector-icons/MaterialIcons";
 import { AxiosError } from 'axios';
 
-export default () => {
+export default function Delete() {
   const router = useRouter()
   const theme = useTheme()
   const [password, setPassword] = useState('')

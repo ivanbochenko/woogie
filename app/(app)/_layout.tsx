@@ -15,8 +15,9 @@ export default function RootLayoutNav() {
       }}
     >
       <Stack.Screen name="(tabs)"  options={{ headerShown: false, presentation: 'card' }} />
-      <Stack.Screen name="(profile)" options={{ headerTitle: 'Profile' }} />
       <Stack.Screen name="Settings" />
+      <Stack.Screen name="Profile" />
+      <Stack.Screen name="Delete" />
       <Stack.Screen name="Reviews" />
       <Stack.Screen name="Review" />
       <Stack.Screen name="Chat" />

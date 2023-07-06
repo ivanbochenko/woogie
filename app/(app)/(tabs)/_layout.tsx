@@ -23,7 +23,7 @@ export default function TabLayout() {
         headerTitleAlign: 'center',
         headerTintColor: colors.primary,
         headerLeft: () => (
-          <Link href="/profile" asChild>
+          <Link href="/Profile" asChild>
             <Pressable>
               {({ pressed }) => (
                 <Icon
