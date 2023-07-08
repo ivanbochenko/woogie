@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ActivityIndicator, StyleSheet, SafeAreaView, ScrollView, FlatList, ImageBackground } from 'react-native'
 import { useQuery } from 'urql'
-import { useGlobalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { s, m, l, xl } from '../../constants/Spaces';
@@ -13,7 +13,7 @@ import { EVENT_QUERY } from '../../lib/queries';
 
 export default () => {
   const { colors } = useTheme()
-  const { event_id } = useGlobalSearchParams() as {event_id: string}
+  const { event_id } = useLocalSearchParams() as {event_id: string}
 
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: EVENT_QUERY,

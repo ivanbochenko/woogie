@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Image, Pressable, TextInput, SafeAreaView, ScrollView, Keyboard, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useSubscription, useMutation, gql } from 'urql';
-import { useGlobalSearchParams, useRouter, Stack } from 'expo-router'
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router'
 import Animated, {
   Layout,
   FadeOutRight,
@@ -18,7 +18,7 @@ import { useAuth } from '../../lib/State'
 import { POST_MESSAGE } from '../../lib/queries';
 
 export default () => {
-  const { title, event_id } = useGlobalSearchParams() as { title: string, event_id: string }
+  const { title, event_id } = useLocalSearchParams() as { title: string, event_id: string }
   const router = useRouter()
   const { colors } = useTheme()
   const id = useAuth.use.id()

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useGlobalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import Animated, {
   FadeOutRight,
   FadeInLeft,
@@ -16,7 +16,7 @@ import { REVIEWS_QUERY } from '../../lib/queries';
 
 export default () => {
   const { colors } = useTheme()
-  const { user_id } = useGlobalSearchParams() as { user_id: string }
+  const { user_id } = useLocalSearchParams() as { user_id: string }
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: REVIEWS_QUERY,
     variables: { user_id }
