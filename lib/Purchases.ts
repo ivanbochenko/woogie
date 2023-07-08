@@ -11,12 +11,9 @@ export const isPro = async (appUserID: string) => {
   //   Purchases.configure({ apiKey: GOOGLE_PURCHASES_KEY, appUserID });
   // }
   // // access latest customerInfo
-  // const customerInfo = await Purchases.getCustomerInfo();
-  // // access latest customerInfo
-  // if(typeof customerInfo.entitlements.active['pro'] !== "undefined") {
-    // Grant user "pro" access
-    return true
-  // } else {
-  //   return false
-  // }
+  // const customerInfo = await Purchases.getCustomerInfo()
+  // // Grant user "pro" access
+  // const pro = typeof customerInfo.entitlements.active['pro'] !== "undefined"
+  // return pro
+  return true
 }

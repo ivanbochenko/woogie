@@ -43,7 +43,7 @@ export default (props: {
     title: '',
     text: '',
     time: new Date(),
-    slots: 1,
+    slots: 5,
     latitude,
     longitude,
   }

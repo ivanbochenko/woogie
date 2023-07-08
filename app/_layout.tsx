@@ -2,7 +2,7 @@ import { ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 import { SplashScreen, Slot } from 'expo-router';
-import * as Notifications from 'expo-notifications'
+import { setNotificationHandler } from 'expo-notifications'
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider } from '../lib/Auth'
@@ -22,7 +22,7 @@ SplashScreen.preventAutoHideAsync()
 
 hydrateAuth()
 
-Notifications.setNotificationHandler({
+setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
@@ -31,17 +31,24 @@ Notifications.setNotificationHandler({
 })
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme()
-
   const [loaded, error] = useFonts({
     Lato_400Regular,
     Lato_700Bold,
   });
 
   useEffect(() => {
-    if (loaded) SplashScreen.hideAsync()
     if (error) throw error;
-  }, [error, loaded])
+  }, [error])
+
+  useEffect(() => {
+    if (loaded) SplashScreen.hideAsync()
+  }, [loaded])
+
+  return loaded ? <RootLayoutNav/> : null
+}
+
+function RootLayoutNav() {
+  const colorScheme = useColorScheme();
 
   return (
     <Provider>
@@ -49,5 +56,5 @@ export default function RootLayout() {
         <Slot/>
       </ThemeProvider>
     </Provider>
-  )
+  );
 }
