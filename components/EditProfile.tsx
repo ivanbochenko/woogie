@@ -8,6 +8,7 @@ import { RegularText, TextInput } from './StyledText';
 import { useTheme } from '@react-navigation/native';
 import { launchImagePicker } from '../lib/Media';
 import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
+import { AVATAR } from '@/constants/images';
 
 export type UserData = {
   id: string,
@@ -26,7 +27,7 @@ export const EditProfileView = ({value, setValue, onSubmit}: {
   const { colors } = useTheme()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const snapPoints = useMemo(() => ['25%'], [])
-  const img = value.avatar ? {uri: value.avatar} : require('../assets/images/avatar.png')
+  const img = value.avatar ? {uri: value.avatar} : AVATAR
 
   const getPhoto = async (camera:boolean) => {
     const photo = await launchImagePicker(camera)

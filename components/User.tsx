@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 
 import { RegularText } from './StyledText'
 import { m } from '../constants/Spaces';
+import { AVATAR } from '@/constants/images';
 
 type UserData = {
   id?: string | null | undefined,
@@ -14,7 +15,7 @@ type UserData = {
 export default (props: UserData) => {
   const router = useRouter();
   const { avatar, id, name } = props
-  const photo = avatar ? {uri: avatar} : require('../assets/images/avatar.png')
+  const photo = avatar ? {uri: avatar} : AVATAR
   return (
     <View style={styles.center}>
       <Pressable style={{borderRadius: 30}} onPress={() => router.push({pathname: "User", params: {id, review: false}})}>

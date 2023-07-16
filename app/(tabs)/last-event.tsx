@@ -7,15 +7,16 @@ import Animated, {
   FadeOutRight,
   FadeInLeft,
 } from "react-native-reanimated";
-import { RegularText, BoldText } from '../../../components/StyledText';
-import { Icon } from '../../../components/Themed';
-import { s, m, l, xl } from '../../../constants/Spaces';
-import { useAuth } from '../../../lib/State';
+import { RegularText, BoldText } from '@/components/StyledText';
+import { Icon } from '@/components/Themed';
+import { s, m, l, xl } from '@/constants/Spaces';
+import { useAuth } from '@/lib/State';
 import { useRouter } from 'expo-router';
-import User from "../../../components/User";
+import User from "@/components/User";
 import NewEvent from '../new-event';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ACCEPT_MATCH, LAST_EVENT } from '../../../lib/queries';
+import { ACCEPT_MATCH, LAST_EVENT } from '@/lib/queries';
+import { AVATAR } from '@/constants/images';
 
 // This screen displays matches and link to event
 // Chats screen displays links to chats of events matched to
@@ -74,7 +75,7 @@ export default () => {
   if (!data?.lastEvent) return <NewEvent latitude={location?.latitude!} longitude={location?.longitude!} refresh={refresh}/>
 
   const { id: event_id, title, photo, matches } = data.lastEvent
-  const img = photo ? {uri: photo} : require('../../../assets/images/avatar.png')
+  const img = photo ? {uri: photo} : AVATAR
   
   return (
     <SafeAreaView style={{flex: 1}}>

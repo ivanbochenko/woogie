@@ -4,12 +4,13 @@ import { useQuery } from 'urql'
 import { useLocalSearchParams } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { s, m, l, xl } from '../../constants/Spaces';
-import { height, width } from '../../constants/Layout';
-import { RegularText, BoldText } from '../../components/StyledText'
-import User from '../../components/User'
-import Map from '../../components/Map';
-import { EVENT_QUERY } from '../../lib/queries';
+import { s, m, l, xl } from '@/constants/Spaces';
+import { height, width } from '@/constants/Layout';
+import { RegularText, BoldText } from '@/components/StyledText'
+import User from '@/components/User'
+import Map from '@/components/Map';
+import { EVENT_QUERY } from '@/lib/queries';
+import { PLACEHOLDER } from '@/constants/images';
 
 export default () => {
   const { colors } = useTheme()
@@ -29,7 +30,7 @@ export default () => {
 
   const { title, text, time, photo, author, matches, latitude, longitude } = data?.event!
   const users = matches?.map((item: any) => item?.user)
-  const image = photo ? {uri: photo} : require('../../assets/images/placeholder.png')
+  const image = photo ? {uri: photo} : PLACEHOLDER
 
   return (
     <View style={styles.container}>

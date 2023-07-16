@@ -1,11 +1,15 @@
 {
   "expo": {
+    "jsEngine": "jsc",
     "name": "Woogie",
     "slug": "woogie",
     "version": "0.0.4",
     "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/7d2a71cb-d30f-425f-8b73-38e105704c23"
+    },
+    "experiments": {
+      "tsconfigPaths": true
     },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -44,7 +48,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "We need your location to show events near you."
         }
-      ]
+      ],
+      "expo-router"
     ],
     "web": {
       "bundler": "metro",

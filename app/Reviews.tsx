@@ -8,11 +8,11 @@ import Animated, {
 } from "react-native-reanimated";
 import { useQuery } from 'urql';
 
-import { BoldText, RegularText } from '../../components/StyledText'
-import { Icon } from '../../components/Themed'
-import { s, m, l, xl } from '../../constants/Spaces';
-import User from "../../components/User";
-import { REVIEWS_QUERY } from '../../lib/queries';
+import { BoldText, RegularText } from '@/components/StyledText'
+import { Icon } from '@/components/Themed'
+import { s, m, l, xl } from '@/constants/Spaces';
+import User from "@/components/User";
+import { REVIEWS_QUERY } from '@/lib/queries';
 
 export default () => {
   const { colors } = useTheme()

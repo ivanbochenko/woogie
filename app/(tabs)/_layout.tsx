@@ -2,7 +2,7 @@ import { useTheme } from '@react-navigation/native';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
-import { Icon } from '../../../components/Themed'
+import { Icon } from '@/components/Themed'
 
 export default function TabLayout() {
   const { colors } = useTheme()

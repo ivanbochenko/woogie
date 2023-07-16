@@ -7,11 +7,12 @@ import Animated, {
   FadeOutRight,
   FadeInLeft,
 } from "react-native-reanimated";
-import { RegularText, BoldText } from '../../components/StyledText'
-import { Icon } from '../../components/Themed'
-import { s, m, l, xl } from '../../constants/Spaces';
-import User from "../../components/User";
-import { USER_QUERY } from '../../lib/queries';
+import { RegularText, BoldText } from '@/components/StyledText'
+import { Icon } from '@/components/Themed'
+import { s, m, l, xl } from '@/constants/Spaces';
+import User from "@/components/User";
+import { USER_QUERY } from '@/lib/queries';
+import { AVATAR } from '@/constants/images';
 
 export default () => {
   const { id, review } = useLocalSearchParams() as { id: string, review: string }
@@ -30,7 +31,7 @@ export default () => {
   )
 
   const { avatar, name, age, bio, stars, recievedReviews } = data?.user!
-  const image = avatar ? {uri: avatar} : require('../../assets/images/avatar.png')
+  const image = avatar ? {uri: avatar} : AVATAR
 
   return (
     <SafeAreaView style={{flex: 1}}>

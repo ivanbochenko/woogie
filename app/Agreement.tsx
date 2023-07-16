@@ -1,6 +1,6 @@
 import { ScrollView, SafeAreaView } from 'react-native';
-import { BoldText, RegularText } from '../../components/StyledText';
-import { l } from '../../constants/Spaces';
+import { BoldText, RegularText } from '../components/StyledText';
+import { l } from '../constants/Spaces';
 
 export default function Agreement() {
   return (

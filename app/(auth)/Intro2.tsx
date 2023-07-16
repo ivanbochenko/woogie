@@ -3,11 +3,11 @@ import React from "react";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useTheme } from "@react-navigation/native";
 import Icons from "@expo/vector-icons/MaterialIcons";
-import Artwork02 from "../../assets/artworks/Artwork02";
-import { ScreenIndicators } from "../../components/ScreenIndicators";
-import { PrimaryButton } from "../../components/Button";
+import Artwork02 from "@/assets/artworks/Artwork02";
+import { ScreenIndicators } from "@/components/ScreenIndicators";
+import { PrimaryButton } from "@/components/Button";
 import { useRouter } from "expo-router";
-import { s, m, l, xl } from "../../constants/Spaces";
+import { s, m, l, xl } from "@/constants/Spaces";
 
 const INTRO_SCREEN_02 = {
   title: "Get new social inspirations",

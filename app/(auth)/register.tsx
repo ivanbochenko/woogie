@@ -11,14 +11,14 @@ import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter, Link } from "expo-router";
 import { useTheme } from "@react-navigation/native";
 import validator from "validator";
-import { PrimaryButton } from "../../components/Button";
+import { PrimaryButton } from "@/components/Button";
 import Icons from "@expo/vector-icons/MaterialIcons";
-import { signIn } from "../../lib/State";
-import { registerNotifications } from '../../lib/Notification'
+import { signIn } from "@/lib/State";
+import { registerNotifications } from '@/lib/Notification'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AxiosError } from "axios";
-import { s, m, l, xl } from "../../constants/Spaces";
-import { apiClient } from "../../lib/Client";
+import { s, m, l, xl } from "@/constants/Spaces";
+import { apiClient } from "@/lib/Client";
 
 const REGISTER_SCREEN = {
   title: "Let's\nGet Started",

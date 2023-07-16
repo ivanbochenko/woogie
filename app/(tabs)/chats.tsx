@@ -14,11 +14,12 @@ import ReAnimated, {
   SlideOutRight,
 } from "react-native-reanimated";
 
-import { height, width } from '../../../constants/Layout';
-import { s, m, l, xl } from '../../../constants/Spaces';
-import { useAuth } from '../../../lib/State'
-import { BoldText, RegularText } from '../../../components/StyledText';
-import { DELETE_EVENT, DELETE_MATCH, MY_EVENTS, MY_MATCHES } from '../../../lib/queries';
+import { height, width } from '@/constants/Layout';
+import { s, m, l, xl } from '@/constants/Spaces';
+import { useAuth } from '@/lib/State'
+import { BoldText, RegularText } from '@/components/StyledText';
+import { DELETE_EVENT, DELETE_MATCH, MY_EVENTS, MY_MATCHES } from '@/lib/queries';
+import { PLACEHOLDER } from '@/constants/images';
 
 export default function Chats() {
   const [show, setShow] = useState(true)
@@ -183,7 +184,7 @@ const Swipe = ({ event, leave }: {
   const router = useRouter()
   const { colors } = useTheme()
   const { id, title, time, photo } = event
-  const image = photo ? {uri: photo} : require('../../../assets/images/placeholder.png')
+  const image = photo ? {uri: photo} : PLACEHOLDER
 
   const ref = useRef<Swipeable>(null)
   const onDelete = () => {

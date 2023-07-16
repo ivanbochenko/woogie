@@ -10,17 +10,17 @@ import {
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
-import Artwork03 from "../../assets/artworks/Artwork03";
-import { PrimaryButton } from "../../components/Button";
+import Artwork03 from "@/assets/artworks/Artwork03";
+import { PrimaryButton } from "@/components/Button";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import Icons from "@expo/vector-icons/MaterialIcons";
-import { signIn } from "../../lib/State";
+import { signIn } from "@/lib/State";
 import validator from "validator";
-import { registerNotifications } from "../../lib/Notification";
-import { s, m, l, xl } from "../../constants/Spaces";
+import { registerNotifications } from "@/lib/Notification";
+import { s, m, l, xl } from "@/constants/Spaces";
 import { AxiosError } from "axios";
-import { apiClient } from "../../lib/Client";
+import { apiClient } from "@/lib/Client";
 
 const LOG_IN_SCREEN = {
   title: "Let's\nGet Started",

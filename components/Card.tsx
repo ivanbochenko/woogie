@@ -17,6 +17,7 @@ import { Icon } from '../components/Themed'
 import User from '../components/User'
 import Map from './Map';
 import { useRouter } from 'expo-router';
+import { PLACEHOLDER } from '@/constants/images';
 
 export const Stack = ({events, onSwipe}: {
   events: any[],
@@ -114,7 +115,7 @@ const Card = (props: Event & {undo?(): void}) => {
   const router = useRouter()
   const cardHeigth = height-height/4.7
   const { id, title, text, time, photo, author, matches, distance, latitude, longitude } = props
-  const image = photo ? {uri: photo} : require('../assets/images/placeholder.png')
+  const image = photo ? {uri: photo} : PLACEHOLDER
   const date = new Date(time).toLocaleString().replace(/(:\d{2}| [AP]M)$/, "")
   const users = matches?.map(item => item.user)
   return (

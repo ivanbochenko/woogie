@@ -1,15 +1,16 @@
 import { StyleSheet, ActivityIndicator, SafeAreaView, ScrollView, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { View, Pressable, Icon } from '../../components/Themed';
-import { s, m, l, xl } from '../../constants/Spaces';
-import { RegularText, BoldText } from '../../components/StyledText';
+import { View, Pressable, Icon } from '@/components/Themed';
+import { s, m, l, xl } from '@/constants/Spaces';
+import { RegularText, BoldText } from '@/components/StyledText';
 import { useMutation, useQuery } from 'urql';
-import { useAuth } from '../../lib/State'
+import { useAuth } from '@/lib/State'
 import { useState } from 'react';
-import { EditProfileView, UserData } from '../../components/EditProfile';
-import { EDIT_PROFILE, PROFILE_QUERY } from '../../lib/queries';
+import { EditProfileView, UserData } from '@/components/EditProfile';
+import { EDIT_PROFILE, PROFILE_QUERY } from '@/lib/queries';
 import { AxiosError } from 'axios';
+import { AVATAR } from '@/constants/images';
 
 export default function Profile() {
   const router = useRouter()
@@ -65,7 +66,7 @@ export default function Profile() {
       <ScrollView contentContainerStyle={{alignItems: "center", padding: m}}>
 
         <Image style={styles.profileImg} source={
-          data?.user?.avatar ? {uri: data?.user?.avatar} : require('../../assets/images/avatar.png')
+          data?.user?.avatar ? {uri: data?.user?.avatar} : AVATAR
         }/>
         <BoldText style={{fontSize: 25, marginTop: m}}>
           {data?.user?.name ?? 'Name'}, {data?.user?.age ?? 'age'}

@@ -6,15 +6,15 @@ import { useMutation } from 'urql'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
 
-import { s, m, l, xl } from '../../constants/Spaces';
-import { Button, Square } from '../../components/Button';
+import { s, m, l, xl } from '@/constants/Spaces';
+import { Button, Square } from '@/components/Button';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { Icon } from '../../components/Themed';
-import { BoldText, RegularText, TextInput } from '../../components/StyledText'
-import { useAuth } from '../../lib/State';
-import { launchImagePicker } from '../../lib/Media';
-import { dateShiftHours, getDistance } from '../../lib/Calc';
-import { CREATE_EVENT } from '../../lib/queries';
+import { Icon } from '@/components/Themed';
+import { BoldText, RegularText, TextInput } from '@/components/StyledText'
+import { useAuth } from '@/lib/State';
+import { launchImagePicker } from '@/lib/Media';
+import { dateShiftHours, getDistance } from '@/lib/Calc';
+import { CREATE_EVENT } from '@/lib/queries';
 import { AxiosError } from 'axios';
 
 const MAX_SLOTS = 20

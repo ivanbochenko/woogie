@@ -4,12 +4,12 @@ import { useTheme } from '@react-navigation/native';
 import { useMutation } from 'urql';
 import { useLocalSearchParams } from 'expo-router'
 
-import { BoldText, TextInput } from '../../components/StyledText'
-import { s, m, l, xl } from '../../constants/Spaces';
-import { Button } from '../../components/Button';
-import { Icon } from '../../components/Themed'
-import { useAuth } from '../../lib/State';
-import { POST_REVIEW } from '../../lib/queries';
+import { BoldText, TextInput } from '@/components/StyledText'
+import { s, m, l, xl } from '@/constants/Spaces';
+import { Button } from '@/components/Button';
+import { Icon } from '@/components/Themed'
+import { useAuth } from '@/lib/State';
+import { POST_REVIEW } from '@/lib/queries';
 
 export default () => {
   const { colors } = useTheme();

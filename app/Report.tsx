@@ -7,11 +7,11 @@ import BouncyCheckboxGroup, {
 } from "react-native-bouncy-checkbox-group";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useMutation } from 'urql'
-import { BoldText, RegularText, TextInput } from '../../components/StyledText'
-import { s, m, l, xl } from '../../constants/Spaces';
-import { Button } from '../../components/Button';
-import { useAuth } from '../../lib/State';
-import { BLOCK } from '../../lib/queries';
+import { BoldText, RegularText, TextInput } from '@/components/StyledText'
+import { s, m, l, xl } from '@/constants/Spaces';
+import { Button } from '@/components/Button';
+import { useAuth } from '@/lib/State';
+import { BLOCK } from '@/lib/queries';
 
 const reasons = [
   'There`s nudity or something sexually explicit',

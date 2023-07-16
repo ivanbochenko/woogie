@@ -2,12 +2,12 @@ import { View } from "react-native";
 import React from "react";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Artwork01 from "../../assets/artworks/Artwork01";
+import Artwork01 from "@/assets/artworks/Artwork01";
 import { useTheme } from "@react-navigation/native";
-import { ScreenIndicators } from "../../components/ScreenIndicators";
-import { PrimaryButton } from "../../components/Button";
+import { ScreenIndicators } from "@/components/ScreenIndicators";
+import { PrimaryButton } from "@/components/Button";
 import { useRouter } from "expo-router";
-import { s, m, l, xl } from "../../constants/Spaces";
+import { s, m, l, xl } from "@/constants/Spaces";
 
 const INTRO_SCREEN_01 = {
   title: "Connect with people around easily",

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, KeyboardAvoidingView, StyleSheet } from 'react-native';
-import { Button } from "../../components/Button";
-import { s, m, l, xl } from '../../constants/Spaces';
-import { RegularText, TextInput } from '../../components/StyledText';
-import { api, signOut } from '../../lib/State'
+import { Button } from "@/components/Button";
+import { s, m, l, xl } from '@/constants/Spaces';
+import { RegularText, TextInput } from '@/components/StyledText';
+import { api, signOut } from '@/lib/State'
 import { useTheme } from '@react-navigation/native';
 import validator from 'validator';
-import { Icon } from '../../components/Themed';
+import { Icon } from '@/components/Themed';
 import { AxiosError } from 'axios';
 
 export default () => {

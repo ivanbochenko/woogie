@@ -10,12 +10,13 @@ import Animated, {
 } from "react-native-reanimated";
 import { Ionicons } from '@expo/vector-icons'
 
-import { s, m, l, xl } from '../../constants/Spaces'
-import { height, width } from '../../constants/Layout';
-import { RegularText } from '../../components/StyledText'
-import { View, Icon } from '../../components/Themed'
-import { useAuth } from '../../lib/State'
-import { POST_MESSAGE } from '../../lib/queries';
+import { s, m, l, xl } from '../constants/Spaces'
+import { height, width } from '../constants/Layout';
+import { RegularText } from '../components/StyledText'
+import { View, Icon } from '../components/Themed'
+import { useAuth } from '../lib/State'
+import { POST_MESSAGE } from '../lib/queries';
+import { AVATAR } from '@/constants/images';
 
 export default () => {
   const { title, event_id } = useLocalSearchParams() as { title: string, event_id: string }
@@ -176,7 +177,7 @@ const Message = (props: {
   const router = useRouter()
   const backgroundColor = data.author.id === user_id ? colors.card : colors.border
   const time = new Date(data.time).toLocaleTimeString().replace(/(:\d{2}| [AP]M)$/, "")
-  const image = data.author.avatar ? {uri: data.author.avatar} : require('../../assets/images/avatar.png')
+  const image = data.author.avatar ? {uri: data.author.avatar} : AVATAR
   return (
     <Animated.View
       entering={FadeInLeft}

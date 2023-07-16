@@ -4,9 +4,9 @@ import { View, Alert, StyleSheet, ActivityIndicator, SafeAreaView, Image, Scroll
 import { useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SparkleButton } from '../../components/Button';
-import { BoldText, RegularText } from '../../components/StyledText';
-import { s, m, l, xl } from '../../constants/Spaces'
+import { SparkleButton } from '../components/Button';
+import { BoldText, RegularText } from '../components/StyledText';
+import { s, m, l, xl } from '../constants/Spaces'
 
 export default function Upgrade() {
   const router = useRouter()
@@ -49,11 +49,11 @@ export default function Upgrade() {
         end={{x: 0.5, y: 1}}
       >
         <View style={styles.row}>
-          <Image resizeMode='contain' style={styles.emoji} source={require('../../assets/memojis/girlHat.png')}/>
-          <Image resizeMode='contain' style={{width: xl+m, height: xl+l, opacity: 0.7, marginTop: xl}} source={require('../../assets/memojis/guyHair.png')}/>
-          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.9, marginTop: 0}]} source={require('../../assets/memojis/guyHipster.png')}/>
-          <Image resizeMode='contain' style={{width: xl+m+s, height: xl+l+m, opacity: 0.7, marginTop: l+m}} source={require('../../assets/memojis/girlMask.png')}/>
-          <Image resizeMode='contain' style={styles.emoji} source={require('../../assets/memojis/guyGlasses.png')}/>
+          <Image resizeMode='contain' style={styles.emoji} source={require('../assets/memojis/girlHat.png')}/>
+          <Image resizeMode='contain' style={{width: xl+m, height: xl+l, opacity: 0.7, marginTop: xl}} source={require('../assets/memojis/guyHair.png')}/>
+          <Image resizeMode='contain' style={[styles.emoji, {opacity: 0.9, marginTop: 0}]} source={require('../assets/memojis/guyHipster.png')}/>
+          <Image resizeMode='contain' style={{width: xl+m+s, height: xl+l+m, opacity: 0.7, marginTop: l+m}} source={require('../assets/memojis/girlMask.png')}/>
+          <Image resizeMode='contain' style={styles.emoji} source={require('../assets/memojis/guyGlasses.png')}/>
         </View>
       </LinearGradient>
       {/* <ScrollView>
