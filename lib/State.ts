@@ -4,7 +4,7 @@ import * as Location from 'expo-location'
 import type { LocationObjectCoords } from 'expo-location'
 import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } from './Storage';
-import { apiClient } from '../lib/Client'
+import { apiClient, app } from './Client'
 import { isPro } from './Purchases';
 import { dateShiftHours } from './Calc';
 
@@ -26,6 +26,7 @@ interface AuthState {
   addSwipe(): Promise<void>,
   getProAccess(): Promise<void>,
   api(): Axios,
+  app: typeof app,
   signIn(data: Data): void,
   signOut(): void,
   hydrate(): Promise<void>,
@@ -35,6 +36,7 @@ const _useAuth = create<AuthState>((set, get) => ({
   token: undefined,
   id: undefined,
   pro: false,
+  app,
   feed: {
     fetching: false,
     data: undefined

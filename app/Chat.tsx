@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Image, Pressable, TextInput, SafeAreaView, ScrollView, Keyboard, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useSubscription, useMutation, gql } from 'urql';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router'
 import Animated, {
   Layout,
@@ -15,81 +14,67 @@ import { height, width } from '../constants/Layout';
 import { RegularText } from '../components/StyledText'
 import { View, Icon } from '../components/Themed'
 import { useAuth } from '../lib/State'
-import { POST_MESSAGE } from '../lib/queries';
 import { AVATAR } from '@/constants/images';
+
+type Message = {
+  id: string,
+  text: string,
+  time: Date,
+  author: {
+    id: string,
+    avatar: string | null,
+    name: string | null
+  }
+}
 
 export default () => {
   const { title, event_id } = useLocalSearchParams() as { title: string, event_id: string }
   const router = useRouter()
   const { colors } = useTheme()
   const id = useAuth.use.id()
-  const api = useAuth.use.api()()
+  const app = useAuth.use.app()
 
   const [fetching, setFetching] = useState(true)
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [keyboardHeight, setKeyboardHeight] = useState(0)
   const inputRef = useRef<TextInput>(null)
   const scrollRef = useRef<ScrollView>(null)
+  
+  useEffect(() => {
+    const keyboardWillShow = Keyboard.addListener('keyboardWillShow', (e) => setKeyboardHeight(e.endCoordinates.height))
+    const keyboardWillHide = Keyboard.addListener('keyboardWillHide', () => setKeyboardHeight(0))
+    return () => {
+      keyboardWillShow.remove()
+      keyboardWillHide.remove()
+    }
+  }, [])
+
+  const chat = app.chat[event_id].subscribe()
 
   // Load previous messages
   
   useEffect(() => {
     (async () => {
       setFetching(true)
-      const { status, data } = await api.post('graphql', {
-        query: `
-          query ($event_id: String!) {
-            messages(event_id: $event_id) {
-              id
-              time
-              text
-              author {
-                id
-                name
-                avatar
-              }
-            }
-          }
-        `,
-        variables: { event_id }
-      })
+      const { status, data, error } = await app.messages[event_id].get()
       if (status === 200) {
-        setMessages(data.data.messages)
+        setMessages(data ?? [])
       }
       setFetching(false)
     })()
-    const keyboardWillShow = Keyboard.addListener('keyboardWillShow', (e) => setKeyboardHeight(e.endCoordinates.height))
-    const keyboardWillHide = Keyboard.addListener('keyboardWillHide', () => setKeyboardHeight(0))
-    return () => {
-      keyboardWillShow.remove()
-      keyboardWillHide.remove()      
-    }
+    
+    // Subscribe to new messages
+    chat.subscribe(message => {
+      setMessages(messages => [...messages, message as unknown as Message])
+    })
   }, [])
   
-  // Subscribe to new messages
-
-  const [res] = useSubscription({
-    query: MessagesSubscription, variables: { event_id }
-  },
-    (messages = [], response) => [ ...messages, response.messages ] 
-  )
-
   // Send message
-  
-  const [messagePostResult, messagePost] = useMutation(POST_MESSAGE);
-  
-  const onSubmit = async () => {
-    const text = input
+
+  const onSubmit = () => {
+    if (input) chat.send({ text: input, author_id: id! })
     inputRef.current!.clear()
-    if (text) {
-      const result = await messagePost({
-        text,
-        event_id,
-        author_id: id!,
-      })
-      if (result.error) console.error('Oh no!', result.error);
-    }
   }
   
   if (fetching) return (
@@ -118,7 +103,7 @@ export default () => {
         onContentSizeChange={() => scrollRef.current!.scrollToEnd()}
         contentContainerStyle={{paddingBottom: keyboardHeight + 68}}
       >
-        {[...(messages ?? []), ...(res.data ?? [])].map((item, index, array) =>
+        {messages.map((item, index, array) =>
           <Message
             key={item?.id}
             data={item}
@@ -161,14 +146,7 @@ export default () => {
 }
 
 const Message = (props: {
-  data: {
-    text: string,
-    time: string,
-    author: {
-      avatar: string,
-      id: string,
-    }
-  },
+  data: Message,
   renderAvatar: boolean
 }) => {
   const { data, renderAvatar } = props
@@ -228,19 +206,3 @@ const styles = StyleSheet.create({
     marginRight: m,
   },
 });
-
-const MessagesSubscription = gql`
-  subscription MESSAGES_SUB($event_id: String!) {
-    messages(event_id: $event_id) {
-      id
-      time
-      text
-      author {
-        id
-        name
-        avatar
-        created_at
-      }
-    }
-  }
-`
