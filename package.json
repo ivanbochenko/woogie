@@ -61,7 +61,6 @@
     "react-native-svg": "13.9.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.6",
-    "urql": "^4.0.4",
     "validator": "^13.9.0",
     "zod": "^3.21.4",
     "zustand": "^4.3.9"

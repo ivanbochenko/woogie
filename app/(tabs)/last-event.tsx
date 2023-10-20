@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import { SafeAreaView, ScrollView, View, Pressable, StyleSheet, RefreshControl, ActivityIndicator, ImageBackground } from 'react-native'
 import { useTheme } from '@react-navigation/native';
-import { useQuery, useMutation } from 'urql';
 import Animated, {
   FadeInUp,
   FadeOutRight,
@@ -15,8 +14,8 @@ import { useRouter } from 'expo-router';
 import User from "@/components/User";
 import NewEvent from '../new-event';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ACCEPT_MATCH, LAST_EVENT } from '@/lib/queries';
 import { AVATAR } from '@/constants/images';
+import { useApp } from '@/lib/useApp';
 
 // This screen displays matches and link to event
 // Chats screen displays links to chats of events matched to
@@ -27,7 +26,7 @@ const Match = (props: {
 }) => {
   const { match, index } = props
   const { colors } = useTheme()
-  const [matchUserResult, matchUser] = useMutation(ACCEPT_MATCH)
+  const app = useAuth.use.app()()
   return (
     <Animated.View
       entering={FadeInLeft.delay(index*100 + 100).springify()}
@@ -35,7 +34,7 @@ const Match = (props: {
       style={[styles.match, {backgroundColor: colors.border}]}
     >
       <User {...match.user}/>
-      <Pressable style={{alignItems: 'center'}} onPress={async () => await matchUser({id: match.id})}>
+      <Pressable style={{alignItems: 'center'}} onPress={async () => await app.match.accept.post({id: match.id})}>
         <View style={[styles.circle, {backgroundColor: colors.card}]}>
           <Icon name="check" />
         </View>
@@ -48,41 +47,29 @@ const Match = (props: {
 export default () => {
   const router = useRouter()
   const id = useAuth.use.id()
+  const app = useAuth.use.app()()
   const location = useAuth.use.location()
   
-  const [refreshing, setRefreshing] = useState(false)
-  const refresh = () => reexecuteQuery({requestPolicy: 'network-only'})
+  const route = app.last_event[id!].get
+  const { response, fetching } = useApp(route)
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    refresh()
-    setRefreshing(false)
-  }, []);
-
-  const [{ data, fetching, error }, reexecuteQuery] = useQuery({
-    query: LAST_EVENT,
-    variables: { author_id: id! },
-  });
-  
-  
-  if (fetching || error) return (
+  if (fetching || response?.error || !response?.data ) return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      {fetching && <ActivityIndicator size="large" color='gray'/>}
-      {error && <RegularText>Server error</RegularText>}
+      {fetching
+        ? <ActivityIndicator size="large" color={'gray'} />
+        : <RegularText>Server error</RegularText>
+      }
     </View>
   )
 
-  if (!data?.lastEvent) return <NewEvent latitude={location?.latitude!} longitude={location?.longitude!} refresh={refresh}/>
+  if (!response.data) return <NewEvent latitude={location?.latitude!} longitude={location?.longitude!}/>
 
-  const { id: event_id, title, photo, matches } = data.lastEvent
+  const { id: event_id, title, photo, matches } = response.data
   const img = photo ? {uri: photo} : AVATAR
   
   return (
     <SafeAreaView style={{flex: 1}}>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
+      <ScrollView contentContainerStyle={styles.container}>
         <Animated.View style={{flex: 1, width: '100%'}} entering={FadeInUp.springify()}>
           <Pressable
             style={{

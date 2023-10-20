@@ -6,12 +6,10 @@ import BouncyCheckboxGroup, {
   ICheckboxButton,
 } from "react-native-bouncy-checkbox-group";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { useMutation } from 'urql'
 import { BoldText, RegularText, TextInput } from '@/components/StyledText'
 import { s, m, l, xl } from '@/constants/Spaces';
 import { Button } from '@/components/Button';
 import { useAuth } from '@/lib/State';
-import { BLOCK } from '@/lib/queries';
 
 const reasons = [
   'There`s nudity or something sexually explicit',
@@ -20,19 +18,18 @@ const reasons = [
   'Racism or personal discrimination',
   'Illegal activity'
 ]
-
-type Params = { user_id: string | undefined, event_id: string | undefined }
-type ValueData = Params & {reason: string, text: string}
+interface Params { user_id?: string, event_id?: string }
+type ValueData = Params & { reason: string, text: string, author_id: string }
 
 export default () => {
   const { colors } = useTheme()
   const router = useRouter()
   const id = useAuth.use.id()
-  const api = useAuth.use.api()()
+  const app = useAuth.use.app()()
   const { user_id, event_id } = useLocalSearchParams() as Params
   const [blockUser, setBlockUser] = useState(false)
-  const [blockResult, block] = useMutation(BLOCK)
   const [value, setValue] = useState<ValueData>({
+    author_id: id!,
     event_id,
     user_id,
     reason: '',
@@ -53,17 +50,22 @@ export default () => {
   
   const onSubmit = async () => {
     if (!value.text || !value.reason) {
-      Alert.alert('Add reason and text')
-      return
+      return Alert.alert('Add reason and text')
     }
     let res
-    event_id && (res = await api.post('report/event', value))
-    user_id && (res = await api.post('report/user', value))
-    blockUser && (await block({id: id!, user_id: user_id!}))
+    if (event_id) {
+      res = await app.event.report.post({...value, event_id})
+    }
+    if (user_id) {
+      res = await app.user.report.post({...value, user_id})
+    }
+    // user_id might be unspecified
+    if (blockUser) {
+      await app.user.block.post({id: id!, user_id: user_id!})
+    }
 
     if (res?.status !== 200 ) {
-      Alert.alert(res?.data?.message ?? 'Error, try again')
-      return
+      return Alert.alert('Error, try again')
     }
     router.back()
   }

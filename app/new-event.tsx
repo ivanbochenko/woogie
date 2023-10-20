@@ -2,7 +2,6 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import MapView from 'react-native-maps';
-import { useMutation } from 'urql'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
 
@@ -14,20 +13,19 @@ import { BoldText, RegularText, TextInput } from '@/components/StyledText'
 import { useAuth } from '@/lib/State';
 import { launchImagePicker } from '@/lib/Media';
 import { dateShiftHours, getDistance } from '@/lib/Calc';
-import { CREATE_EVENT } from '@/lib/queries';
-import { AxiosError } from 'axios';
+import { useRouter } from 'expo-router';
 
 const MAX_SLOTS = 20
 
 type Sheet = 'photo' | 'time' | 'map'
 
 export default (props: {
-  refresh(): void,
   latitude: number,
   longitude: number
 }) => {
-  const {refresh, latitude, longitude} = props
+  const {latitude, longitude} = props
   const { colors } = useTheme()
+  const router = useRouter()
   const combinedInputStyles = [ styles.input, {backgroundColor: colors.border} ]
 
   const [showSheet, setShowSheet] = useState<Sheet>('photo')
@@ -35,7 +33,7 @@ export default (props: {
   const snapPoints = useMemo(() => ['75%'], [])
   
   const id = useAuth.use.id()
-  const api = useAuth.use.api()()
+  const app = useAuth.use.app()()
 
   const initialState = {
     author_id: id!,
@@ -49,8 +47,6 @@ export default (props: {
   }
 
   const [state, setState] = useState(initialState)
-
-  const [postEventResult, postEvent] = useMutation(CREATE_EVENT)
 
   const getPhoto = async (camera: boolean) => {
     const image = await launchImagePicker(camera)
@@ -78,16 +74,12 @@ export default (props: {
       setState(state => ({...state, time: dateShiftHours(state.time, 24)}))
     }
     const file = { uri: state.photo, type: 'image/jpeg', name: 'photo.jpg' } as unknown as File
-    const FD = new FormData()
-    FD.append('file', file)
-    try {
-      const res = await api.post('images', FD, {headers: {"Content-Type": 'multipart/form-data'}})
-      await postEvent({...state, photo: res.data.image})
-      refresh()
-    } catch (error) {
-      const err = error as AxiosError
-      return Alert.alert(err?.response?.statusText ?? 'Explicit image')
+    const { data, error } = await app.photo[id!].post({ file })
+    if (!data) {
+      return Alert.alert('Explicit image')
     }
+    const res = await app.event.create.post({...state, photo: data})
+    router.back()
   }
 
   return (

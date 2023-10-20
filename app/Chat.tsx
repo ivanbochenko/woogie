@@ -32,7 +32,7 @@ export default () => {
   const router = useRouter()
   const { colors } = useTheme()
   const id = useAuth.use.id()
-  const app = useAuth.use.app()
+  const app = useAuth.use.app()()
 
   const [fetching, setFetching] = useState(true)
   const [messages, setMessages] = useState<Message[]>([])

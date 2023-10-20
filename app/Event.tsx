@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, ActivityIndicator, StyleSheet, SafeAreaView, ScrollView, FlatList, ImageBackground } from 'react-native'
-import { useQuery } from 'urql'
 import { useLocalSearchParams } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,26 +8,28 @@ import { height, width } from '@/constants/Layout';
 import { RegularText, BoldText } from '@/components/StyledText'
 import User from '@/components/User'
 import Map from '@/components/Map';
-import { EVENT_QUERY } from '@/lib/queries';
 import { PLACEHOLDER } from '@/constants/images';
+import { useAuth } from '@/lib/State';
+import { useApp } from '@/lib/useApp';
 
 export default () => {
   const { colors } = useTheme()
   const { event_id } = useLocalSearchParams() as {event_id: string}
+  
+  const app = useAuth.use.app()()
+  const route = app.event[event_id].get
+  const { response, fetching } = useApp(route)
 
-  const [{ data, fetching, error }, reexecuteQuery] = useQuery({
-    query: EVENT_QUERY,
-    variables: { id: event_id }
-  })
-
-  if (fetching || error) return (
+  if (fetching || response?.error || !response?.data ) return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      {fetching && <ActivityIndicator size="large" color={'gray'} /> }
-      {error && <RegularText>Server error</RegularText> }
+      {fetching
+        ? <ActivityIndicator size="large" color={'gray'} />
+        : <RegularText>Server error</RegularText>
+      }
     </View>
   )
 
-  const { title, text, time, photo, author, matches, latitude, longitude } = data?.event!
+  const { title, text, time, photo, author, matches, latitude, longitude } = response.data
   const users = matches?.map((item: any) => item?.user)
   const image = photo ? {uri: photo} : PLACEHOLDER
 

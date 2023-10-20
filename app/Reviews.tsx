@@ -6,35 +6,37 @@ import Animated, {
   FadeOutRight,
   FadeInLeft,
 } from "react-native-reanimated";
-import { useQuery } from 'urql';
 
 import { BoldText, RegularText } from '@/components/StyledText'
 import { Icon } from '@/components/Themed'
 import { s, m, l, xl } from '@/constants/Spaces';
 import User from "@/components/User";
-import { REVIEWS_QUERY } from '@/lib/queries';
+import { useAuth } from '@/lib/State';
+import { useApp } from '@/lib/useApp';
 
 export default () => {
   const { colors } = useTheme()
   const { user_id } = useLocalSearchParams() as { user_id: string }
-  const [{ data, fetching, error }, reexecuteQuery] = useQuery({
-    query: REVIEWS_QUERY,
-    variables: { user_id }
-  });
+  
+  const app = useAuth.use.app()()
+  const route = app.reviews[user_id].get
+  const { response, fetching } = useApp(route)
 
-  if (fetching || error) return (
+  if (fetching || response?.error || !response?.data ) return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      {fetching && <ActivityIndicator size="large" color={'gray'} /> }
-      {error && <RegularText>Server error</RegularText> }
+      {fetching
+        ? <ActivityIndicator size="large" color={'gray'} />
+        : <RegularText>Server error</RegularText>
+      }
     </View>
   )
   
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={[styles.center, {padding: m}]}>
-        {data?.reviews!.length
-          ? data.reviews.map( (review: any, index: number) => {
-            const { author, stars, text, time } = review!
+        {response.data.length
+          ? response.data.map( (review, index) => {
+            const { author, stars, text, time } = review
             return (
               <Animated.View
                 entering={FadeInLeft.delay(index*100).springify()}

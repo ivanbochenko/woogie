@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Pressable, SafeAreaView, ScrollView, Alert } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useMutation } from 'urql';
 import { useLocalSearchParams } from 'expo-router'
 
 import { BoldText, TextInput } from '@/components/StyledText'
@@ -9,14 +8,13 @@ import { s, m, l, xl } from '@/constants/Spaces';
 import { Button } from '@/components/Button';
 import { Icon } from '@/components/Themed'
 import { useAuth } from '@/lib/State';
-import { POST_REVIEW } from '@/lib/queries';
 
 export default () => {
   const { colors } = useTheme();
   const id = useAuth.use.id()
+  const app = useAuth.use.app()()
   const author_id = id!
   const { user_id } = useLocalSearchParams() as { user_id: string }
-  const [reviewResult, review] = useMutation(POST_REVIEW)
   const [value, setValue] = useState({
     author_id,
     user_id,
@@ -26,7 +24,7 @@ export default () => {
   
   const onSubmit = async () => {
     if (value.text && value.stars) {
-      const result = await review(value)
+      const result = await app.review.post(value)
       if (result.error) {
         Alert.alert('Error, review not sent')
       } else {

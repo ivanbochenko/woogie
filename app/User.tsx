@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, Image, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useQuery } from 'urql';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router'
 import Animated, {
   FadeOutRight,
@@ -11,26 +10,29 @@ import { RegularText, BoldText } from '@/components/StyledText'
 import { Icon } from '@/components/Themed'
 import { s, m, l, xl } from '@/constants/Spaces';
 import User from "@/components/User";
-import { USER_QUERY } from '@/lib/queries';
 import { AVATAR } from '@/constants/images';
+import { useAuth } from '@/lib/State';
+import { useApp } from '@/lib/useApp';
 
 export default () => {
   const { id, review } = useLocalSearchParams() as { id: string, review: string }
   const router = useRouter()
   const { colors } = useTheme()
-  const [{ data, fetching, error }, reexecuteQuery] = useQuery({
-    query: USER_QUERY,
-    variables: { id }
-  });
+  
+  const app = useAuth.use.app()()
+  const route = app.user[id].get
+  const { response, fetching } = useApp(route)
 
-  if (fetching || error) return (
+  if (fetching || response?.error || !response?.data ) return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      {fetching && <ActivityIndicator size="large" color={'gray'} /> }
-      {error && <RegularText>Server error</RegularText> }
+      {fetching
+        ? <ActivityIndicator size="large" color={'gray'} />
+        : <RegularText>Server error</RegularText>
+      }
     </View>
   )
 
-  const { avatar, name, age, bio, stars, recievedReviews } = data?.user!
+  const { avatar, name, age, bio, stars, recievedReviews } = response.data
   const image = avatar ? {uri: avatar} : AVATAR
 
   return (

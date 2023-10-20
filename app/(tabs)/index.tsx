@@ -1,40 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { useMutation, useQuery } from 'urql';
 import { useRouter } from 'expo-router';
 import { Fade } from "@/components/Fade";
 import { Stack } from '@/components/Card';
 import { RegularText } from '@/components/StyledText';
 import { useAuth } from '@/lib/State'
-import { CREATE_MATCH, FEED_QUERY } from '@/lib/queries';
 
 const freeSwipes = 5
 
 export default () => {
   const router = useRouter()
   const swipes = useAuth.use.swipes()
+  const app = useAuth.use.app()()
   const proAccess = useAuth.use.pro()
   const addSwipe = useAuth.use.addSwipe()
-  const user_id = useAuth.use.id()!
-  const maxDistance = useAuth.use.maxDistance()
+  const id = useAuth.use.id()!
+  const max_distance = useAuth.use.maxDistance()
   const location = useAuth.use.location()
+  const [fetching, setFetching] = useState(false)
+  const [respose, setRespose] = useState<Awaited<ReturnType<typeof app.feed.post>>>()
 
-  const [{ data, fetching, error }] = useQuery({
-    query: FEED_QUERY,
-    variables: {
-      user_id,
-      maxDistance,
-      latitude: location?.latitude!,
-      longitude: location?.longitude!
-    },
-    pause: !location || !maxDistance || !user_id
-  })
+  useEffect(() => {
+    (async () => {
+      if (location) {
+        setFetching(true)
+        const { latitude, longitude } = location
+        const res = await app.feed.post({
+          id,
+          max_distance,
+          latitude,
+          longitude
+        })
+        setRespose(res)
+        setFetching(false)
+      }
+    })()
+  }, [location, max_distance])
   
-  const [_, match] = useMutation(CREATE_MATCH)
+
+  if (fetching || respose?.error || !respose?.data ) return (
+    <SafeAreaView style={styles.container}>
+      {fetching
+        ? <Fade/>
+        : <RegularText>Server error</RegularText>
+      }
+    </SafeAreaView>
+  )
 
   const onSwipe = async (event_id: string, dismissed: boolean) => {
     if (proAccess) {
-      return await match({user_id, event_id, dismissed})
+      return await app.match.create.post({user_id: id, event_id, dismissed})
     }
     if (swipes >= freeSwipes) {
       return router.push({pathname: 'Upgrade'})
@@ -42,23 +57,15 @@ export default () => {
     if (!dismissed) {
       await addSwipe()
     }
-    await match({user_id, event_id, dismissed})
+    await app.match.create.post({user_id: id, event_id, dismissed})
   }
-
-  if (fetching || typeof data === 'undefined') return <Fade/>
-
-  if (error) return (
-    <SafeAreaView style={styles.container}>
-      <RegularText>Server error</RegularText>
-    </SafeAreaView>
-  )
 
   return (
     <SafeAreaView style={styles.container}>
       <RegularText style={styles.deepText}>
         Thats all events in your area, make sure your location is on.
       </RegularText>
-      {!!data?.feed?.length ? <Stack events={data.feed} onSwipe={onSwipe}/> : null}
+      {!!respose.data?.length ? <Stack events={respose.data} onSwipe={onSwipe}/> : null}
     </SafeAreaView>
   );
 }

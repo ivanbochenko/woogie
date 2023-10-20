@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { Pressable, View, SafeAreaView, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, Animated, Image, RefreshControl } from 'react-native'
-import { useQuery, useMutation } from 'urql';
 import { useTheme } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import {Swipeable, GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -18,17 +17,15 @@ import { height, width } from '@/constants/Layout';
 import { s, m, l, xl } from '@/constants/Spaces';
 import { useAuth } from '@/lib/State'
 import { BoldText, RegularText } from '@/components/StyledText';
-import { DELETE_EVENT, DELETE_MATCH, MY_EVENTS, MY_MATCHES } from '@/lib/queries';
 import { PLACEHOLDER } from '@/constants/images';
+import { useApp } from '@/lib/useApp';
 
 export default function Chats() {
   const [show, setShow] = useState(true)
   const id = useAuth.use.id()
+  const app = useAuth.use.app()()
   const {colors} = useTheme()
   const user_id = id!
-
-  const [deleteEventResult, deleteEvent] = useMutation(DELETE_EVENT)
-  const [deleteMatchResult, deleteMatch] = useMutation(DELETE_MATCH)
 
   // Switch
   let transformX = useRef(new Animated.Value(0)).current
@@ -45,39 +42,31 @@ export default function Chats() {
   })
 
   const ShowMatches = () => {
-
-    const [refreshing, setRefreshing] = useState(false)
-    const onRefresh = useCallback(() => {
-      setRefreshing(true)
-      refreshMatches({requestPolicy: 'cache-and-network'})
-      setRefreshing(false)
-    }, []);
-
-    const [{data, fetching, error}, refreshMatches] = useQuery({
-      query: MY_MATCHES,
-      variables: { user_id }
-    });
-
-    if (fetching || error) return (
+    const route = app.matches[user_id].get
+    const { response, fetching } = useApp(route)
+  
+    if (fetching || response?.error || !response?.data ) return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        {fetching && <ActivityIndicator size="large" color={'gray'} /> }
-        {error && <RegularText>Server error</RegularText> }
+        {fetching
+          ? <ActivityIndicator size="large" color={'gray'} />
+          : <RegularText>Server error</RegularText>
+        }
       </View>
     )
 
     return (
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ScrollView>
         <ReAnimated.View
           entering={SlideInLeft}
           exiting={SlideOutLeft}
           layout={Layout.duration(200)}
         >
-          {data?.matches!.length ?
-            data.matches.map((match, index) => 
+          {response.data.length ?
+            response.data.map((match, index) => 
               <Swipe
                 key={index}
-                event={match?.event!}
-                leave={async () => await deleteMatch({ id: match!.id })}
+                event={match.event}
+                leave={async () => await app.match.delete.post({ id: match!.id })}
               />
             )
             : <View style={{alignItems: 'center'}}><BoldText>No matches</BoldText></View>
@@ -88,38 +77,31 @@ export default function Chats() {
   }
 
   const ShowEvents = () => {
-    const [refreshing, setRefreshing] = useState(false)
-    const onRefresh = useCallback(() => {
-      setRefreshing(true)
-      refreshEvents({requestPolicy: 'cache-and-network'})
-      setRefreshing(false)
-    }, []);
-
-    const [{data, fetching, error}, refreshEvents] = useQuery({
-      query: MY_EVENTS,
-      variables: { author_id: user_id }
-    });
-
-    if (fetching || error) return (
+    const route = app.events[user_id].get
+    const { response, fetching } = useApp(route)
+  
+    if (fetching || response?.error || !response?.data ) return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        {fetching && <ActivityIndicator size="large" color={'gray'} /> }
-        {error && <RegularText>Server error</RegularText> }
+        {fetching
+          ? <ActivityIndicator size="large" color={'gray'} />
+          : <RegularText>Server error</RegularText>
+        }
       </View>
     )
 
     return (
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ScrollView>
         <ReAnimated.View
           entering={SlideInRight}
           exiting={SlideOutRight}
           layout={Layout.duration(200)}
         >
-          {data?.events!.length
-            ? data.events.map((event, index) =>
+          {response.data.length
+            ? response.data.map((event, index) =>
                 <Swipe
                   key={index}
                   event={event!}
-                  leave={async () => await deleteEvent({ id: event?.id! })}
+                  leave={async () => await app.event.delete.post({ id: event?.id! })}
                 />
               )
             : <View style={{alignItems: 'center'}}><BoldText>No events</BoldText></View>
@@ -176,7 +158,7 @@ const Swipe = ({ event, leave }: {
   event: {
     id: string,
     title: string,
-    time: string,
+    time: Date,
     photo: string,
   },
   leave(): void

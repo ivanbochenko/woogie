@@ -4,72 +4,68 @@ import { useRouter } from 'expo-router';
 import { View, Pressable, Icon } from '@/components/Themed';
 import { s, m, l, xl } from '@/constants/Spaces';
 import { RegularText, BoldText } from '@/components/StyledText';
-import { useMutation, useQuery } from 'urql';
 import { useAuth } from '@/lib/State'
 import { useState } from 'react';
 import { EditProfileView, UserData } from '@/components/EditProfile';
-import { EDIT_PROFILE, PROFILE_QUERY } from '@/lib/queries';
 import { AxiosError } from 'axios';
 import { AVATAR } from '@/constants/images';
+import { useApp } from '@/lib/useApp';
 
 export default function Profile() {
   const router = useRouter()
   const id = useAuth.use.id()
-  const api = useAuth.use.api()()
+  const app = useAuth.use.app()()
   const [value, setValue] = useState({} as UserData)
   const [edit, setEdit] = useState(false)
   
-  const [editProfileResult, editProfile] = useMutation(EDIT_PROFILE)
+  const route = app.user[id!].get
+  const { response, fetching } = useApp(route)
 
-  const [{ data, fetching, error }, reexecuteQuery] = useQuery({
-    query: PROFILE_QUERY,
-    variables: { id: id! },
-  });
+  if (fetching || response?.error || !response?.data ) return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      {fetching
+        ? <ActivityIndicator size="large" color={'gray'} />
+        : <RegularText>Server error</RegularText>
+      }
+    </View>
+  )
 
   const onSubmit = async () => {
     if (!value.name || !value.age || !value.sex || !value.avatar) {
       return Alert.alert('Add name, age, sex and avatar')
     }
     const file = { uri: value.avatar, type: 'image/jpeg', name: 'photo.jpg'} as unknown as File
-    const FD = new FormData()
-    FD.append('file', file)
-    try {
-      const res = await api.post('images', FD, {headers: {"Content-Type": 'multipart/form-data'}})
-      await editProfile({
-        id: id!,
-        name: value.name!,
-        bio: value.bio!,
-        sex: value.sex!,
-        age: Number(value.age),
-        avatar: res.data.image ?? ''
-      })
-      setEdit(false)
-    } catch (error) {
-      const err = error as AxiosError
-      return Alert.alert(err?.response?.statusText ?? 'Explicit image')
+    const res = await app.photo[id!].post({ file })
+    
+    const { data, error } = await app.user.update.post({
+      id: id!,
+      name: value.name!,
+      bio: value.bio!,
+      sex: value.sex!,
+      age: Number(value.age),
+      avatar: res.data ?? ''
+    })
+    setEdit(false)
+    if (error) {
+      Alert.alert('Explicit image')
     }
   }
-
-  if (fetching || error) return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      {fetching && <ActivityIndicator size="large" color={'gray'} /> }
-      {error && <RegularText>Server error</RegularText> }
-    </View>
-  )
 
   if (edit) {
     return <EditProfileView value={value} setValue={setValue} onSubmit={onSubmit}/>
   }
+
+  const { name, age, bio, sex, avatar } = response.data
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={{alignItems: "center", padding: m}}>
 
         <Image style={styles.profileImg} source={
-          data?.user?.avatar ? {uri: data?.user?.avatar} : AVATAR
+          avatar ? {uri: avatar} : AVATAR
         }/>
         <BoldText style={{fontSize: 25, marginTop: m}}>
-          {data?.user?.name ?? 'Name'}, {data?.user?.age ?? 'age'}
+          {name ?? 'Name'}, {age ?? 'age'}
         </BoldText>
         
         <View style={[styles.row, {marginTop: m}]}>
@@ -95,7 +91,6 @@ export default function Profile() {
             <Pressable
               style={styles.circle}
               onPress={() => {
-                const { id, name, age, bio, sex, avatar } = data?.user!
                 const ageString = age ? age.toString() : ''
                 setValue({
                   id: id!,

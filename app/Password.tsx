@@ -3,14 +3,14 @@ import { SafeAreaView, View, KeyboardAvoidingView, StyleSheet } from 'react-nati
 import { Button } from "@/components/Button";
 import { s, m, l, xl } from '@/constants/Spaces';
 import { RegularText, TextInput } from '@/components/StyledText';
-import { api, signOut } from '@/lib/State'
+import { signOut, useAuth } from '@/lib/State'
 import { useTheme } from '@react-navigation/native';
 import validator from 'validator';
 import { Icon } from '@/components/Themed';
-import { AxiosError } from 'axios';
 
 export default () => {
   const theme = useTheme()
+  const app = useAuth.use.app()()
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [repeatNewPassword, setRepeatNewPassword] = useState('')
@@ -32,13 +32,11 @@ export default () => {
     if (newPassword !== repeatNewPassword) {
       return setError('Passwords dont match')
     }
-    try {
-      const res = await api().post('password/reset', { password, newPassword })
-      signOut()
-    } catch (error) {
-      const err = error as AxiosError
-      setError(err?.response?.statusText ?? 'Wrong data')
+    const { error, status } = await app.password.reset.post({ password, newPassword })
+    if (error) {
+      setError('Wrong data')
     }
+    signOut()
   }
 
   return (

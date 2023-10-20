@@ -1,12 +1,16 @@
 import { create } from 'zustand';
-import { Axios } from 'axios'
 import * as Location from 'expo-location'
 import type { LocationObjectCoords } from 'expo-location'
 import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } from './Storage';
-import { apiClient, app } from './Client'
+import { apiClient } from './Client'
 import { isPro } from './Purchases';
 import { dateShiftHours } from './Calc';
+import { APP_URL } from '@/constants/Config';
+import { edenTreaty } from '@elysiajs/eden'
+import type { App } from '../../backend/src'
+
+const app = edenTreaty<App>(APP_URL)
 
 type Data = {
   id: string,
@@ -25,8 +29,7 @@ interface AuthState {
   hydrateSwipes(): Promise<void>,
   addSwipe(): Promise<void>,
   getProAccess(): Promise<void>,
-  api(): Axios,
-  app: typeof app,
+  app(): typeof app,
   signIn(data: Data): void,
   signOut(): void,
   hydrate(): Promise<void>,
@@ -36,7 +39,19 @@ const _useAuth = create<AuthState>((set, get) => ({
   token: undefined,
   id: undefined,
   pro: false,
-  app,
+  app: () => {
+    const authApp = edenTreaty<App>(
+      APP_URL,
+      {
+        $fetch: {
+          headers: {
+            'Authorization': get().token ?? ''
+          }
+        }
+      }
+    )
+    return authApp
+  },
   feed: {
     fetching: false,
     data: undefined
@@ -72,10 +87,6 @@ const _useAuth = create<AuthState>((set, get) => ({
   getProAccess: async () => {
     set({pro: await isPro(get().id!)})
   },
-  api: () => {
-    apiClient.defaults.headers.common['Authorization'] = get().token
-    return apiClient
-  },
   signIn: ({token, id}: Data) => {
     setToken(token);
     set({ token, id });
@@ -107,4 +118,3 @@ export const useAuth = createSelectors(_useAuth);
 export const signOut = () => _useAuth.getState().signOut();
 export const signIn = (data: Data) => _useAuth.getState().signIn(data);
 export const hydrateAuth = () => _useAuth.getState().hydrate();
-export const api = () => _useAuth.getState().api();
