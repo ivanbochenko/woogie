@@ -13,12 +13,10 @@ import { useTheme } from "@react-navigation/native";
 import validator from "validator";
 import { PrimaryButton } from "@/components/Button";
 import Icons from "@expo/vector-icons/MaterialIcons";
-import { signIn } from "@/lib/State";
+import { app, signIn } from "@/lib/State";
 import { registerNotifications } from '@/lib/Notification'
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AxiosError } from "axios";
 import { s, m, l, xl } from "@/constants/Spaces";
-import { apiClient } from "@/lib/Client";
 
 const REGISTER_SCREEN = {
   title: "Let's\nGet Started",
@@ -65,13 +63,12 @@ export default () => {
     if (!validator.isEmail(email) || !isStrong(password) || password !== repeatPassword) {
       return Alert.alert('Enter valid data')
     }
-    const pushToken = await registerNotifications()
-    try {
-      const res = await apiClient.post('login/register', { email, password, pushToken })
-      signIn(res.data)
-    } catch (error) {
-      const err = error as AxiosError
-      setError(err?.response?.statusText ?? 'Wrong data')
+    const pushToken = await registerNotifications() ?? ''
+    const { data, status } = await app.login.register.post({ email, password, pushToken })
+    if (data) {
+      signIn(data)
+    } else {
+      setError('Wrong data')
     }
   }
 

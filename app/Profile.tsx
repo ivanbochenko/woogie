@@ -7,7 +7,6 @@ import { RegularText, BoldText } from '@/components/StyledText';
 import { useAuth } from '@/lib/State'
 import { useState } from 'react';
 import { EditProfileView, UserData } from '@/components/EditProfile';
-import { AxiosError } from 'axios';
 import { AVATAR } from '@/constants/images';
 import { useApp } from '@/lib/useApp';
 

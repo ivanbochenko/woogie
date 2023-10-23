@@ -15,12 +15,10 @@ import { PrimaryButton } from "@/components/Button";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import Icons from "@expo/vector-icons/MaterialIcons";
-import { signIn } from "@/lib/State";
+import { app, signIn } from "@/lib/State";
 import validator from "validator";
 import { registerNotifications } from "@/lib/Notification";
 import { s, m, l, xl } from "@/constants/Spaces";
-import { AxiosError } from "axios";
-import { apiClient } from "@/lib/Client";
 
 const LOG_IN_SCREEN = {
   title: "Let's\nGet Started",
@@ -42,13 +40,12 @@ const LogInScreen = () => {
       return setError('Enter valid email and password')
     }
     setError(null)
-    const pushToken = await registerNotifications()
-    try {
-      const res = await apiClient.post('login/password', { email, password, pushToken })
-      signIn(res.data)
-    } catch (error) {
-      const err = error as AxiosError
-      setError(err?.response?.statusText ?? 'Wrong data, try again or restore')
+    const pushToken = await registerNotifications() ?? ''
+    const { data, status } = await app.login.password.post({ email, password, pushToken })
+    if (data) {
+      signIn(data)
+    } else {
+      setError('Wrong data, try again or restore')
     }
   }
 
@@ -57,12 +54,11 @@ const LogInScreen = () => {
       return setError('Enter valid email')
     }
     setDisabled(true)
-    try {
-      const res = await apiClient.post('login/restore', { email })
+    const { data, status } = await app.login.restore.post({ email })
+    if (data) {
       Alert.alert('Check your email')
-    } catch (error) {
-      const err = error as AxiosError
-      setError(err?.response?.statusText ?? 'Wrong data')
+    } else {
+      setError('Wrong data')
     }
     setDisabled(false)
   }

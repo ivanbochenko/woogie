@@ -3,14 +3,13 @@ import * as Location from 'expo-location'
 import type { LocationObjectCoords } from 'expo-location'
 import { createSelectors } from './Selectors'
 import { getToken, removeToken, setToken, getSwipes, setSwipes, removeSwipes } from './Storage';
-import { apiClient } from './Client'
 import { isPro } from './Purchases';
 import { dateShiftHours } from './Calc';
 import { APP_URL } from '@/constants/Config';
 import { edenTreaty } from '@elysiajs/eden'
 import type { App } from '../../backend/src'
 
-const app = edenTreaty<App>(APP_URL)
+export const app = edenTreaty<App>(APP_URL)
 
 type Data = {
   id: string,
@@ -100,8 +99,8 @@ const _useAuth = create<AuthState>((set, get) => ({
       let hasToSignOut = true
       const token = await getToken();
       if (!!token) {
-        const { status, data } = await apiClient.post(`login`, {token})
-        if (status === 200) {
+        const { status, data } = await app.login.token.post({token})
+        if (status === 200 && data) {
           hasToSignOut = false
           get().signIn(data)
         }
