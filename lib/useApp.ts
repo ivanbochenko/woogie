@@ -7,7 +7,11 @@ export const useApp = <T extends unknown> (fetcher: () => Promise<T>) => {
   useEffect(() => {
     (async () => {
       setFetching(true)
-      setResponse(await fetcher())
+      try {
+        setResponse(await fetcher())
+      } catch (error) {
+        console.log(error)
+      }
       setFetching(false)
     })()
   }, [])

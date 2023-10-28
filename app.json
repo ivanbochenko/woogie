@@ -60,6 +60,16 @@
         "projectId": "7d2a71cb-d30f-425f-8b73-38e105704c23"
       }
     },
-    "owner": "bochenko"
+    "owner": "bochenko",
+    "android": {
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "package": "com.app.woogie"
+    }
   }
 }

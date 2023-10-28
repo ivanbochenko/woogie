@@ -50,8 +50,6 @@ export default () => {
     }
   }, [])
 
-  const chat = app.chat[event_id].subscribe()
-
   // Load previous messages
   
   useEffect(() => {
@@ -63,12 +61,15 @@ export default () => {
       }
       setFetching(false)
     })()
-    
-    // Subscribe to new messages
-    chat.subscribe(message => {
-      setMessages(messages => [...messages, message as unknown as Message])
-    })
   }, [])
+
+  const chat = app.chat[event_id].subscribe()
+  
+  // Subscribe to new messages
+  chat.subscribe(message => {
+    console.warn(message)
+    setMessages(messages => [...messages, message as any])
+  })
   
   // Send message
 
